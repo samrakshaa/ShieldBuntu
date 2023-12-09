@@ -6,10 +6,12 @@ Note:- Fullfill all prerequisite present here: [Tauri Prerequisite](https://taur
 
 ### Cloning repo and installing dependencies
 
-bash`    git clone https://github.com/samrakshak23/main.git
-    cd main
-    npm install`
+```bash 
+git clone https://github.com/samrakshak23/main.git
+cd main
+npm install
+```
 
 ### Starting dev server
 
-bash`    npm run tauri dev`
+`npm run tauri dev`
