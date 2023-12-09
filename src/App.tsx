@@ -1,12 +1,12 @@
 import { useState } from "react";
-
+import { Button } from "@/components/ui/button";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 
 import { info } from "tauri-plugin-log-api";
 import { attachConsole } from "tauri-plugin-log-api";
 
-attachConsole(); 
+attachConsole();
 function App() {
   const [greetMsg, setGreetMsg] = useState("");
   const [name, setName] = useState("");
@@ -19,10 +19,6 @@ function App() {
 
   return (
     <div className="container">
-
-
-     
-
       <p>Click on the Tauri, Vite, and React logos to learn more.</p>
 
       <form
