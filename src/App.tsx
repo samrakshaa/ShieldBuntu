@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { ThemeProvider } from "./components/theme-provider";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/navbar/Navbar";
+import Home from "./components/home/Home";
+import Firewall from "./components/firewall/Firewall";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 
@@ -18,26 +22,15 @@ function App() {
   }
 
   return (
-    <div className="container">
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <Button type="submit">Greet</Button>
-      </form>
-
-      <p>{greetMsg}</p>
-    </div>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path="/firewall" element={<Home />} />
+          <Route path="/firewall" element={<Firewall />} />
+        </Routes>
+      </Router>
+    </ThemeProvider>
   );
 }
 
