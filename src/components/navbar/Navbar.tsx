@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { useTheme } from "@/components/theme-provider";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import { FaSun, FaMoon } from "react-icons/fa";
+import { IoMdArrowDropright } from "react-icons/io";
 
 const Navbar = () => {
   const { setTheme } = useTheme();
@@ -35,28 +36,33 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="flex flex-row justify-between p-4 fixed w-full">
+      <div className="flex flex-row justify-between p-4 fixed w-full backdrop-blur-xl">
         <div className="nav flex flex-row gap-8">
           <div className="nav-items flex flex-row gap-4">
-            <Button onClick={onBack}>
+            <Button onClick={onBack} variant={"outline"}>
               <IoChevronBack />
             </Button>
-            <Button onClick={onNext}>
+            <Button onClick={onNext} variant={"outline"}> 
               <IoChevronForward />
             </Button>
           </div>
           <div className="breadcrumbs flex items-center text-xl">
             <Link to="/" className="hover:underline hover:text-[blue]">
-              SECURITY
+              <Button variant="ghost">SECURITY</Button>
+              
             </Link>
             {breadcrumbs.map((item) => (
               <>
-                <span className="px-2">{">"}</span>
+                <span className="px-2"><IoMdArrowDropright /></span>
                 <Link
                   to="firewall"
                   className="hover:underline hover:text-[blue]"
                 >
-                  {item.toLocaleUpperCase()}
+                     <Link to="/" className="hover:underline hover:text-[blue]">
+              <Button variant="ghost">{item.toLocaleUpperCase()}</Button>
+              
+            </Link>
+                  
                 </Link>
               </>
             ))}
