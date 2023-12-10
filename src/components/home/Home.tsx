@@ -15,25 +15,31 @@ const Home = () => {
       title: "Firewall Configution",
       alt: "firewall",
       image: Firewall,
-      link: "/firewall",
+      link: "/network-security/firewall",
     },
     {
       title: "SSH Blocking",
       alt: "ssh",
       image: SSH,
-      link: "/sshblock",
+      link: "/network-security/sshblock",
     },
     {
       title: "USB Blocking",
       alt: "usb",
       image: USB,
-      link: "/usbblock",
+      link: "/network-security/usbblock",
     },
     {
       title: "TOR Settings",
       alt: "tor",
       image: TOR,
-      link: "/tor",
+      link: "/network-security/tor",
+    },
+    {
+      title: "Open Port Settings",
+      alt: "open port",
+      image: TOR,
+      link: "/network-security/openPort",
     },
   ];
 
@@ -42,13 +48,13 @@ const Home = () => {
       title: "Basic & Display Settings",
       alt: "display",
       image: Display,
-      link: "/display",
+      link: "/boot/display",
     },
     {
       title: "Advanced Boot Settings",
       alt: "adv boot",
       image: Boot,
-      link: "/advboot",
+      link: "/boot/advboot",
     },
   ];
 
@@ -57,13 +63,13 @@ const Home = () => {
       title: "Auditing",
       alt: "auditing",
       image: Audit,
-      link: "/audit",
+      link: "/general/audit",
     },
     {
       title: "Cron Settings",
       alt: "cron",
       image: Cron,
-      link: "/cron",
+      link: "/general/cron",
     },
   ];
 

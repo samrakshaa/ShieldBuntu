@@ -27,7 +27,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/firewall" element={<Firewall />} />
+          <Route path="/network-security/firewall" element={<Firewall />} />
         </Routes>
       </Router>
     </ThemeProvider>

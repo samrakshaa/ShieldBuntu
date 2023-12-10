@@ -35,7 +35,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="flex flex-row justify-between p-4 border-b-2 fixed w-full">
+      <div className="flex flex-row justify-between p-4 fixed w-full">
         <div className="nav flex flex-row gap-8">
           <div className="nav-items flex flex-row gap-4">
             <Button onClick={onBack}>
