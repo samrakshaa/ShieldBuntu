@@ -2,9 +2,19 @@ import { useEffect, useState } from "react";
 import Sidemenu from "../sidemenu/Sidemenu";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "../ui/button";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 const Firewall = () => {
   const [isFirewallEnabled, setIsFirewallEnabled] = useState(false);
+  const [firewallRules, setFirewallRules] = useState([]);
 
   const handleSwitchChange = () => {
     setIsFirewallEnabled((prevState) => !prevState);
@@ -44,19 +54,30 @@ const Firewall = () => {
 
         {/* IP table config */}
         <div className="iptable mt-12">
-          <h2 className="text-2xl text-[#326690]">IP Table Configuration</h2>
-          <table className="table-auto w-full mt-4">
-            <thead>
-              <tr>
-                <th className="text-xl">Custom IP table rules</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>sudo iptable -A INPUT -p tcp -dport 22 -j ACCEPT</td>
-              </tr>
-            </tbody>
-          </table>
+          <h2 className="text-2xl mb-4 text-[#326690]">
+            IP Table Configuration
+          </h2>
+          <Table className="">
+            {/* <TableCaption>IP table rules.</TableCaption> */}
+            <TableHeader>
+              <TableRow>
+                <TableHead className="text-xl" colSpan={2}>
+                  Custom IP table rules
+                  <Button className="absolute right-0 top-0">
+                    View Current Rules
+                  </Button>
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell className="font-medium">Add more rules</TableCell>
+                <TableCell className="relative">
+                  <Button className="absolute right-0 top-0">ADD</Button>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </div>
       </div>
     </div>
