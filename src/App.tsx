@@ -26,7 +26,7 @@ function App() {
       <Router>
         <Navbar />
         <Routes>
-          <Route path="/firewall" element={<Home />} />
+          <Route path="/" element={<Home />} />
           <Route path="/firewall" element={<Firewall />} />
         </Routes>
       </Router>
