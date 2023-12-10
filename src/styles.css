@@ -4,6 +4,18 @@
  
 @layer base {
   :root {
+
+    --light-blue: #DEF2FC;
+    --custom-blue: #326690;
+    --white: #FFFFFF;
+    --tortoise-for-selections: #5B6D7C;
+    --greyish-black: #222222;
+    --light-red: #EC6A5E;
+    --light-yellow: #F4BF4F;
+    --light-green: #61C554;
+
+    --productSans: 'Product Sans', sans-serif;
+
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -73,4 +85,20 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@font-face {
+  font-family: 'Product Sans';
+  src: url('product_sans/ProductSans-Black.ttf') format('ttf'),
+       url('product_sans/ProductSans-Bold.ttf') format('ttf'),
+       url('product_sans/ProductSans-BoldItalic.ttf') format('ttf'),
+       url('product_sans/ProductSans-Italic.ttf') format('ttf'),
+       url('product_sans/ProductSans-Light.ttf') format('ttf'),
+       url('product_sans/ProductSans-LightItalic.ttf') format('ttf'),
+       url('product_sans/ProductSans-Medium.ttf') format('ttf'),
+       url('product_sans/ProductSans-MediumItalic.ttf format('ttf'),
+       url('product_sans/ProductSans-Regular.ttf') format('ttf'),
+       url('product_sans/ProductSans-Thin.ttf') format('ttf'),
+       url('product_sans/ProductSans-ThinItalic.ttf') format('ttf'),
+       url('product_sans/ProductSans-BlackItalic.ttf') format('ttf');
 }
