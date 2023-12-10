@@ -63,7 +63,7 @@ const Home = () => {
       title: "Auditing",
       alt: "auditing",
       image: Audit,
-      link: "/general/audit",
+      link: "/general/auditing",
     },
     {
       title: "Cron Settings",

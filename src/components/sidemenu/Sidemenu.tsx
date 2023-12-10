@@ -38,12 +38,12 @@ const bootList = [
 
 const generalList = [
   {
-    title: "Firewall Configuration",
-    link: "/network-security/firewall",
+    title: "Auditing",
+    link: "/general/auditing",
   },
   {
     title: "SSH/IP Blocking",
-    link: "/network-security/sshblock",
+    link: "/general/cron",
   },
 ];
 
@@ -54,15 +54,15 @@ const Sidemenu = () => {
     const sidemenu = document.querySelector(".sidemenu");
     if (theme === "dark") {
       sidemenu?.classList.add("bg-gray-800");
-      sidemenu?.classList.remove("bg-gray-300");
+      sidemenu?.classList.remove("bg-[#DEF2FC]");
     } else {
-      document.querySelector(".sidemenu")?.classList.add("bg-gray-300");
+      document.querySelector(".sidemenu")?.classList.add("bg-[#DEF2FC]");
       document.querySelector(".sidemenu")?.classList.remove("bg-gray-800");
     }
   }, [theme]);
 
   return (
-    <div className="sidemenu flex flex-col gap-8 items-start w-[350px] h-full overflow-hidden p-8 bg-gray-800">
+    <div className="sidemenu flex flex-col gap-8 items-start w-[350px] h-full fixed top-20 left-0 overflow-hidden p-8 bg-gray-800">
       <div className="network-security mt-4">
         <h3 className="text-3xl">Network & Security</h3>
         <div className="links flex flex-col ml-4 p-2">
@@ -74,9 +74,19 @@ const Sidemenu = () => {
         </div>
       </div>
       <div className="network-security mt-4">
-        <h3 className="text-3xl">Network & Security</h3>
+        <h3 className="text-3xl">Boot Settings</h3>
         <div className="links flex flex-col ml-4 p-2">
-          {networkList.map(({ title, link }) => (
+          {bootList.map(({ title, link }) => (
+            <Link to={link} className="text-xl text-[#326690] hover:underline">
+              {title}
+            </Link>
+          ))}
+        </div>
+      </div>
+      <div className="network-security mt-4">
+        <h3 className="text-3xl">General Settings</h3>
+        <div className="links flex flex-col ml-4 p-2">
+          {generalList.map(({ title, link }) => (
             <Link to={link} className="text-xl text-[#326690] hover:underline">
               {title}
             </Link>
