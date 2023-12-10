@@ -9,70 +9,70 @@ import Cron from "@/assets/cron-settings.png";
 
 import { Link } from "react-router-dom";
 
+const networkLinks = [
+  {
+    title: "Firewall Configution",
+    alt: "firewall",
+    image: Firewall,
+    link: "/network-security/firewall",
+  },
+  {
+    title: "SSH Blocking",
+    alt: "ssh",
+    image: SSH,
+    link: "/network-security/sshblock",
+  },
+  {
+    title: "USB Blocking",
+    alt: "usb",
+    image: USB,
+    link: "/network-security/usbblock",
+  },
+  {
+    title: "TOR Settings",
+    alt: "tor",
+    image: TOR,
+    link: "/network-security/tor",
+  },
+  {
+    title: "Open Port Settings",
+    alt: "open port",
+    image: TOR,
+    link: "/network-security/openPort",
+  },
+];
+
+const bootLinks = [
+  {
+    title: "Basic & Display Settings",
+    alt: "display",
+    image: Display,
+    link: "/boot/display",
+  },
+  {
+    title: "Advanced Boot Settings",
+    alt: "adv boot",
+    image: Boot,
+    link: "/boot/advboot",
+  },
+];
+
+const generalLinks = [
+  {
+    title: "Auditing",
+    alt: "auditing",
+    image: Audit,
+    link: "/general/auditing",
+  },
+  {
+    title: "Cron Settings",
+    alt: "cron",
+    image: Cron,
+    link: "/general/cron",
+  },
+];
+
 const Home = () => {
-  const networkLinks = [
-    {
-      title: "Firewall Configution",
-      alt: "firewall",
-      image: Firewall,
-      link: "/network-security/firewall",
-    },
-    {
-      title: "SSH Blocking",
-      alt: "ssh",
-      image: SSH,
-      link: "/network-security/sshblock",
-    },
-    {
-      title: "USB Blocking",
-      alt: "usb",
-      image: USB,
-      link: "/network-security/usbblock",
-    },
-    {
-      title: "TOR Settings",
-      alt: "tor",
-      image: TOR,
-      link: "/network-security/tor",
-    },
-    {
-      title: "Open Port Settings",
-      alt: "open port",
-      image: TOR,
-      link: "/network-security/openPort",
-    },
-  ];
-
-  const bootLinks = [
-    {
-      title: "Basic & Display Settings",
-      alt: "display",
-      image: Display,
-      link: "/boot/display",
-    },
-    {
-      title: "Advanced Boot Settings",
-      alt: "adv boot",
-      image: Boot,
-      link: "/boot/advboot",
-    },
-  ];
-
-  const generalLinks = [
-    {
-      title: "Auditing",
-      alt: "auditing",
-      image: Audit,
-      link: "/general/auditing",
-    },
-    {
-      title: "Cron Settings",
-      alt: "cron",
-      image: Cron,
-      link: "/general/cron",
-    },
-  ];
-
   return (
     <>
       <div className="home pt-32 flex flex-col gap-32 w-4/5 mx-auto py-20 md:py-10">
