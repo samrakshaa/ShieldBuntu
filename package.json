@@ -25,7 +25,8 @@
     "react-router-dom": "^6.20.1",
     "tailwind-merge": "^2.1.0",
     "tailwindcss-animate": "^1.0.7",
-    "tauri-plugin-log-api": "github:tauri-apps/tauri-plugin-log"
+    "tauri-plugin-log-api": "github:tauri-apps/tauri-plugin-log",
+    "zustand": "^4.4.7"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.5.6",
