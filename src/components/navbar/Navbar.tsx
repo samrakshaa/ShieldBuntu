@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -15,8 +15,9 @@ import { FaSun, FaMoon } from "react-icons/fa";
 const Navbar = () => {
   const { setTheme } = useTheme();
   const location = useLocation();
-  const navigate = useNavigate();
   const [breadcrumbs, setBreadcrumbs] = useState<string[]>([]);
+  const [canGoBack, setCanGoBack] = useState(false);
+  const [canGoForward, setCanGoForward] = useState(false);
 
   useEffect(() => {
     const breadslices = location.pathname
@@ -26,11 +27,11 @@ const Navbar = () => {
   }, [location]);
 
   const onBack = () => {
-    navigate("/");
+    window.history.back();
   };
 
   const onNext = () => {
-    navigate("/firewall");
+    window.history.forward();
   };
 
   return (

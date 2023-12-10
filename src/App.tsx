@@ -21,6 +21,7 @@ function App() {
     info(`${msg} - this is from nodejs `);
   }
 
+  // limit window size to 1000x900
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <Router>
