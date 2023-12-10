@@ -44,22 +44,38 @@ const Firewall = () => {
 
         {/* IP table config */}
         <div className="iptable mt-12">
-          <h2 className="text-2xl text-[#326690]">IP Table Configuration</h2>
-          <table className="table-auto w-full mt-4">
-            <thead>
-              <tr>
-                <th className="text-xl">Custom IP table rules</th>
-              </tr>
+        <h2 className="text-2xl text-[#326690]">IP Table Configuration</h2>
+           <table className="w-11/12 border-sky-700 bg-white rounded-lg mt-4">
+            <thead className="bg-blue-50">
+                <tr className="h-16">
+                    <th className="py-2 px-4 border-b border-gray-300 text-left">
+                    {/* <button className="rounded border border-gray-400 px-4 py-2">View Current Rules</button> */}
+                      CUSTOM IP TABLE RULES
+                      </th>
+                      <th className="py-2 px-4 border-b text-right">
+                        <button className="rounded border border-gray-400 bg-white px-8 py-0">View Current Rules</button>
+                    </th>
+                </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>sudo iptable -A INPUT -p tcp -dport 22 -j ACCEPT</td>
-              </tr>
+            <tbody className="w-max">
+                <tr className="border-2 rounded m-2 flex items-center justify-between m-2">
+                <td className="py-2 px-4">
+                        <span>Row 1</span>
+                        <button className="rounded border border-gray-400 px-3 py-1">Action</button>
+                    </td>
+                </tr>
+                <tr className="flex flex-row justified-between border-2 rounded m-2">
+                    <td className="py-2 px-4">Row 2</td>
+                </tr>
+                <tr className="flex flex-row justified-between border 2 rounded m-2">
+                    <td className="py-2 px-4">Row 3</td>
+                </tr>
             </tbody>
-          </table>
+        </table>
         </div>
       </div>
     </div>
+         
   );
 };
 
