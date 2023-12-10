@@ -75,13 +75,13 @@ const generalLinks = [
 const Home = () => {
   return (
     <>
-      <div className="home pt-32 flex flex-col gap-32 w-4/5 mx-auto py-20 md:py-10">
-        <div className="network-security flex flex-col w-4/5 mx-auto">
+      <div className="home pt-32 flex flex-col gap-32 w-4/5 mx-auto py-20">
+        <div className="network-security flex flex-col">
           <h1 className="settings-header text-4xl">Network & Settings</h1>
           <p className="py-2 text-lg text-gray-400">
             Manage network settings for connectivity and security safegaurds.
           </p>
-          <div className="links mt-4 flex flex-row gap-32 md:justify-between">
+          <div className="links mt-4 flex flex-row gap-32 md:gap-0 md:justify-between">
             {networkLinks.map(({ title, alt, image, link }) => (
               <Link
                 to={link}
