@@ -19,7 +19,18 @@ module.exports = {
       screens: {
         md: { max: "1290px" },
       },
+      fontFamily: {
+        'product-sans': ['var(--productSans)', 'sans-serif'],
+      },
       colors: {
+        lightBlue: 'var(--light-blue)',
+        customBlue: 'var(--custom-blue)',
+        white: 'var(--white)',
+        tortoise: 'var(--tortoise-for-selections)',
+        greyishBlack: 'var(-greyish-black)',
+        red: 'var(--light-red)',
+        yellow: 'var(--light-yellow)',
+        green: 'var(--light-green)',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

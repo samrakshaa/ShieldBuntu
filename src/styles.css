@@ -4,6 +4,17 @@
 
 @layer base {
   :root {
+    --light-blue: #def2fc;
+    --custom-blue: #326690;
+    --white: #ffffff;
+    --tortoise-for-selections: #5b6d7c;
+    --greyish-black: #222222;
+    --light-red: #ec6a5e;
+    --light-yellow: #f4bf4f;
+    --light-green: #61c554;
+
+    --productSans: "Product Sans", sans-serif;
+
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -73,10 +84,4 @@
   body {
     @apply bg-background text-foreground;
   }
-}
-
-html,
-body {
-  min-width: 1000px;
-  min-height: 900px;
 }
