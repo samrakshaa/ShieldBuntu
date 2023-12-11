@@ -9,6 +9,7 @@ import "./App.css";
 
 import { info } from "tauri-plugin-log-api";
 import { attachConsole } from "tauri-plugin-log-api";
+import StorageProvider from "./components/storageProvider";
 
 attachConsole();
 function App() {
@@ -21,16 +22,17 @@ function App() {
     info(`${msg} - this is from nodejs `);
   }
 
-  // limit window size to 1000x900
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/*" element={<Home />} />
-          <Route path="/network-security/firewall" element={<Firewall />} />
-        </Routes>
-      </Router>
+      <StorageProvider>
+        <Router>
+          <Navbar />
+          <Routes>
+            <Route path="/*" element={<Home />} />
+            <Route path="/network-security/firewall" element={<Firewall />} />
+          </Routes>
+        </Router>
+      </StorageProvider>
     </ThemeProvider>
   );
 }
