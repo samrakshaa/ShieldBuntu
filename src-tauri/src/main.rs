@@ -74,6 +74,7 @@ fn list_usb_devices() -> Result<String, String> {
 }
 
 
+
 #[tauri::command]
 fn remove_unused_packages() -> Result<(), String> {
 
@@ -83,7 +84,6 @@ fn remove_unused_packages() -> Result<(), String> {
 
     // Run the bash script to remove unused packages
     let output = Command::new("bash")
-        .arg("-c")
         .arg(script_path)
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
