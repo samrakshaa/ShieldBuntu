@@ -25,7 +25,7 @@ struct UsbDevice {
 fn list_usb_devices() -> Result<String, String> {
     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
 
-    let script_path = current_dir.join("scripts/list_connected_usb.sh");
+    let script_path = current_dir.join("scripts/list_usb.sh");
 
 
     let output = Command::new("bash")
@@ -80,13 +80,13 @@ fn remove_unused_packages() -> Result<(), String> {
 
     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
 
-    let script_path = current_dir.join("src/scripts/unused_package_remover.sh");
+    let script_path = current_dir.join("scripts/unused_package_remover.sh");
 
     // Run the bash script to remove unused packages
     let output = Command::new("bash")
         .arg(script_path)
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
+        .stdout(Stdio::inherit())
+        .stderr(Stdio::inherit())
         .spawn()
         .map_err(|e| format!("Error spawning process: {}", e))?
         .wait_with_output()
@@ -109,14 +109,14 @@ fn update_and_upgrade_packages() -> Result<(), String> {
 
     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
 
-    let script_path = current_dir.join("src/scripts/update_packages.sh");
+    let script_path = current_dir.join("scripts/update_packages.sh");
 
     // Run the bash script for updating and upgrading packages
     let output = Command::new("bash")
         .arg("-c")
         .arg(script_path)
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
+        .stdout(Stdio::inherit())
+        .stderr(Stdio::inherit())
         .output();
 
     // Check if the command executed successfully

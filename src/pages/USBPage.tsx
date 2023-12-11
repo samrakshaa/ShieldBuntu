@@ -13,6 +13,11 @@ const USBPage = () => {
       .then((res) => console.log(res))
       .catch((err) => console.error(err));
   };
+  const handleClick3 = () => {
+    invoke("update_and_upgrade_packages")
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
+  };
 
   return (
     <div className="">
@@ -21,6 +26,9 @@ const USBPage = () => {
       </Button>
       <Button onClick={handleClick2} className=" mt-32">
         Ununsed Package Remover
+      </Button>
+      <Button onClick={handleClick3} className=" mt-32">
+        Package Updater
       </Button>
     </div>
   );
