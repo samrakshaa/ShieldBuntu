@@ -51,10 +51,10 @@ const Firewall = () => {
         });
       setIsLoadingFirewall(false);
     } else {
-      console.log("trying to disable firewall");
+      console.log("reverse_firewall_rules");
 
       setIsLoadingFirewall(true);
-      invoke("disable_firewall")
+      invoke("reverse_firewall_rules")
         .then((res) => {
           if (res === "true") {
             console.log("firewall off");
@@ -68,7 +68,8 @@ const Firewall = () => {
             });
           }
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log(err);
           toast({
             variant: "destructive",
             title: "Uh oh! Something went wrong.",
@@ -97,12 +98,6 @@ const Firewall = () => {
             onClick={handleSwitchChange}
           />
         </div>
-        <Alert>
-          <AlertTitle>Heads up!</AlertTitle>
-          <AlertDescription>
-            You can add components and dependencies to your app using the cli.
-          </AlertDescription>
-        </Alert>
         {/* Checking for UFM installation */}
         <div className="checkingUfm ">
           <h2 className="text-2xl text-[#326690]">
