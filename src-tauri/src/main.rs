@@ -3,11 +3,7 @@
 
 use log::warn;
 use tauri_plugin_log::{LogTarget, fern::colors::ColoredLevelConfig};
-use std::process::{Command, Stdio};
-use serde::{Serialize, Deserialize};
 use std::env;
-use tokio::process::Command as AsyncCommand;
-use tokio::io::{AsyncReadExt};
 mod update_packages;
 mod firewall;
 mod unused_packages;

@@ -1,9 +1,6 @@
-
-use std::process::{Command, Stdio};
-use serde::{Serialize, Deserialize};
-use std::env;
+use std::process::Stdio;
 use tokio::process::Command as AsyncCommand;
-use tokio::io::{AsyncReadExt};
+use tokio::io::AsyncReadExt;
 
 #[tauri::command]
 pub async fn update_and_upgrade_packages() -> Result<String, String> {
