@@ -11,9 +11,10 @@ const USBPage = () => {
 
   return (
     <div className="">
-      <Button onClick={handleClick} className="text-black mt-32">
-        Click here
+      <Button onClick={handleClick} className=" mt-32">
+        List USB
       </Button>
+      <></>
     </div>
   );
 };
