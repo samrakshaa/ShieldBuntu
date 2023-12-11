@@ -78,59 +78,59 @@ fn list_usb_devices() -> Result<String, String> {
 
 
 #[tauri::command]
-fn remove_unused_packages() -> Result<String, String> {
-
+async fn remove_unused_packages() -> Result<String, String> {
     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-
     let script_path = current_dir.join("scripts/unused_package_remover.sh");
 
     // Run the bash script to remove unused packages
-    let output = Command::new("bash")
-        .arg(script_path)
+    let mut child = tokio::process::Command::new("bash")
+        .arg(&script_path)
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit())
         .spawn()
-        .map_err(|e| format!("Error spawning process: {}", e))?
-        .wait_with_output()
-        .map_err(|e| format!("Error waiting for process: {}", e))?;
+        .map_err(|e| format!("Error spawning process: {}", e))?;
+
+    // Await the child process completion
+    let status = child.wait().await.map_err(|e| format!("Error waiting for process: {}", e))?;
 
     // Check if the command executed successfully
-    if output.status.success() {
-        // println!("Unused packages removed successfully!");
-        Ok(output.status.success().to_string())
+    if status.success() {
+        Ok(true.to_string())
     } else {
-        let error = String::from_utf8_lossy(&output.stderr);
-        Err(format!("Error removing unused packages: {}", error))
+        let mut error_output = String::new();
+        if let Some(mut stderr) = child.stderr.take() {
+            stderr.read_to_string(&mut error_output).await.map_err(|e| format!("Error reading stderr: {}", e))?;
+        }
+        Err(format!("Error removing unused packages: {}", error_output))
     }
 }
 
 
 #[tauri::command]
-fn update_and_upgrade_packages() -> Result<String, String> {
-
+async fn update_and_upgrade_packages() -> Result<String, String> {
     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-
     let script_path = current_dir.join("scripts/update_packages.sh");
 
     // Run the bash script for updating and upgrading packages
-    let output = Command::new("bash")
+    let mut child = AsyncCommand::new("bash")
         .arg("-c")
-        .arg(script_path)
+        .arg(&script_path)
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit())
-        .output();
+        .spawn()
+        .map_err(|e| format!("Error spawning process: {}", e))?;
+
+    let status = child.wait().await.map_err(|e| format!("Error waiting for process: {}", e))?;
 
     // Check if the command executed successfully
-    match output {
-        Ok(output) => {
-            if output.status.success() {
-                Ok(output.status.success().to_string())
-            } else {
-                let error = String::from_utf8_lossy(&output.stderr);
-                Err(error.into_owned())
-            }
+    if status.success() {
+        Ok(true.to_string())
+    } else {
+        let mut error_output = String::new();
+        if let Some(mut stderr) = child.stderr.take() {
+            stderr.read_to_string(&mut error_output).await.map_err(|e| format!("Error reading stderr: {}", e))?;
         }
-        Err(err) => Err(format!("Error executing command: {}", err)),
+        Err(format!("Error executing command: {}", error_output))
     }
 }
 
@@ -143,29 +143,23 @@ async fn apply_firewall_rules() -> Result<String, String> {
     // Run the bash script for applying firewall rules
     let mut child = AsyncCommand::new("bash")
         .arg(script_path)
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
+        .stdout(Stdio::inherit())
+        .stderr(Stdio::inherit())
         .spawn()
         .map_err(|e| format!("Error spawning process: {}", e))?;
 
     // Await the child process completion
     let status = child.wait().await.map_err(|e| format!("Error waiting for process: {}", e))?;
 
-    // Read the output from stdout
-    let mut stdout = child.stdout.take().unwrap();
-    let mut output = String::new();
-    stdout.read_to_string(&mut output).await.map_err(|e| format!("Error reading stdout: {}", e))?;
-
-    // Read the output from stderr
-    let mut stderr = child.stderr.take().unwrap();
-    let mut error_output = String::new();
-    stderr.read_to_string(&mut error_output).await.map_err(|e| format!("Error reading stderr: {}", e))?;
-
     // Check if the command executed successfully
     if status.success() {
-        Ok(output)
+        Ok(true.to_string())
     } else {
-        Err(error_output)
+        let mut error_output = String::new();
+        if let Some(mut stderr) = child.stderr.take() {
+            stderr.read_to_string(&mut error_output).await.map_err(|e| format!("Error reading stderr: {}", e))?;
+        }
+        Err(format!("Error executing command: {}", error_output))
     }
 }
 
