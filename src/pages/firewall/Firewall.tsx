@@ -11,21 +11,72 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { invoke } from "@tauri-apps/api/tauri";
 
 const Firewall = () => {
   const [isFirewallEnabled, setIsFirewallEnabled] = useState(false);
   const [firewallRules, setFirewallRules] = useState([]);
+  const [isLoadingFirewall, setIsLoadingFirewall] = useState(false);
+  const { toast } = useToast();
 
   const handleSwitchChange = () => {
-    invoke("apply_firewall_rules")
-      .then((res) => {
-        if (res === "true") setIsFirewallEnabled((prevState) => !prevState);
-        else {
-        }
-      })
-      .catch((err) => console.error(err));
+    if (!isFirewallEnabled) {
+      console.log("trying to enable firewall");
+
+      setIsLoadingFirewall(true);
+      invoke("apply_firewall_rules")
+        .then((res) => {
+          if (res === "true") {
+            console.log("firewall on");
+            setIsFirewallEnabled((prevState) => !prevState);
+          } else {
+            console.log("not able to enable firewall");
+            toast({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description: "Not able to enable/disable firewall.",
+            });
+          }
+        })
+        .catch(() => {
+          toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: "There was a problem with your request.",
+            action: <ToastAction altText="Try again">Try again</ToastAction>,
+          });
+        });
+      setIsLoadingFirewall(false);
+    } else {
+      console.log("trying to disable firewall");
+
+      setIsLoadingFirewall(true);
+      invoke("disable_firewall")
+        .then((res) => {
+          if (res === "true") {
+            console.log("firewall off");
+            setIsFirewallEnabled((prevState) => !prevState);
+          } else {
+            console.log("not able to disable firewall");
+            toast({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description: "Not able to enable/disable firewall.",
+            });
+          }
+        })
+        .catch(() => {
+          toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: "There was a problem with your request.",
+          });
+        });
+      setIsLoadingFirewall(false);
+    }
   };
 
   return (
@@ -42,7 +93,8 @@ const Firewall = () => {
           <p>Enable/Disable Firewall</p>
           <Switch
             checked={isFirewallEnabled}
-            onCheckedChange={handleSwitchChange}
+            disabled={isLoadingFirewall}
+            onClick={handleSwitchChange}
           />
         </div>
         <Alert>

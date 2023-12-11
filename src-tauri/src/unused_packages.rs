@@ -1,7 +1,5 @@
 use std::process::Stdio;
-// use serde::{Serialize, Deserialize};
-// use std::env;
-// use tokio::process::Command as AsyncCommand;
+use tokio::process::Command as AsyncCommand;
 use tokio::io::AsyncReadExt;
 
 #[tauri::command]
@@ -10,7 +8,7 @@ pub async fn remove_unused_packages() -> Result<String, String> {
     let script_path = current_dir.join("scripts/unused_package_remover.sh");
 
     // Run the bash script to remove unused packages
-    let mut child = tokio::process::Command::new("bash")
+    let mut child = AsyncCommand::new("bash")
         .arg(&script_path)
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit())

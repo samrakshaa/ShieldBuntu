@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ThemeProvider } from "./components/theme-provider";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Toaster } from "./components/ui/toaster";
 import Navbar from "./components/Navbar";
 import Home from "./pages/home/Home";
 import Firewall from "./pages/firewall/Firewall";
@@ -33,6 +34,7 @@ function App() {
             <Route path="/network-security/usbblock" element={<USBPage />} />
           </Routes>
         </Router>
+        <Toaster />
       </StorageProvider>
     </ThemeProvider>
   );
