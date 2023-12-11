@@ -6,9 +6,9 @@ import Home from "./components/home/Home";
 import Firewall from "./components/firewall/Firewall";
 import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
-
 import { info } from "tauri-plugin-log-api";
 import { attachConsole } from "tauri-plugin-log-api";
+import USBPage from "./pages/USBPage";
 
 attachConsole();
 function App() {
@@ -29,6 +29,7 @@ function App() {
         <Routes>
           <Route path="/*" element={<Home />} />
           <Route path="/network-security/firewall" element={<Firewall />} />
+          <Route path="/network-security/usbblock" element={<USBPage />} />
         </Routes>
       </Router>
     </ThemeProvider>
