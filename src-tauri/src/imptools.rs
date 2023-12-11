@@ -1,11 +1,14 @@
-use std::process::Stdio;
+use std::process::{Command, Stdio};
+use serde::{Serialize, Deserialize};
+use std::env;
 use tokio::process::Command as AsyncCommand;
 use tokio::io::{AsyncReadExt};
+use std::io::Read;
 
 #[tauri::command]
-pub async fn apply_firewall_rules() -> Result<String, String> {
+pub async fn apply_imptools() -> Result<String, String> {
     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/firewall.sh");
+    let script_path = current_dir.join("scripts/imptools.sh");
 
     // Run the bash script for applying firewall rules
     let mut child = AsyncCommand::new("bash")
@@ -30,17 +33,12 @@ pub async fn apply_firewall_rules() -> Result<String, String> {
     }
 }
 
-
-
 #[tauri::command]
-pub async fn reverse_firewall_rules() -> Result<String, String> {
-    // Get the current directory
+pub async fn reverse_imptools() -> Result<String, String> {
     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    let script_path = current_dir.join("scripts/reverse/r-imptools.sh");
 
-    // Construct the path to the reverse firewall script
-    let script_path = current_dir.join("scripts/reverse/r-firewall.sh");
-
-    // Run the bash script for reversing firewall changes
+    // Run the bash script for applying firewall rules
     let mut child = AsyncCommand::new("bash")
         .arg(script_path)
         .stdout(Stdio::inherit())

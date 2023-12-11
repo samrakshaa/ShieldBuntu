@@ -94,6 +94,7 @@ async fn main() {
             usb::list_usb_devices,
             unused_packages::remove_unused_packages,
             update_packages::update_and_upgrade_packages,
+            firewall::reverse_firewall_rules,
             firewall::apply_firewall_rules
              ]
             )
