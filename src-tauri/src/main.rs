@@ -6,6 +6,8 @@ use tauri_plugin_log::{LogTarget, fern::colors::ColoredLevelConfig};
 use std::process::{Command, Stdio};
 use serde::{Serialize, Deserialize};
 use std::env;
+use tokio::process::Command as AsyncCommand;
+use tokio::io::{AsyncReadExt};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -134,29 +136,36 @@ fn update_and_upgrade_packages() -> Result<String, String> {
 
 
 #[tauri::command]
-fn apply_firewall_rules() -> Result<String, String> {
-
+async fn apply_firewall_rules() -> Result<String, String> {
     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-
     let script_path = current_dir.join("scripts/firewall.sh");
+
     // Run the bash script for applying firewall rules
-    let output = Command::new("bash")
+    let mut child = AsyncCommand::new("bash")
         .arg(script_path)
-        .stdout(Stdio::inherit())
-        .stderr(Stdio::inherit())
-        .output();
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .map_err(|e| format!("Error spawning process: {}", e))?;
+
+    // Await the child process completion
+    let status = child.wait().await.map_err(|e| format!("Error waiting for process: {}", e))?;
+
+    // Read the output from stdout
+    let mut stdout = child.stdout.take().unwrap();
+    let mut output = String::new();
+    stdout.read_to_string(&mut output).await.map_err(|e| format!("Error reading stdout: {}", e))?;
+
+    // Read the output from stderr
+    let mut stderr = child.stderr.take().unwrap();
+    let mut error_output = String::new();
+    stderr.read_to_string(&mut error_output).await.map_err(|e| format!("Error reading stderr: {}", e))?;
 
     // Check if the command executed successfully
-    match output {
-        Ok(output) => {
-            if output.status.success() {
-                Ok(output.status.success().to_string())
-            } else {
-                let error = String::from_utf8_lossy(&output.stderr);
-                Err(error.into_owned())
-            }
-        }
-        Err(err) => Err(format!("Error executing command: {}", err)),
+    if status.success() {
+        Ok(output)
+    } else {
+        Err(error_output)
     }
 }
 
@@ -165,7 +174,8 @@ fn apply_firewall_rules() -> Result<String, String> {
 const LOG_TARGETS: [LogTarget; 2] = [LogTarget::Stdout, LogTarget::Webview]; //logs to the web console - for debugging
 // const LOG_TARGETS: [LogTarget; 2] = [LogTarget::Stdout, LogTarget::LogDir]; //logs to the log file - for production
 
-fn main() {
+#[tokio::main]
+async fn main() {
     tauri::Builder::default()
     .plugin(
         tauri_plugin_log::Builder::default().targets(LOG_TARGETS)
