@@ -163,7 +163,7 @@ async fn apply_firewall_rules() -> Result<String, String> {
 
     // Check if the command executed successfully
     if status.success() {
-        Ok(output)
+        Ok(true.to_string())
     } else {
         Err(error_output)
     }
