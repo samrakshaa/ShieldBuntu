@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import Sidemenu from "../sidemenu/Sidemenu";
+import Sidemenu from "../../components/Sidemenu";
 import { Switch } from "@/components/ui/switch";
-import { Button } from "../ui/button";
+import { Button } from "../../components/ui/button";
 import {
   Table,
   TableBody,
@@ -11,13 +11,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { invoke } from "@tauri-apps/api/tauri";
 
 const Firewall = () => {
   const [isFirewallEnabled, setIsFirewallEnabled] = useState(false);
   const [firewallRules, setFirewallRules] = useState([]);
 
   const handleSwitchChange = () => {
-    setIsFirewallEnabled((prevState) => !prevState);
+    invoke("apply_firewall_rules")
+      .then((res) => {
+        if (res === "true") setIsFirewallEnabled((prevState) => !prevState);
+        else {
+        }
+      })
+      .catch((err) => console.error(err));
   };
 
   return (
@@ -37,9 +45,14 @@ const Firewall = () => {
             onCheckedChange={handleSwitchChange}
           />
         </div>
-
+        <Alert>
+          <AlertTitle>Heads up!</AlertTitle>
+          <AlertDescription>
+            You can add components and dependencies to your app using the cli.
+          </AlertDescription>
+        </Alert>
         {/* Checking for UFM installation */}
-        <div className="checkingUfm mt-12">
+        <div className="checkingUfm ">
           <h2 className="text-2xl text-[#326690]">
             Is UFM( Uncomplicated Firewall ) installed?
           </h2>

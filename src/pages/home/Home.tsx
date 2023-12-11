@@ -9,7 +9,7 @@ import Cron from "@/assets/cron-settings.png";
 
 import { Link } from "react-router-dom";
 import { useGStore } from "@/store";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 
 const networkLinks = [
   {

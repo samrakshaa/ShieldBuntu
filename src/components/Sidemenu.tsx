@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useTheme } from "../theme-provider";
+import { useTheme } from "./theme-provider";
 
 const networkList = [
   {

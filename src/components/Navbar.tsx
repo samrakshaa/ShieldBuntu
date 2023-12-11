@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { Button } from "../ui/button";
+import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -43,27 +43,26 @@ const Navbar = () => {
             <Button onClick={onBack} variant={"outline"}>
               <IoChevronBack />
             </Button>
-            <Button onClick={onNext} variant={"outline"}> 
+            <Button onClick={onNext} variant={"outline"}>
               <IoChevronForward />
             </Button>
           </div>
           <div className="breadcrumbs flex items-center text-xl">
             <Link to="/" className="hover:underline hover:text-[blue]">
               <Button variant="ghost">SECURITY</Button>
-              
             </Link>
-            {breadcrumbs.map((item) => (
+            {breadcrumbs.map((item, index) => (
               <>
-                <span className="px-2"><IoMdArrowDropright /></span>
+                <span className="px-2" key={index}>
+                  <IoMdArrowDropright />
+                </span>
                 <Link
                   to="firewall"
                   className="hover:underline hover:text-[blue]"
                 >
-                     <Link to="/" className="hover:underline hover:text-[blue]">
-              <Button variant="ghost">{item.toLocaleUpperCase()}</Button>
-              
-            </Link>
-                  
+                  <Link to="/" className="hover:underline hover:text-[blue]">
+                    <Button variant="ghost">{item.toLocaleUpperCase()}</Button>
+                  </Link>
                 </Link>
               </>
             ))}
