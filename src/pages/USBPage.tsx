@@ -30,6 +30,9 @@ const USBPage = () => {
       <Button onClick={handleClick3} className=" mt-32">
         Package Updater
       </Button>
+      <Button onClick={handleClick3} className=" mt-32">
+        Firewall
+      </Button>
     </div>
   );
 };

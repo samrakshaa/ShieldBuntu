@@ -13,6 +13,7 @@ fn greet(name: &str) -> String {
     warn!("{}! - this is from rust", &name);
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
+
 #[derive(Debug, Serialize, Deserialize)]
 struct UsbDevice {
     sequence: u32,
@@ -74,9 +75,8 @@ fn list_usb_devices() -> Result<String, String> {
 }
 
 
-
 #[tauri::command]
-fn remove_unused_packages() -> Result<(), String> {
+fn remove_unused_packages() -> Result<String, String> {
 
     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
 
@@ -94,8 +94,8 @@ fn remove_unused_packages() -> Result<(), String> {
 
     // Check if the command executed successfully
     if output.status.success() {
-        println!("Unused packages removed successfully!");
-        Ok(())
+        // println!("Unused packages removed successfully!");
+        Ok(output.status.success().to_string())
     } else {
         let error = String::from_utf8_lossy(&output.stderr);
         Err(format!("Error removing unused packages: {}", error))
@@ -104,8 +104,7 @@ fn remove_unused_packages() -> Result<(), String> {
 
 
 #[tauri::command]
-fn update_and_upgrade_packages() -> Result<(), String> {
-
+fn update_and_upgrade_packages() -> Result<String, String> {
 
     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
 
@@ -123,7 +122,7 @@ fn update_and_upgrade_packages() -> Result<(), String> {
     match output {
         Ok(output) => {
             if output.status.success() {
-                Ok(())
+                Ok(output.status.success().to_string())
             } else {
                 let error = String::from_utf8_lossy(&output.stderr);
                 Err(error.into_owned())
@@ -132,6 +131,36 @@ fn update_and_upgrade_packages() -> Result<(), String> {
         Err(err) => Err(format!("Error executing command: {}", err)),
     }
 }
+
+
+#[tauri::command]
+fn apply_firewall_rules() -> Result<String, String> {
+
+    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+
+    let script_path = current_dir.join("scripts/firewall.sh");
+    // Run the bash script for applying firewall rules
+    let output = Command::new("bash")
+        .arg(script_path)
+        .stdout(Stdio::inherit())
+        .stderr(Stdio::inherit())
+        .output();
+
+    // Check if the command executed successfully
+    match output {
+        Ok(output) => {
+            if output.status.success() {
+                Ok(output.status.success().to_string())
+            } else {
+                let error = String::from_utf8_lossy(&output.stderr);
+                Err(error.into_owned())
+            }
+        }
+        Err(err) => Err(format!("Error executing command: {}", err)),
+    }
+}
+
+
 
 const LOG_TARGETS: [LogTarget; 2] = [LogTarget::Stdout, LogTarget::Webview]; //logs to the web console - for debugging
 // const LOG_TARGETS: [LogTarget; 2] = [LogTarget::Stdout, LogTarget::LogDir]; //logs to the log file - for production
@@ -144,7 +173,7 @@ fn main() {
        .with_colors(ColoredLevelConfig::default())
         .build()
     )
-        .invoke_handler(tauri::generate_handler![greet, list_usb_devices, remove_unused_packages, update_and_upgrade_packages])
+        .invoke_handler(tauri::generate_handler![greet, list_usb_devices, remove_unused_packages, update_and_upgrade_packages, apply_firewall_rules])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
