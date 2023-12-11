@@ -8,13 +8,20 @@ const USBPage = () => {
       .then((res) => console.log(res))
       .catch((err) => console.error(err));
   };
+  const handleClick2 = () => {
+    invoke("remove_unused_packages")
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
+  };
 
   return (
     <div className="">
       <Button onClick={handleClick} className=" mt-32">
         List USB
       </Button>
-      <></>
+      <Button onClick={handleClick2} className=" mt-32">
+        Ununsed Package Remover
+      </Button>
     </div>
   );
 };

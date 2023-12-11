@@ -73,6 +73,66 @@ fn list_usb_devices() -> Result<String, String> {
         }
 }
 
+
+#[tauri::command]
+fn remove_unused_packages() -> Result<(), String> {
+
+    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+
+    let script_path = current_dir.join("src/scripts/unused_package_remover.sh");
+
+    // Run the bash script to remove unused packages
+    let output = Command::new("bash")
+        .arg("-c")
+        .arg(script_path)
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .map_err(|e| format!("Error spawning process: {}", e))?
+        .wait_with_output()
+        .map_err(|e| format!("Error waiting for process: {}", e))?;
+
+    // Check if the command executed successfully
+    if output.status.success() {
+        println!("Unused packages removed successfully!");
+        Ok(())
+    } else {
+        let error = String::from_utf8_lossy(&output.stderr);
+        Err(format!("Error removing unused packages: {}", error))
+    }
+}
+
+
+#[tauri::command]
+fn update_and_upgrade_packages() -> Result<(), String> {
+
+
+    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+
+    let script_path = current_dir.join("src/scripts/update_packages.sh");
+
+    // Run the bash script for updating and upgrading packages
+    let output = Command::new("bash")
+        .arg("-c")
+        .arg(script_path)
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .output();
+
+    // Check if the command executed successfully
+    match output {
+        Ok(output) => {
+            if output.status.success() {
+                Ok(())
+            } else {
+                let error = String::from_utf8_lossy(&output.stderr);
+                Err(error.into_owned())
+            }
+        }
+        Err(err) => Err(format!("Error executing command: {}", err)),
+    }
+}
+
 const LOG_TARGETS: [LogTarget; 2] = [LogTarget::Stdout, LogTarget::Webview]; //logs to the web console - for debugging
 // const LOG_TARGETS: [LogTarget; 2] = [LogTarget::Stdout, LogTarget::LogDir]; //logs to the log file - for production
 
@@ -84,7 +144,7 @@ fn main() {
        .with_colors(ColoredLevelConfig::default())
         .build()
     )
-        .invoke_handler(tauri::generate_handler![greet, list_usb_devices])
+        .invoke_handler(tauri::generate_handler![greet, list_usb_devices, remove_unused_packages, update_and_upgrade_packages])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
