@@ -18,6 +18,11 @@ const USBPage = () => {
       .then((res) => console.log(res))
       .catch((err) => console.error(err));
   };
+  const handleClick4 = () => {
+    invoke("apply_firewall_rules")
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
+  };
 
   return (
     <div className="">
@@ -30,7 +35,7 @@ const USBPage = () => {
       <Button onClick={handleClick3} className=" mt-32">
         Package Updater
       </Button>
-      <Button onClick={handleClick3} className=" mt-32">
+      <Button onClick={handleClick4} className=" mt-32">
         Firewall
       </Button>
     </div>
