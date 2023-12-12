@@ -11,6 +11,7 @@ import { info } from "tauri-plugin-log-api";
 import { attachConsole } from "tauri-plugin-log-api";
 import USBPage from "./pages/USBPage";
 import StorageProvider from "./components/storageProvider";
+import SudoDialog from "./components/SudoDialog";
 
 attachConsole();
 function App() {
@@ -26,6 +27,7 @@ function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <StorageProvider>
+        <SudoDialog />
         <Router>
           <Navbar />
           <Routes>

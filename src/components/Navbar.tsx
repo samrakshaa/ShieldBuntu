@@ -80,22 +80,23 @@ const Navbar = () => {
         </div>
         <div className="search-bar flex flex-row gap-8 relative">
           <div className="search ml-auto flex items-center space-x-4  ">
-            <Command className="w-[300px] md:w-[150px] absolute top-0 right-48  h-auto  " >
-              <CommandInput placeholder="Type to search..." onFocus={() => setSearchOpen(true)} onBlur={() => setSearchOpen(false)} />
-              {seacrchOpen && <CommandList className="commandList" >
-                <CommandEmpty>No results found.</CommandEmpty>
-                <CommandGroup heading="Suggestions">
-                  <CommandItem>Calendar</CommandItem>
-                  <CommandItem>Search Emoji</CommandItem>
-                  <CommandItem>Calculator</CommandItem>
-                </CommandGroup>
-                <CommandSeparator />
-                <CommandGroup heading="Settings">
-                  <CommandItem>Profile</CommandItem>
-                  <CommandItem>Billing</CommandItem>
-                  <CommandItem>Settings</CommandItem>
-                </CommandGroup>
-              </CommandList>}
+            <Command className="w-[300px] md:w-[150px] absolute top-0 right-28  h-auto  ">
+              <CommandInput
+                placeholder="Type to search..."
+                onFocus={() => setSearchOpen(true)}
+                onBlur={() => setSearchOpen(false)}
+              />
+              {seacrchOpen && (
+                <CommandList>
+                  <CommandEmpty>No results found.</CommandEmpty>
+                  <CommandGroup heading="Suggestions">
+                    <CommandItem>Firewall</CommandItem>
+                    <CommandItem>SSH Settings</CommandItem>
+                    <CommandItem>Open Port</CommandItem>
+                  </CommandGroup>
+                  <CommandSeparator />
+                </CommandList>
+              )}
             </Command>
           </div>
           <div className="toggle-mode">
