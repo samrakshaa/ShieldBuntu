@@ -93,8 +93,8 @@ const Firewall = () => {
           <h1 className="text-4xl text-primary font-bold">
             Firewall Configuration{" "}
           </h1>
-          <TooltipProvider >
-            <Tooltip >
+          <TooltipProvider>
+            <Tooltip delayDuration={20}>
               <TooltipTrigger className="">
                 {" "}
                 <HiOutlineInformationCircle size={25} />
@@ -108,7 +108,7 @@ const Firewall = () => {
           ports, protocols. Use iptables for advanced rules. Install, configure,
           manage. Ensure network security.
         </p>
-        <br/>
+        <br />
         <div className="toggle-firewall mt-4 p-2 px-4 text-xl border-2 rounded-lg flex flex-row justify-between items-center">
           <p>Enable/Disable Firewall</p>
           <Switch
