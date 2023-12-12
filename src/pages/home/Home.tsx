@@ -8,7 +8,6 @@ import Audit from "@/assets/audi-icon.png";
 import Cron from "@/assets/cron-settings.png";
 
 import { Link } from "react-router-dom";
-import { useGStore } from "@/store";
 import { Button } from "@/components/ui/button";
 
 const networkLinks = [
@@ -75,18 +74,12 @@ const generalLinks = [
 ];
 
 const Home = () => {
-  const { count, inc, dec } = useGStore();
+
   return (
     <>
       <div className="home pt-32 flex flex-col gap-32 w-4/5 mx-auto py-20">
         <div className="network-security flex flex-col">
-          {/* for testing  */}
-          <div>
-            <h1>Testing zustland count: {count}</h1>
-            <Button onClick={inc}>inc</Button>
-            {"      "}
-            <Button onClick={dec}>dec</Button>
-          </div>
+        
           <h1 className="settings-header text-4xl">Network & Settings</h1>
           <p className="py-2 text-lg text-gray-400">
             Manage network settings for connectivity and security safegaurds.

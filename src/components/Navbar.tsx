@@ -28,6 +28,7 @@ const Navbar = () => {
   const { setTheme } = useTheme();
   const location = useLocation();
   const [breadcrumbs, setBreadcrumbs] = useState<string[]>([]);
+  const [seacrchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
     const breadslices = location.pathname
@@ -42,17 +43,6 @@ const Navbar = () => {
 
   const onNext = () => {
     window.history.forward();
-  };
-
-  const handleSearchFocus = () => {
-    console.log("focus");
-    let command_list = document.querySelector(".commandList");
-    command_list?.classList.remove("hidden");
-  };
-  const handleSearchBlur = () => {
-    console.log("blur");
-    let command_list = document.querySelector(".commandList");
-    command_list?.classList.add("hidden");
   };
 
   return (
@@ -88,15 +78,11 @@ const Navbar = () => {
             ))}
           </div>
         </div>
-        <div className="search-bar flex flex-row gap-8">
-          <div className="search ml-auto flex items-center space-x-4 ">
-            <Command className="w-[300px] md:-[150px] ">
-              <CommandInput
-                placeholder="Type to search..."
-                onFocusCapture={handleSearchFocus}
-                onBlur={handleSearchBlur}
-              />
-              <CommandList className="commandList">
+        <div className="search-bar flex flex-row gap-8 relative">
+          <div className="search ml-auto flex items-center space-x-4  ">
+            <Command className="w-[300px] md:w-[150px] absolute top-0 right-48  h-auto  " >
+              <CommandInput placeholder="Type to search..." onFocus={() => setSearchOpen(true)} onBlur={() => setSearchOpen(false)} />
+              {seacrchOpen && <CommandList className="commandList" >
                 <CommandEmpty>No results found.</CommandEmpty>
                 <CommandGroup heading="Suggestions">
                   <CommandItem>Calendar</CommandItem>
@@ -109,7 +95,7 @@ const Navbar = () => {
                   <CommandItem>Billing</CommandItem>
                   <CommandItem>Settings</CommandItem>
                 </CommandGroup>
-              </CommandList>
+              </CommandList>}
             </Command>
           </div>
           <div className="toggle-mode">
