@@ -7,7 +7,18 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@/components/ui/command";
+
 import { useTheme } from "@/components/theme-provider";
 import { IoChevronBack, IoChevronForward } from "react-icons/io5";
 import { FaSun, FaMoon } from "react-icons/fa";
@@ -17,8 +28,6 @@ const Navbar = () => {
   const { setTheme } = useTheme();
   const location = useLocation();
   const [breadcrumbs, setBreadcrumbs] = useState<string[]>([]);
-  const [canGoBack, setCanGoBack] = useState(false);
-  const [canGoForward, setCanGoForward] = useState(false);
 
   useEffect(() => {
     const breadslices = location.pathname
@@ -33,6 +42,17 @@ const Navbar = () => {
 
   const onNext = () => {
     window.history.forward();
+  };
+
+  const handleSearchFocus = () => {
+    console.log("focus");
+    let command_list = document.querySelector(".commandList");
+    command_list?.classList.remove("hidden");
+  };
+  const handleSearchBlur = () => {
+    console.log("blur");
+    let command_list = document.querySelector(".commandList");
+    command_list?.classList.add("hidden");
   };
 
   return (
@@ -69,12 +89,28 @@ const Navbar = () => {
           </div>
         </div>
         <div className="search-bar flex flex-row gap-8">
-          <div className="search ml-auto flex items-center space-x-4">
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-[300px] md:w-[150px]"
-            />
+          <div className="search ml-auto flex items-center space-x-4 ">
+            <Command className="w-[300px] md:-[150px] ">
+              <CommandInput
+                placeholder="Type to search..."
+                onFocusCapture={handleSearchFocus}
+                onBlur={handleSearchBlur}
+              />
+              <CommandList className="commandList">
+                <CommandEmpty>No results found.</CommandEmpty>
+                <CommandGroup heading="Suggestions">
+                  <CommandItem>Calendar</CommandItem>
+                  <CommandItem>Search Emoji</CommandItem>
+                  <CommandItem>Calculator</CommandItem>
+                </CommandGroup>
+                <CommandSeparator />
+                <CommandGroup heading="Settings">
+                  <CommandItem>Profile</CommandItem>
+                  <CommandItem>Billing</CommandItem>
+                  <CommandItem>Settings</CommandItem>
+                </CommandGroup>
+              </CommandList>
+            </Command>
           </div>
           <div className="toggle-mode">
             <DropdownMenu>
