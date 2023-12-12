@@ -6,22 +6,25 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-  DialogClose,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { invoke } from "@tauri-apps/api/tauri";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { useToast } from "./ui/use-toast";
 
 const SudoDialog = () => {
   const [password, setPassword] = useState("");
+  const [isdialogOpen, setIsDialogOpen] = useState(true);
   const { toast } = useToast();
 
-  const handlePassword = () => {
+  const handlePassword = (e: FormEvent) => {
+    e.preventDefault();
     invoke("set_password", { password })
-      .then((res) => console.log("password: ", res))
+      .then(() => {
+        setIsDialogOpen(false);
+        console.log("Authorized");
+      })
       .catch((err) => {
         console.log(err);
         toast({
@@ -32,37 +35,33 @@ const SudoDialog = () => {
       });
   };
   return (
-    <>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="outline">Enter Password bish</Button>
-        </DialogTrigger>
+    <div>
+      <Dialog open={isdialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Enter Super User Password</DialogTitle>
             <DialogDescription>Enter you one time password.</DialogDescription>
           </DialogHeader>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Password
-            </Label>
-            <Input
-              id="username"
-              value={password}
-              className="col-span-3"
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button type="submit" onClick={handlePassword}>
-                Authorize
-              </Button>
-            </DialogClose>
-          </DialogFooter>
+          <form onSubmit={handlePassword}>
+            <div className="grid grid-cols-4 items-center gap-4 mb-4">
+              <Label htmlFor="username" className="text-right">
+                Password
+              </Label>
+              <Input
+                type="password"
+                id="username"
+                value={password}
+                className="col-span-3"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <DialogFooter>
+              <Button type="submit">Authorize</Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 };
 
