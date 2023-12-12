@@ -79,7 +79,27 @@ fn greet(name: &str) -> String {
 //             }
 //         }
 // }
+static mut PASSWORD: Option<String> = None;
 
+#[tauri::command]
+fn set_password(password: String) -> Option<String> {
+    unsafe {
+        PASSWORD.replace(password);
+        PASSWORD.clone()
+    }
+}
+
+// #[tauri::command]
+// fn get_sudo_auth() -> Option<String> {
+//     unsafe {
+//         PASSWORD.clone()
+//     }
+// }
+
+// #[tauri::command]
+// pub async fn sudo_auth(pass: String) {
+
+// }
 
 const LOG_TARGETS: [LogTarget; 2] = [LogTarget::Stdout, LogTarget::Webview]; //logs to the web console - for debugging
 // const LOG_TARGETS: [LogTarget; 2] = [LogTarget::Stdout, LogTarget::LogDir]; //logs to the log file - for production
@@ -103,10 +123,11 @@ async fn main() {
             fail2ban::install_and_configure_fail2ban,
             apparmor::install_and_configure_apparmor,
             rkhunter::install_and_configure_rkhunter,
-            autoupdate::run_autoupdate_script
-
-             ]
-            )
+            autoupdate::run_autoupdate_script,
+            // get_sudo_auth,
+            set_password
+            ]
+        )
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
