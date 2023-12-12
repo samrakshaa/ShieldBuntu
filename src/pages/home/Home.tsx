@@ -75,7 +75,7 @@ const generalLinks = [
 ];
 
 const Home = () => {
-  const { count, inc, dec } = useGStore();
+  const { firewall } = useGStore();
   return (
     <>
       <div className="home pt-32 flex flex-col gap-32 w-4/5 mx-auto py-20">

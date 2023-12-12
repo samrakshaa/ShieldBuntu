@@ -14,7 +14,13 @@ import {
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { invoke } from "@tauri-apps/api/tauri";
-
+import { HiOutlineInformationCircle } from "react-icons/hi";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 const Firewall = () => {
   const [isFirewallEnabled, setIsFirewallEnabled] = useState(false);
   const [firewallRules, setFirewallRules] = useState([]);
@@ -83,12 +89,26 @@ const Firewall = () => {
     <div className="firewall flex flex-row items-center pt-20">
       <Sidemenu />
       <div className="main-section p-12 ml-[400px] w-3/5">
-        <h1 className="text-4xl">Firewall Configuration</h1>
-        <p className="text-lg py-2 text-gray-600">
+        <div className=" flex gap-2  items-center ">
+          <h1 className="text-4xl text-primary font-bold">
+            Firewall Configuration{" "}
+          </h1>
+          <TooltipProvider >
+            <Tooltip >
+              <TooltipTrigger className="">
+                {" "}
+                <HiOutlineInformationCircle size={25} />
+              </TooltipTrigger>
+              <TooltipContent>Hover</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+        <p className="text-lg py-2 text-foreground/60 leading-6">
           Control network ports and firewall rules with UFW. Allow/deny specific
           ports, protocols. Use iptables for advanced rules. Install, configure,
           manage. Ensure network security.
         </p>
+        <br/>
         <div className="toggle-firewall mt-4 p-2 px-4 text-xl border-2 rounded-lg flex flex-row justify-between items-center">
           <p>Enable/Disable Firewall</p>
           <Switch
@@ -99,12 +119,9 @@ const Firewall = () => {
         </div>
         {/* Checking for UFM installation */}
         <div className="checkingUfm ">
-          <h2 className="text-md mt-1 text-[#326690]">
-            Is UFM( Uncomplicated Firewall ) installed?
-          </h2>
           <div className="install mt-4 flex flex-row gap-2">
             {/* color change needed here */}
-            <Button className="text-lg px-8 bg-[#326690] text-white">
+            <Button className="text-lg px-8 text-white" variant={"outline"}>
               Check
             </Button>
             <Button className="text-lg px-8">Install</Button>
@@ -113,9 +130,7 @@ const Firewall = () => {
         <br />
         {/* IP table config */}
         <div className="iptable mt-12">
-          <h2 className="text-2xl mb-4 text-[#326690]">
-            IP Table Configuration
-          </h2>
+          <h2 className="text-2xl mb-4 font-bold ">IP Table Configuration</h2>
           <Table className="">
             {/* <TableCaption>IP table rules.</TableCaption> */}
             <TableHeader>
