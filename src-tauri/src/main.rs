@@ -8,6 +8,10 @@ mod update_packages;
 mod firewall;
 mod unused_packages;
 mod usb;
+mod fail2ban;
+mod apparmor;
+mod rkhunter;
+mod autoupdate;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -95,7 +99,12 @@ async fn main() {
             unused_packages::remove_unused_packages,
             update_packages::update_and_upgrade_packages,
             firewall::reverse_firewall_rules,
-            firewall::apply_firewall_rules
+            firewall::apply_firewall_rules,
+            fail2ban::install_and_configure_fail2ban,
+            apparmor::install_and_configure_apparmor,
+            rkhunter::install_and_configure_rkhunter,
+            autoupdate::run_autoupdate_script
+
              ]
             )
         .run(tauri::generate_context!())
