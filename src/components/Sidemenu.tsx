@@ -47,29 +47,38 @@ const generalList = [
   },
 ];
 
-const menuOptions = [networkList, bootList, generalList];
+const menuOptions = [
+  {
+    title: "Network & Security",
+    items: networkList,
+  },
+  {
+    title: "Boot Settings",
+    items: bootList,
+  },
+  {
+    title: "General Settings",
+    items: generalList,
+  },
+];
 
 const Sidemenu = () => {
-
-
-
   return (
-    <div className="sidemenu flex flex-col gap-8 items-start w-[350px] h-full fixed top-20 left-0 overflow-hidden p-8 bg-secondary">
+    <div className="sidemenu  overflow-auto flex flex-col gap-8 items-start w-[350px] h-full fixed top-20 left-0 bg-secondary py-10">
       {menuOptions.map((menu) => (
-        <div className=" mt-4">
-          <h3 className="text-3xl font-bold">Network & Security</h3>
-          <br />
-          <div className="links flex flex-col ">
-            {menu.map(({ title, link }) => (
+        <>
+          <div className="flex flex-col w-full  ">
+            <h3 className="text-2xl font-bold px-4 mb-3">{menu.title}</h3>
+            {menu.items.map(({ title, link }) => (
               <Link
                 to={link}
-                className="text-xl hover:bg-popover rounded-xl text-foreground/50 p-4"
+                className="text-md hover:bg-popover  text-foreground/50 p-2 px-4 "
               >
                 {title}
               </Link>
             ))}
           </div>
-        </div>
+        </>
       ))}
     </div>
   );
