@@ -89,7 +89,7 @@ const Firewall = () => {
           ports, protocols. Use iptables for advanced rules. Install, configure,
           manage. Ensure network security.
         </p>
-        <div className="toggle-firewall mt-4 p-2 px-4 text-2xl border-2 rounded-lg flex flex-row justify-between items-center">
+        <div className="toggle-firewall mt-4 p-2 px-4 text-xl border-2 rounded-lg flex flex-row justify-between items-center">
           <p>Enable/Disable Firewall</p>
           <Switch
             checked={isFirewallEnabled}
@@ -99,10 +99,10 @@ const Firewall = () => {
         </div>
         {/* Checking for UFM installation */}
         <div className="checkingUfm ">
-          <h2 className="text-2xl text-[#326690]">
+          <h2 className="text-md mt-1 text-[#326690]">
             Is UFM( Uncomplicated Firewall ) installed?
           </h2>
-          <div className="install mt-4 flex flex-row gap-8">
+          <div className="install mt-4 flex flex-row gap-2">
             {/* color change needed here */}
             <Button className="text-lg px-8 bg-[#326690] text-white">
               Check
@@ -110,7 +110,7 @@ const Firewall = () => {
             <Button className="text-lg px-8">Install</Button>
           </div>
         </div>
-
+        <br />
         {/* IP table config */}
         <div className="iptable mt-12">
           <h2 className="text-2xl mb-4 text-[#326690]">
