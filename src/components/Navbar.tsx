@@ -47,7 +47,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className="flex flex-row justify-between p-4 fixed w-full backdrop-blur-xl">
+      <div className="flex flex-row justify-between p-4  w-full backdrop-blur-xl">
         <div className="nav flex flex-row gap-8">
           <div className="nav-items flex flex-row gap-4">
             <Button onClick={onBack} variant={"outline"}>
@@ -57,7 +57,7 @@ const Navbar = () => {
               <IoChevronForward />
             </Button>
           </div>
-          <div className="breadcrumbs flex items-center text-xl">
+          {/* <div className="breadcrumbs flex items-center text-xl">
             <Link to="/" className="hover:underline hover:text-[blue]">
               <Button variant="ghost" className="font-primary">
                 SECURITY
@@ -78,7 +78,7 @@ const Navbar = () => {
                 </Link>
               </>
             ))}
-          </div>
+          </div> */}
         </div>
         <div className="search-bar flex flex-row gap-8 relative">
           <div className="search ml-auto flex items-center space-x-4  ">

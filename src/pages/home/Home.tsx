@@ -9,135 +9,77 @@ import Cron from "@/assets/cron-settings.png";
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Outlet } from "react-router-dom";
+import Sidemenu from "@/components/Sidemenu";
+
+// interface MenuItem {
+//   title: string;
+//   link: string;
+//   icon?: ReactNode;
+// }
 
 const networkLinks = [
   {
-    title: "Firewall Configution",
-    alt: "firewall",
-    image: Firewall,
-    link: "/network-security/firewall",
+    title: "Firewall",
+    link: "/firewall",
   },
   {
     title: "SSH Blocking",
-    alt: "ssh",
-    image: SSH,
-    link: "/network-security/sshblock",
+
+    link: "/",
   },
   {
     title: "USB Blocking",
-    alt: "usb",
-    image: USB,
-    link: "/network-security/usbblock",
+
+    link: "/",
   },
   {
     title: "TOR Settings",
-    alt: "tor",
-    image: TOR,
-    link: "/network-security/tor",
+
+    link: "/",
   },
   {
     title: "Open Port Settings",
-    alt: "open port",
-    image: TOR,
-    link: "/network-security/openPort",
+    link: "/",
   },
 ];
 
-const bootLinks = [
-  {
-    title: "Basic & Display Settings",
-    alt: "display",
-    image: Display,
-    link: "/boot/display",
-  },
-  {
-    title: "Advanced Boot Settings",
-    alt: "adv boot",
-    image: Boot,
-    link: "/boot/advboot",
-  },
-];
+// const bootLinks = [
+//   {
+//     title: "Basic & Display Settings",
+//     alt: "display",
+//     image: Display,
+//     link: "/boot/display",
+//   },
+//   {
+//     title: "Advanced Boot Settings",
+//     alt: "adv boot",
+//     image: Boot,
+//     link: "/boot/advboot",
+//   },
+// ];
 
-const generalLinks = [
-  {
-    title: "Auditing",
-    alt: "auditing",
-    image: Audit,
-    link: "/general/auditing",
-  },
-  {
-    title: "Cron Settings",
-    alt: "cron",
-    image: Cron,
-    link: "/general/cron",
-  },
-];
+// const generalLinks = [
+//   {
+//     title: "Auditing",
+//     alt: "auditing",
+//     image: Audit,
+//     link: "/general/auditing",
+//   },
+//   {
+//     title: "Cron Settings",
+//     alt: "cron",
+//     image: Cron,
+//     link: "/general/cron",
+//   },
+// ];
 
 const Home = () => {
-
   return (
     <>
-      <div className="home pt-32 flex flex-col gap-32 w-4/5 mx-auto py-20">
-        <div className="network-security flex flex-col">
-        
-          <h1 className="settings-header text-4xl">Network & Settings</h1>
-          <p className="py-2 text-lg text-gray-400">
-            Manage network settings for connectivity and security safegaurds.
-          </p>
-          <div className="links mt-4 flex flex-row gap-32 md:gap-0 md:justify-between">
-            {networkLinks.map(({ title, alt, image, link }) => (
-              <Link
-                to={link}
-                className="link-item flex flex-col gap-4 justify-center items-center"
-              >
-                <div className="image-container p-1 h-[120px] w-[120px]">
-                  <img src={image} alt={alt} className="h-full w-full" />
-                </div>
-                <h2>{title}</h2>
-              </Link>
-            ))}
-          </div>
-        </div>
-        <div className="other-settings grid grid-cols-2 justify-start md:justify-between gap-32 ">
-          <div className="boot-settings">
-            <h1 className="settings-header text-4xl">Boot Settings</h1>
-            <p className="py-2 text-lg text-gray-400">
-              Tailor your system's startup and enhance security.
-            </p>
-            <div className="links mt-4 flex flex-row gap-20">
-              {bootLinks.map(({ title, alt, image, link }) => (
-                <Link
-                  to={link}
-                  className="link-item flex flex-col gap-4 justify-center items-center"
-                >
-                  <div className="image-container p-1 h-[120px] w-[120px]">
-                    <img src={image} alt={alt} className="w-full h-full" />
-                  </div>
-                  <h2>{title}</h2>
-                </Link>
-              ))}
-            </div>
-          </div>
-          <div className="general-setetings">
-            <h1 className="settings-header text-4xl">General Settings</h1>
-            <p className="py-2 text-lg text-gray-400">
-              Manage essential system configurations and preferences easily.
-            </p>
-            <div className="links mt-4 flex flex-row gap-28">
-              {generalLinks.map(({ title, alt, image, link }) => (
-                <Link
-                  to={link}
-                  className="link-item flex flex-col gap-4 justify-center items-center"
-                >
-                  <div className="image-container p-1 h-[120px] w-[120px]">
-                    <img src={image} alt={alt} className="w-full h-full" />
-                  </div>
-                  <h2>{title}</h2>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
+      <div className="home flex  h-full gap-32  mx-auto ">
+        <Sidemenu menuOptions={networkLinks} />
+        <Outlet />
       </div>
     </>
   );

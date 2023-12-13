@@ -15,14 +15,7 @@ import SudoDialog from "./components/SudoDialog";
 
 attachConsole();
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
 
-  async function greet() {
-    const msg: string = await invoke("greet", { name });
-    msg && setGreetMsg(msg);
-    info(`${msg} - this is from nodejs `);
-  }
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -31,9 +24,12 @@ function App() {
         <Router>
           <Navbar />
           <Routes>
-            <Route path="/*" element={<Home />} />
-            <Route path="/network-security/firewall" element={<Firewall />} />
-            <Route path="/network-security/usbblock" element={<USBPage />} />
+            <Route path="/" element={<Home />}>
+              <Route path={"/firewall"} element={<div>firewallsdsudsudhushdushdushdushudsuhdushdushdushdushdushu</div>} />
+              <Route path={"/usbblocking"} element={<div>Usb Blocking</div>} />
+            </Route>
+            {/* <Route path="/network-security/firewall" element={<Firewall />} />
+            <Route path="/network-security/usbblock" element={<USBPage />} /> */}
           </Routes>
         </Router>
         <Toaster />
