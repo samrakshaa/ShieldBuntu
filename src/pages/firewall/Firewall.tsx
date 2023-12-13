@@ -23,12 +23,11 @@ import {
 } from "@/components/ui/tooltip";
 import { GiSheikahEye } from "react-icons/gi";
 
-
-const networkList= [
+const networkList = [
   {
     title: "Firewall Configuration",
     link: "/network-security/firewall",
-    icon: <GiSheikahEye />
+    icon: <GiSheikahEye />,
   },
   {
     title: "SSH/IP Blocking",
@@ -150,9 +149,8 @@ const Firewall = () => {
   };
 
   return (
-    <div className="firewall flex flex-row items-center pt-20">
-      <Sidemenu menuOptions={menuOptions} /> 
-      <div className="main-section p-12 ml-[400px] w-3/5">
+    <div className="firewall flex flex-row items-center">
+      <div className="main-section py-12">
         <div className=" flex gap-2  items-center ">
           <h1 className="text-4xl text-primary font-bold">
             Firewall Configuration{" "}

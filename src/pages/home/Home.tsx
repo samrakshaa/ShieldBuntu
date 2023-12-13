@@ -77,9 +77,11 @@ const networkLinks = [
 const Home = () => {
   return (
     <>
-      <div className="home flex  h-full gap-32  mx-auto ">
+      <div className="home flex h-full gap-20  mx-auto ">
         <Sidemenu menuOptions={networkLinks} />
-        <Outlet />
+        <div className="bg-white">
+          <Outlet />
+        </div>
       </div>
     </>
   );
