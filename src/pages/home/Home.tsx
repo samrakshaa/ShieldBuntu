@@ -20,6 +20,10 @@ import Sidemenu from "@/components/Sidemenu";
 
 const networkLinks = [
   {
+    title: "Dashboard",
+    link: "/",
+  },
+  {
     title: "Firewall",
     link: "/firewall",
   },
@@ -77,11 +81,9 @@ const networkLinks = [
 const Home = () => {
   return (
     <>
-      <div className="home flex h-full gap-20  mx-auto ">
+      <div className="home flex h-full mx-auto ">
         <Sidemenu menuOptions={networkLinks} />
-        <div className="bg-white">
-          <Outlet />
-        </div>
+        <Outlet />
       </div>
     </>
   );

@@ -149,10 +149,10 @@ const Firewall = () => {
   };
 
   return (
-    <div className="firewall flex flex-row items-center">
+    <div className="firewall flex flex-row justify-center mx-auto max-w-[900px] p-8">
       <div className="main-section py-12">
         <div className=" flex gap-2  items-center ">
-          <h1 className="text-4xl text-primary font-bold">
+          <h1 className="text-3xl text-primary font-bold">
             Firewall Configuration{" "}
           </h1>
           <TooltipProvider>
@@ -165,39 +165,30 @@ const Firewall = () => {
             </Tooltip>
           </TooltipProvider>
         </div>
-        <p className="text-lg py-2 text-foreground/60 leading-6">
+        <p className="py-2 text-foreground/50 leading-6">
           Control network ports and firewall rules with UFW. Allow/deny specific
           ports, protocols. Use iptables for advanced rules. Install, configure,
           manage. Ensure network security.
         </p>
         <br />
-        <div className="toggle-firewall mt-4 p-2 px-4 text-xl border-2 rounded-lg flex flex-row justify-between items-center">
+        <div className="toggle-firewall bg-secondary/60 mt-2 p-2 px-4 text-lg border-2 rounded-lg flex flex-row justify-between items-center">
           <p>Enable/Disable Firewall</p>
           <Switch
+            className=""
             checked={isFirewallEnabled}
             disabled={isLoadingFirewall}
             onClick={handleSwitchChange}
           />
         </div>
-        {/* Checking for UFM installation */}
-        <div className="checkingUfm ">
-          <div className="install mt-4 flex flex-row gap-2">
-            {/* color change needed here */}
-            <Button className="text-lg px-8 text-white" variant={"outline"}>
-              Check
-            </Button>
-            <Button className="text-lg px-8">Install</Button>
-          </div>
-        </div>
         <br />
         {/* IP table config */}
         <div className="iptable mt-12">
-          <h2 className="text-2xl mb-4 font-bold ">IP Table Configuration</h2>
+          <h2 className="text-xl mb-4 font-bold ">IP Table Configuration</h2>
           <Table className="">
             {/* <TableCaption>IP table rules.</TableCaption> */}
             <TableHeader>
               <TableRow>
-                <TableHead className="text-xl" colSpan={2}>
+                <TableHead className="text-lg" colSpan={2}>
                   Custom IP table rules
                   <Button className="absolute right-0 top-0">
                     View Current Rules
