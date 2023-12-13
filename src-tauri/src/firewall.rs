@@ -1,19 +1,30 @@
 use std::process::Stdio;
 use tokio::process::Command as AsyncCommand;
-use tokio::io::{AsyncReadExt};
+use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use crate::get_password;
 
 #[tauri::command]
 pub async fn apply_firewall_rules() -> Result<String, String> {
+
+    let password = get_password().ok_or_else(|| "Password not available".to_string())?;
     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
     let script_path = current_dir.join("scripts/firewall.sh");
 
     // Run the bash script for applying firewall rules
-    let mut child = AsyncCommand::new("bash")
+    let mut child = AsyncCommand::new("sudo")
+        .arg("-k")
+        .arg("-S") // Read the password from stdin
+        .arg("bash")
         .arg(script_path)
+        .stdin(Stdio::piped())
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit())
         .spawn()
         .map_err(|e| format!("Error spawning process: {}", e))?;
+
+    if let Some(mut stdin) = child.stdin.take() {
+        stdin.write_all(format!("{}\n", password).as_bytes()).await.map_err(|e| format!("Error writing to stdin: {}", e))?;
+    }
 
     // Await the child process completion
     let status = child.wait().await.map_err(|e| format!("Error waiting for process: {}", e))?;
@@ -34,19 +45,25 @@ pub async fn apply_firewall_rules() -> Result<String, String> {
 
 #[tauri::command]
 pub async fn reverse_firewall_rules() -> Result<String, String> {
-    // Get the current directory
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
 
-    // Construct the path to the reverse firewall script
+    let password = get_password().ok_or_else(|| "Password not available".to_string())?;
+    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
     let script_path = current_dir.join("scripts/reverse/r-firewall.sh");
 
     // Run the bash script for reversing firewall changes
-    let mut child = AsyncCommand::new("bash")
+    let mut child = AsyncCommand::new("sudo")
+        .arg("-S") // Read the password from stdin
+        .arg("bash")
         .arg(script_path)
+        .stdin(Stdio::piped())
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit())
         .spawn()
         .map_err(|e| format!("Error spawning process: {}", e))?;
+
+    if let Some(mut stdin) = child.stdin.take() {
+        stdin.write_all(format!("{}\n", password).as_bytes()).await.map_err(|e| format!("Error writing to stdin: {}", e))?;
+    }
 
     // Await the child process completion
     let status = child.wait().await.map_err(|e| format!("Error waiting for process: {}", e))?;

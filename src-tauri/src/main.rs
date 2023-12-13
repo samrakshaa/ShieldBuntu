@@ -1,7 +1,10 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use log::warn;
+use std::process::Command;
+use std::io::Write;
+use std::process::Stdio;
+
 use tauri_plugin_log::{LogTarget, fern::colors::ColoredLevelConfig};
 use std::env;
 mod update_packages;
@@ -12,13 +15,6 @@ mod fail2ban;
 mod apparmor;
 mod rkhunter;
 mod autoupdate;
-
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-fn greet(name: &str) -> String {
-    warn!("{}! - this is from rust", &name);
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
 
 // #[derive(Debug, Serialize, Deserialize)]
 // struct UsbDevice {
@@ -82,20 +78,45 @@ fn greet(name: &str) -> String {
 static mut PASSWORD: Option<String> = None;
 
 #[tauri::command]
-fn set_password(password: String) -> Option<String> {
-    unsafe {
-        PASSWORD.replace(password);
-        PASSWORD.clone()
+async fn set_password(password: String) -> Result<bool, String> {
+    // Prepare the sudo command
+    let mut child = Command::new("sudo")
+        .arg("-k")
+        .arg("-S")
+        .arg("ls")
+        .stdin(Stdio::piped())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .spawn()
+        .map_err(|e| format!("Failed to spawn sudo command: {}", e))?;
+
+    // Write the password to the stdin of the sudo command
+    if let Some(mut stdin) = child.stdin.take() {
+        stdin.write_all(format!("{}\n", password).as_bytes())
+            .map_err(|e| format!("Failed to write to stdin: {}", e))?;
+    }
+
+    // Check the command execution status
+    let status = child.wait()
+        .map_err(|e| format!("Failed to execute sudo command: {}", e))?;
+
+    if status.success() {
+        // If the password is correct, store it
+        unsafe {
+            PASSWORD.replace(password);
+        }
+        Ok(true)
+    } else {
+        Err(false.to_string())
     }
 }
 
-// #[tauri::command]
-// fn get_sudo_auth() -> Option<String> {
-//     unsafe {
-//         PASSWORD.clone()
-//     }
-// }
 
+pub fn get_password() -> Option<String> {
+    unsafe {
+        PASSWORD.clone()
+    }
+}
 // #[tauri::command]
 // pub async fn sudo_auth(pass: String) {
 
@@ -105,7 +126,7 @@ const LOG_TARGETS: [LogTarget; 2] = [LogTarget::Stdout, LogTarget::Webview]; //l
 // const LOG_TARGETS: [LogTarget; 2] = [LogTarget::Stdout, LogTarget::LogDir]; //logs to the log file - for production
 
 #[tokio::main]
-async fn main() {
+pub async fn main() {
     tauri::Builder::default()
     .plugin(
         tauri_plugin_log::Builder::default().targets(LOG_TARGETS)
@@ -114,7 +135,7 @@ async fn main() {
         .build()
     )
         .invoke_handler(tauri::generate_handler![
-            greet,
+            set_password,
             usb::list_usb_devices,
             unused_packages::remove_unused_packages,
             update_packages::update_and_upgrade_packages,
@@ -124,8 +145,6 @@ async fn main() {
             apparmor::install_and_configure_apparmor,
             rkhunter::install_and_configure_rkhunter,
             autoupdate::run_autoupdate_script,
-            // get_sudo_auth,
-            set_password
             ]
         )
         .run(tauri::generate_context!())
