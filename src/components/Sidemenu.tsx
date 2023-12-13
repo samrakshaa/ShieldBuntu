@@ -1,5 +1,6 @@
 import { ReactNode, useState } from "react";
 import { Link } from "react-router-dom";
+import { useSidemenuStore } from "@/store";
 
 interface MenuItem {
   title: string;
@@ -12,7 +13,10 @@ interface SidemenuProps {
 }
 
 const Sidemenu: React.FC<SidemenuProps> = ({ menuOptions }) => {
-  const [activeTab, setActiveTab] = useState(0);
+  // const [activeTab, setActiveTab] = useState(0);
+  const activeTab = useSidemenuStore((state) => state.activeTab);
+  const setActiveTab = useSidemenuStore((state) => state.setActiveTab);
+
   const handleClick = (index: number) => {
     setActiveTab(index);
     console.log(index);

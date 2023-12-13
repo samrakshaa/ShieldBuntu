@@ -22,6 +22,7 @@ import {
 // import { GiSheikahEye } from "react-icons/gi";
 import useLoading from "@/hooks/useLoading";
 import { useFirewallStore } from "@/store";
+import Loader from "@/components/Loader";
 
 const Firewall = () => {
   const [isFirewallEnabled, setIsFirewallEnabled] = useState(false);
@@ -115,7 +116,10 @@ const Firewall = () => {
         </p>
         <br />
         <div className="toggle-firewall bg-secondary/60 mt-2 p-2 px-4 text-lg border-2 rounded-lg flex flex-row justify-between items-center">
-          <p>Enable/Disable Firewall</p>
+          <div className="flex flex-row items-center">
+            <p>Enable/Disable Firewall</p>
+            {(isDisablelLoading || isEnablelLoading) && <Loader />}
+          </div>
           <Switch
             className=""
             checked={firewallStatus}
@@ -124,6 +128,7 @@ const Firewall = () => {
           />
         </div>
         <br />
+
         {/* IP table config */}
         <div className="iptable mt-12">
           <h2 className="text-xl mb-4 font-bold ">IP Table Configuration</h2>
