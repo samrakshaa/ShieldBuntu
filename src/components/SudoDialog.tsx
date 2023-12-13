@@ -32,7 +32,9 @@ const SudoDialog = () => {
       toast({
         variant: "destructive",
         title: "Wrong Password",
-        description: `You have entered wrong Password. Only ${attemptsRemaining} chances left.`,
+        description: `You have entered wrong Password. Only ${
+          attemptsRemaining - 1
+        } chances left.`,
       });
     },
   });
@@ -75,7 +77,7 @@ const SudoDialog = () => {
             <DialogFooter>
               <Button type="submit" disabled={isLoading}>
                 {/* features-to-work-on: Add a loading spinner */}
-                {isLoading ? "Authorizing..." : "Authorize"}SD
+                {isLoading ? "Authorizing..." : "Authorize"}
               </Button>
             </DialogFooter>
           </form>

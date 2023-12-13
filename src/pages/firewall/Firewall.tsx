@@ -1,11 +1,9 @@
-import { useEffect, useState } from "react";
-import Sidemenu from "../../components/Sidemenu";
+import { useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "../../components/ui/button";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -21,130 +19,75 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { GiSheikahEye } from "react-icons/gi";
-
-const networkList = [
-  {
-    title: "Firewall Configuration",
-    link: "/network-security/firewall",
-    icon: <GiSheikahEye />,
-  },
-  {
-    title: "SSH/IP Blocking",
-    link: "/network-security/sshblock",
-  },
-  {
-    title: "USB Blocking",
-    link: "/network-security/usbblock",
-  },
-  {
-    title: "TOR Settings",
-    link: "/network-security/tor",
-  },
-  {
-    title: "Open Port Management",
-    link: "/network-security/port",
-  },
-];
-
-const bootList = [
-  {
-    title: "Basic & Display Settings",
-    link: "/boot/display",
-  },
-  {
-    title: "Advance Boot SEttings",
-    link: "/boot/",
-  },
-];
-
-const generalList = [
-  {
-    title: "Auditing",
-    link: "/general/auditing",
-  },
-  {
-    title: "SSH/IP Blocking",
-    link: "/general/cron",
-  },
-];
-
-const menuOptions = [
-  {
-    title: "Network & Security",
-    items: networkList,
-  },
-  {
-    title: "Boot Settings",
-    items: bootList,
-  },
-  {
-    title: "General Settings",
-    items: generalList,
-  },
-];
+// import { GiSheikahEye } from "react-icons/gi";
+import useLoading from "@/hooks/useLoading";
+import { useFirewallStore } from "@/store";
 
 const Firewall = () => {
   const [isFirewallEnabled, setIsFirewallEnabled] = useState(false);
-  const [firewallRules, setFirewallRules] = useState([]);
-  const [isLoadingFirewall, setIsLoadingFirewall] = useState(false);
   const { toast } = useToast();
+  const updateFirewallStatus = useFirewallStore(
+    (state) => state.toggleFirewall
+  );
+  const firewallStatus = useFirewallStore((state) => state.firewall);
+  const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
+    functionToExecute: () => invoke("apply_firewall_rules"),
+    onSuccess: (res) => {
+      if (res === "true") {
+        console.log("firewall on");
+        updateFirewallStatus();
+      } else {
+        console.log("not able to enable firewall");
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: "Not able to enable/disable firewall.",
+        });
+      }
+    },
+    onError: (err) => {
+      console.log(err);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem with your request.",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+    },
+  });
+
+  const { isLoading: isDisablelLoading, execute: executeDisable } = useLoading({
+    functionToExecute: () => invoke("reverse_firewall_rules"),
+    onSuccess: (res) => {
+      if (res === "true") {
+        console.log("firewall off");
+        updateFirewallStatus();
+      } else {
+        console.log("not able to disable firewall");
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: "Not able to enable/disable firewall.",
+        });
+      }
+    },
+    onError: (err) => {
+      console.log(err);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem with your request.",
+      });
+    },
+  });
 
   const handleSwitchChange = () => {
-    if (!isFirewallEnabled) {
+    if (!firewallStatus) {
       console.log("trying to enable firewall");
-
-      setIsLoadingFirewall(true);
-      invoke("apply_firewall_rules")
-        .then((res) => {
-          if (res === "true") {
-            console.log("firewall on");
-            setIsFirewallEnabled((prevState) => !prevState);
-          } else {
-            console.log("not able to enable firewall");
-            toast({
-              variant: "destructive",
-              title: "Uh oh! Something went wrong.",
-              description: "Not able to enable/disable firewall.",
-            });
-          }
-        })
-        .catch(() => {
-          toast({
-            variant: "destructive",
-            title: "Uh oh! Something went wrong.",
-            description: "There was a problem with your request.",
-            action: <ToastAction altText="Try again">Try again</ToastAction>,
-          });
-        });
-      setIsLoadingFirewall(false);
+      executeEnable();
     } else {
       console.log("reverse_firewall_rules");
-
-      setIsLoadingFirewall(true);
-      invoke("reverse_firewall_rules")
-        .then((res) => {
-          if (res === "true") {
-            console.log("firewall off");
-            setIsFirewallEnabled((prevState) => !prevState);
-          } else {
-            console.log("not able to disable firewall");
-            toast({
-              variant: "destructive",
-              title: "Uh oh! Something went wrong.",
-              description: "Not able to enable/disable firewall.",
-            });
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          toast({
-            variant: "destructive",
-            title: "Uh oh! Something went wrong.",
-            description: "There was a problem with your request.",
-          });
-        });
-      setIsLoadingFirewall(false);
+      executeDisable();
     }
   };
 
@@ -175,8 +118,8 @@ const Firewall = () => {
           <p>Enable/Disable Firewall</p>
           <Switch
             className=""
-            checked={isFirewallEnabled}
-            disabled={isLoadingFirewall}
+            checked={firewallStatus}
+            disabled={isDisablelLoading || isEnablelLoading}
             onClick={handleSwitchChange}
           />
         </div>

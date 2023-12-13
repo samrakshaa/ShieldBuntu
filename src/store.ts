@@ -1,12 +1,13 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-interface GStore {
+interface GFireStore {
   firewall: boolean;
+  toggleFirewall: () => void;
 }
 
-export const useGStore = create(
-  persist<GStore>(
+export const useFirewallStore = create(
+  persist<GFireStore>(
     (set) => ({
       firewall: false,
       toggleFirewall: () => set((state) => ({ firewall: !state.firewall })),
