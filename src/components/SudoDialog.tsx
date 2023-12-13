@@ -33,7 +33,7 @@ const SudoDialog = () => {
         toast({
           variant: "destructive",
           title: "Wrong Password",
-          description: `You have entered wrong Password. Only ${attemptsRemaining} left.`,
+          description: `You have entered wrong Password. Only ${attemptsRemaining} chances left.`,
         });
       });
   };

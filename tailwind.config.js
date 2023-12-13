@@ -20,7 +20,7 @@ module.exports = {
       //   md: { max: "1290px" },
       // },
       fontFamily: {
-        "product-sans": ["var(--productSans)", "sans-serif"],
+        primary: ["var(--product-sans)"],
       },
       colors: {
         lightBlue: "var(--light-blue)",
@@ -80,14 +80,14 @@ module.exports = {
           to: { height: 0 },
         },
         blinkingBg: {
-          '0%, 100%': { backgroundColor: "hsl(var(--primary))" },
-          '50%': { backgroundColor: "transparent" },
-      }
+          "0%, 100%": { backgroundColor: "hsl(var(--primary))" },
+          "50%": { backgroundColor: "transparent" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "blinkingBg": 'blinkingBg 2s ease-in-out infinite',
+        blinkingBg: "blinkingBg 2s ease-in-out infinite",
       },
     },
   },

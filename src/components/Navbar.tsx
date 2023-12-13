@@ -59,7 +59,9 @@ const Navbar = () => {
           </div>
           <div className="breadcrumbs flex items-center text-xl">
             <Link to="/" className="hover:underline hover:text-[blue]">
-              <Button variant="ghost">SECURITY</Button>
+              <Button variant="ghost" className="font-primary">
+                SECURITY
+              </Button>
             </Link>
             {breadcrumbs.map((item, index) => (
               <>
