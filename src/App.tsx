@@ -21,7 +21,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />}>
               <Route path={"/firewall"} element={<Firewall />} />
-              <Route path={"/usbblock"} element={<div>Usb Blocking</div>} />
+              <Route path={"/usbblock"} element={<USBPage />} />
             </Route>
             {/* <Route path="/network-security/firewall" element={<Firewall />} />
             <Route path="/network-security/usbblock" element={<USBPage />} /> */}

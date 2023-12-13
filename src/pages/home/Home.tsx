@@ -40,7 +40,7 @@ const networkLinks = [
   {
     title: "TOR Settings",
 
-    link: "/",
+    link: "/usbblock",
   },
   {
     title: "Open Port Settings",

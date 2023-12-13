@@ -23,6 +23,31 @@ const USBPage = () => {
       .then((res) => console.log(res))
       .catch((err) => console.error(err));
   };
+  const handleClick5 = () => {
+    invoke("reverse_firewall_rules")
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
+  };
+  const handleClick6 = () => {
+    invoke("check_firewall")
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
+  };
+  const handleClick7 = () => {
+    invoke("apply_ssh_rules")
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
+  };
+  const handleClick8 = () => {
+    invoke("reverse_ssh_rules")
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
+  };
+  const handleClick9 = () => {
+    invoke("check_ssh")
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
+  };
 
   return (
     <div className="">
@@ -37,6 +62,21 @@ const USBPage = () => {
       </Button>
       <Button onClick={handleClick4} className=" mt-32">
         Firewall
+      </Button>
+      <Button onClick={handleClick5} className=" mt-32">
+        Rev Firewall
+      </Button>
+      <Button onClick={handleClick6} className=" mt-32">
+        Check Firewall
+      </Button>
+      <Button onClick={handleClick7} className=" mt-32">
+        SSH
+      </Button>
+      <Button onClick={handleClick8} className=" mt-32">
+        Rev SSH
+      </Button>
+      <Button onClick={handleClick9} className=" mt-32">
+        Check SSH
       </Button>
     </div>
   );
