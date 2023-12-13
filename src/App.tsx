@@ -10,6 +10,7 @@ import USBPage from "./pages/USBPage";
 import StorageProvider from "./components/storageProvider";
 import SudoDialog from "./components/SudoDialog";
 import Firewall from "./pages/firewall/Firewall";
+import Ssh from "./pages/ssh/Ssh";
 
 attachConsole();
 function App() {
@@ -22,6 +23,7 @@ function App() {
             <Route path="/" element={<Home />}>
               <Route path={"/firewall"} element={<Firewall />} />
               <Route path={"/usbblock"} element={<USBPage />} />
+              <Route path={"/ssh"} element={<Ssh />} />
             </Route>
             {/* <Route path="/network-security/firewall" element={<Firewall />} />
             <Route path="/network-security/usbblock" element={<USBPage />} /> */}

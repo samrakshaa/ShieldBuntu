@@ -5,6 +5,11 @@ interface GFireStore {
   firewall: boolean;
   toggleFirewall: () => void;
 }
+
+interface GSSHStore {
+  ssh: boolean;
+  toggleSSH: () => void;
+}
 interface GSidemenuStore {
   activeTab: number;
   setActiveTab: (index: GSidemenuStore["activeTab"]) => void;
@@ -15,6 +20,19 @@ export const useFirewallStore = create(
     (set) => ({
       firewall: false,
       toggleFirewall: () => set((state) => ({ firewall: !state.firewall })),
+    }),
+    {
+      name: "global-store",
+      storage: createJSONStorage(() => localStorage),
+    }
+  )
+);
+
+export const useSSHStore = create(
+  persist<GSSHStore>(
+    (set) => ({
+      ssh: false,
+      toggleSSH: () => set((state) => ({ ssh: !state.ssh })),
     }),
     {
       name: "global-store",
