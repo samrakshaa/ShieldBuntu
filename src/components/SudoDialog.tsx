@@ -10,16 +10,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { invoke } from "@tauri-apps/api/tauri";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
+import { appWindow } from "@tauri-apps/api/window";
 import { useToast } from "./ui/use-toast";
 
 const SudoDialog = () => {
   const [password, setPassword] = useState("");
   const [isdialogOpen, setIsDialogOpen] = useState(true);
+  const [attemptsRemaining, setAttemptsRemaining] = useState(3);
   const { toast } = useToast();
 
   const handlePassword = (e: FormEvent) => {
     e.preventDefault();
+    setAttemptsRemaining((prev) => prev - 1);
     invoke("set_password", { password })
       .then(() => {
         setIsDialogOpen(false);
@@ -29,11 +32,23 @@ const SudoDialog = () => {
         console.log(err);
         toast({
           variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: err,
+          title: "Wrong Password",
+          description: `You have entered wrong Password. Only ${attemptsRemaining} left.`,
         });
       });
   };
+
+  useEffect(() => {
+    const closeApp = async () => {
+      if (attemptsRemaining < 1) {
+        console.log(attemptsRemaining - 1);
+        await appWindow.close();
+      }
+    };
+
+    closeApp();
+  }, [attemptsRemaining]);
+
   return (
     <div>
       <Dialog open={isdialogOpen}>
