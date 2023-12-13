@@ -6,7 +6,7 @@ use std::fs;
 #[tauri::command]
 pub async fn install_and_configure_apparmor() -> Result<String, String> {
     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/apparmor.sh");
+    let script_path = current_dir.join("scripts/apply/apparmor.sh");
 
     // Check if the script file exists
     if !script_path.exists() {

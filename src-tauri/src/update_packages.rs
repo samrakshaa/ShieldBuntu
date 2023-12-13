@@ -12,7 +12,7 @@ pub async fn update_and_upgrade_packages() -> Result<String, String> {
     if let Some(password) = sudo_password {
         // Path to the script
         let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-        let script_path = current_dir.join("scripts/update_packages.sh");
+        let script_path = current_dir.join("scripts/apply/update_packages.sh");
 
         // Run the bash script for updating and upgrading packages with sudo
         let mut child = AsyncCommand::new("sudo")

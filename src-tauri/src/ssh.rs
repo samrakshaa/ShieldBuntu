@@ -5,11 +5,11 @@ use tokio::io::{AsyncReadExt, AsyncWriteExt};
 use crate::get_password;
 
 #[tauri::command]
-pub async fn apply_firewall_rules() -> Result<String, String> {
+pub async fn apply_ssh_rules() -> Result<String, String> {
 
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/apply/firewall.sh");
+    let script_path = current_dir.join("scripts/apply/ssh.sh");
 
     // Run the bash script for applying firewall rules
     let mut child = AsyncCommand::new("sudo")
@@ -45,11 +45,11 @@ pub async fn apply_firewall_rules() -> Result<String, String> {
 
 
 #[tauri::command]
-pub async fn reverse_firewall_rules() -> Result<String, String> {
+pub async fn reverse_ssh_rules() -> Result<String, String> {
 
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/reverse/r-firewall.sh");
+    let script_path = current_dir.join("scripts/reverse/r-ssh.sh");
 
     // Run the bash script for reversing firewall changes
     let mut child = AsyncCommand::new("sudo")
@@ -83,10 +83,10 @@ pub async fn reverse_firewall_rules() -> Result<String, String> {
 
 
 #[tauri::command]
-pub async fn check_firewall() -> Result<String, String> {
+pub async fn check_ssh() -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/check/check_firewall.sh");
+    let script_path = current_dir.join("scripts/check/check_ssh.sh");
 
     // Run the bash script for checking firewall rules
     let mut child = AsyncCommand::new("sudo")

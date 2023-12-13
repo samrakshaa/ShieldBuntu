@@ -14,7 +14,9 @@ mod usb;
 mod fail2ban;
 mod apparmor;
 mod rkhunter;
+mod tor_blocker;
 mod autoupdate;
+mod ssh;
 
 // #[derive(Debug, Serialize, Deserialize)]
 // struct UsbDevice {
@@ -141,10 +143,16 @@ pub async fn main() {
             update_packages::update_and_upgrade_packages,
             firewall::reverse_firewall_rules,
             firewall::apply_firewall_rules,
+            firewall::check_firewall,
             fail2ban::install_and_configure_fail2ban,
             apparmor::install_and_configure_apparmor,
             rkhunter::install_and_configure_rkhunter,
             autoupdate::run_autoupdate_script,
+            tor_blocker::block_tor_access,
+            tor_blocker::check_tor_blocked,
+            ssh::reverse_ssh_rules,
+            ssh::apply_ssh_rules,
+            ssh::check_ssh,
             ]
         )
         .run(tauri::generate_context!())

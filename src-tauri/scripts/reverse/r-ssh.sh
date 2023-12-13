@@ -1,11 +1,30 @@
 #!/bin/bash
 
-# Revert SSH Configuration Changes
-echo "Reverting SSH configuration changes..."
+# Check if a password is provided as a parameter
 
-sudo cp /etc/ssh/sshd_config.bak /etc/ssh/sshd_config
+echo "Reverting SSH configuration..."
 
-echo "Restarting the SSH service..."
-sudo service ssh restart
+# if command -v sshd &> /dev/null; then
+#     echo "OpenSSH is installed. Uninstalling..."
+#     sudo apt purge openssh-server openssh-client -y
+#     sudo apt update
+# fi
 
-echo "SSH configuration changes reverted."
+# sudo rm -rf /etc/ssh
+
+# Restore the backed-up SSH configuration file
+sshd_config_path="/etc/ssh/sshd_config"
+sudo cp "$sshd_config_path.bak" "$sshd_config_path"
+
+# Restart SSH service
+if command -v systemctl &> /dev/null; then
+    sudo systemctl restart ssh
+    echo "SSH configuration reverted."
+elif command -v service &> /dev/null; then
+    sudo service ssh restart
+    echo "SSH configuration reverted."
+else
+    echo "Unable to restart SSH service. Please restart it manually."
+fi
+
+sudo systemctl stop ssh

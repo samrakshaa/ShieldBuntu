@@ -12,7 +12,7 @@ pub async fn remove_unused_packages() -> Result<String, String> {
     if let Some(password) = sudo_password {
         // Path to the script
         let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-        let script_path = current_dir.join("scripts/unused_package_remover.sh");
+        let script_path = current_dir.join("scripts/apply/unused_package_remover.sh");
 
         // Run the bash script to remove unused packages with sudo
         let mut child = AsyncCommand::new("sudo")

@@ -16,7 +16,7 @@ struct UsbDevice {
 pub async fn list_usb_devices() -> Result<String, String> {
     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
 
-    let script_path = current_dir.join("scripts/list_usb.sh");
+    let script_path = current_dir.join("scripts/apply/list_usb.sh");
 
     // Use tokio::fs::File to open the script file asynchronously
     let mut file = File::open(&script_path).await.map_err(|e| format!("Error opening script file: {}", e))?;
