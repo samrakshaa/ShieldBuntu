@@ -21,6 +21,70 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { GiSheikahEye } from "react-icons/gi";
+
+
+const networkList= [
+  {
+    title: "Firewall Configuration",
+    link: "/network-security/firewall",
+    icon: <GiSheikahEye />
+  },
+  {
+    title: "SSH/IP Blocking",
+    link: "/network-security/sshblock",
+  },
+  {
+    title: "USB Blocking",
+    link: "/network-security/usbblock",
+  },
+  {
+    title: "TOR Settings",
+    link: "/network-security/tor",
+  },
+  {
+    title: "Open Port Management",
+    link: "/network-security/port",
+  },
+];
+
+const bootList = [
+  {
+    title: "Basic & Display Settings",
+    link: "/boot/display",
+  },
+  {
+    title: "Advance Boot SEttings",
+    link: "/boot/",
+  },
+];
+
+const generalList = [
+  {
+    title: "Auditing",
+    link: "/general/auditing",
+  },
+  {
+    title: "SSH/IP Blocking",
+    link: "/general/cron",
+  },
+];
+
+const menuOptions = [
+  {
+    title: "Network & Security",
+    items: networkList,
+  },
+  {
+    title: "Boot Settings",
+    items: bootList,
+  },
+  {
+    title: "General Settings",
+    items: generalList,
+  },
+];
+
 const Firewall = () => {
   const [isFirewallEnabled, setIsFirewallEnabled] = useState(false);
   const [firewallRules, setFirewallRules] = useState([]);
@@ -87,7 +151,7 @@ const Firewall = () => {
 
   return (
     <div className="firewall flex flex-row items-center pt-20">
-      <Sidemenu />
+      <Sidemenu menuOptions={menuOptions} /> 
       <div className="main-section p-12 ml-[400px] w-3/5">
         <div className=" flex gap-2  items-center ">
           <h1 className="text-4xl text-primary font-bold">

@@ -16,9 +16,9 @@ module.exports = {
       },
     },
     extend: {
-      screens: {
-        md: { max: "1290px" },
-      },
+      // screens: {
+      //   md: { max: "1290px" },
+      // },
       fontFamily: {
         "product-sans": ["var(--productSans)", "sans-serif"],
       },
@@ -79,10 +79,15 @@ module.exports = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: 0 },
         },
+        blinkingBg: {
+          '0%, 100%': { backgroundColor: "hsl(var(--primary))" },
+          '50%': { backgroundColor: "transparent" },
+      }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "blinkingBg": 'blinkingBg 2s ease-in-out infinite',
       },
     },
   },
