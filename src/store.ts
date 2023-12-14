@@ -6,7 +6,7 @@ interface GFireStore {
   toggleFirewall: () => void;
 }
 
-interface GSSHStore {
+interface GNetworkStore {
   ssh: boolean;
   toggleSSH: () => void;
 }
@@ -28,8 +28,8 @@ export const useFirewallStore = create(
   )
 );
 
-export const useSSHStore = create(
-  persist<GSSHStore>(
+export const useNetworkStore = create(
+  persist<GNetworkStore>(
     (set) => ({
       ssh: false,
       toggleSSH: () => set((state) => ({ ssh: !state.ssh })),

@@ -22,11 +22,17 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Home />}>
-            <Route path={"/dashboard"} element={<Dashboard />} />
-
+              <Route path={"/dashboard"} element={<Dashboard />} />
               <Route path={"/firewall"} element={<Firewall />} />
               <Route path={"/usbblock"} element={<USBPage />} />
-              <Route path={"/ssh"} element={<Ssh />} />
+              <Route
+                path={"/network"}
+                element={
+                  <>
+                    <Ssh />
+                  </>
+                }
+              />
             </Route>
             {/* <Route path="/network-security/firewall" element={<Firewall />} />
             <Route path="/network-security/usbblock" element={<USBPage />} /> */}

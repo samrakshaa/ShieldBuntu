@@ -3,8 +3,6 @@ import Sidemenu from "@/components/Sidemenu";
 import { MdDashboard } from "react-icons/md";
 import { TbUsb } from "react-icons/tb";
 import { SiFirewalla, SiTorbrowser } from "react-icons/si";
-import { GiFirewall } from "react-icons/gi";
-
 
 // interface MenuItem {
 //   title: string;
@@ -16,25 +14,21 @@ const networkLinks = [
   {
     title: "Dashboard",
     link: "/dashboard",
-    icon: <MdDashboard size={25}/>,
+    icon: <MdDashboard size={25} />,
   },
   {
     title: "Firewall",
     link: "/firewall",
-    icon: <SiFirewalla size={25} />
-  },
-  // {
-  //   title: "SSH Blocking",
-  //   link: "/ssh",<GiFirewall />
-  // },
-  {
-    title: "USB Blocking",
-    link: "/",
-    icon: <TbUsb size={25}  />,
+    icon: <SiFirewalla size={25} />,
   },
   {
-    title: "TOR Settings",
+    title: "USB Settings",
     link: "/usbblock",
+    icon: <TbUsb size={25} />,
+  },
+  {
+    title: "Network Settings",
+    link: "/network",
     icon: <SiTorbrowser size={25} />,
   },
   // {
@@ -46,10 +40,10 @@ const networkLinks = [
 const Home = () => {
   return (
     <>
-        <div className="home flex h-full mx-auto">
-          <Sidemenu menuOptions={networkLinks} />
-          <Outlet />
-        </div>
+      <div className="home flex h-full mx-auto">
+        <Sidemenu menuOptions={networkLinks} />
+        <Outlet />
+      </div>
     </>
   );
 };

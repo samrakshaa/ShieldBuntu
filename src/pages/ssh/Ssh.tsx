@@ -12,18 +12,19 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import useLoading from "@/hooks/useLoading";
-import { useSSHStore } from "@/store";
+import { useNetworkStore } from "@/store";
 import Loader from "@/components/Loader";
 
 const Ssh = () => {
   const [logs, setLogs] = useState("");
   const { toast } = useToast();
-  const updateSSHStatus = useSSHStore((state) => state.toggleSSH);
-  const SSHStatus = useSSHStore((state) => state.ssh);
+  const updateSSHStatus = useNetworkStore((state) => state.toggleSSH);
+  const SSHStatus = useNetworkStore((state) => state.ssh);
   const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
     functionToExecute: () => invoke("apply_ssh_rules"),
-    onSuccess: (res) => {
-      if (res === "true") {
+    onSuccess: (res: any) => {
+      const resJson = JSON.parse(res);
+      if (resJson.success) {
         console.log("ssh on");
         updateSSHStatus();
       } else {
@@ -50,8 +51,9 @@ const Ssh = () => {
 
   const { isLoading: isDisablelLoading, execute: executeDisable } = useLoading({
     functionToExecute: () => invoke("reverse_ssh_rules"),
-    onSuccess: (res) => {
-      if (res === "true") {
+    onSuccess: (res: any) => {
+      const resJson = JSON.parse(res);
+      if (resJson.success) {
         console.log("SSH off");
         updateSSHStatus();
       } else {
