@@ -1,7 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
-import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { invoke } from "@tauri-apps/api/tauri";
 import { HiOutlineInformationCircle } from "react-icons/hi";
@@ -14,12 +12,12 @@ import {
 import useLoading from "@/hooks/useLoading";
 import { useNetworkStore } from "@/store";
 import Loader from "@/components/Loader";
-import BackButton from "./BackButton";
 
 const Ssh = () => {
   const [logs, setLogs] = useState("");
   const { toast } = useToast();
-  const updateSSHStatus = useNetworkStore((state) => state.toggleSSH);
+  const toggleSSHStatus = useNetworkStore((state) => state.toggleSSH);
+  const updateSSHStatus = useNetworkStore((state) => state.changeSSH);
   const SSHStatus = useNetworkStore((state) => state.ssh);
   const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
     functionToExecute: () => invoke("apply_ssh_rules"),
@@ -27,7 +25,7 @@ const Ssh = () => {
       const resJson = JSON.parse(res);
       if (resJson.success) {
         console.log("ssh on");
-        updateSSHStatus();
+        toggleSSHStatus();
       } else {
         const currLog = res as string;
 
@@ -55,7 +53,7 @@ const Ssh = () => {
       const resJson = JSON.parse(res);
       if (resJson.success) {
         console.log("SSH off");
-        updateSSHStatus();
+        toggleSSHStatus();
       } else {
         console.log("not able to disable SSH");
         toast({
@@ -75,6 +73,28 @@ const Ssh = () => {
     },
   });
 
+  const { isLoading: isStatusLoading, execute: executeStatus } = useLoading({
+    functionToExecute: () => invoke("check_ssh"),
+    onSuccess: (res: any) => {
+      const resJSON = JSON.parse(res);
+      if (resJSON.enable) {
+        console.log("SSH is enabled");
+        updateSSHStatus(true);
+      } else {
+        console.log("SSH is disabled");
+        updateSSHStatus(false);
+      }
+    },
+    onError: (err) => {
+      console.log(err);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "SSH is ofline...",
+      });
+    },
+  });
+
   const handleSwitchChange = () => {
     if (!SSHStatus) {
       console.log("trying to enable SSH");
@@ -84,6 +104,10 @@ const Ssh = () => {
       executeDisable();
     }
   };
+
+  useEffect(() => {
+    executeStatus();
+  }, []);
 
   return (
     <div className="SSH flex flex-row justify-center mx-auto max-w-[900px] p-8">
@@ -111,12 +135,14 @@ const Ssh = () => {
         <div className="toggle-SSH bg-secondary/60 mt-2 p-2 px-4 text-lg border-2 rounded-lg flex flex-row justify-between items-center">
           <div className="flex flex-row items-center">
             <p>Enable/Disable SSH</p>
-            {(isDisablelLoading || isEnablelLoading) && <Loader />}
+            {(isDisablelLoading || isEnablelLoading || isStatusLoading) && (
+              <Loader />
+            )}
           </div>
           <Switch
             className=""
             checked={SSHStatus}
-            disabled={isDisablelLoading || isEnablelLoading}
+            disabled={isDisablelLoading || isEnablelLoading || isStatusLoading}
             onClick={handleSwitchChange}
           />
         </div>

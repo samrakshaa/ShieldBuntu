@@ -1,0 +1,47 @@
+[
+  {
+    "function_name": "apply_firewall_rules",
+    "response_success": { "success": true, "logs": "some logs" },
+    "response_error": { "success": false, "logs": "some logs" }
+  },
+  {
+    "function_name": "reverse_firewall_rules",
+    "response_success": { "success": true, "logs": "some logs" },
+    "response_error": { "success": false, "logs": "some logs" }
+  },
+  {
+    "function_name": "check_firewall",
+    "response_success": { "enabled": true },
+    "response_error": { "enabled": true }
+  },
+  {
+    "function_name": "apply_ssh_rules",
+    "response_success": { "success": true, "logs": "some logs" },
+    "response_error": { "success": false, "logs": "some logs" }
+  },
+  {
+    "function_name": "reverse_ssh_rules",
+    "response_success": { "success": true, "logs": "some logs" },
+    "response_error": { "success": false, "logs": "some logs" }
+  },
+  {
+    "function_name": "check_ssh",
+    "response_success": { "enabled": true },
+    "response_error": { "enabled": true }
+  },
+  {
+    "function_name": "reverse_tor_block",
+    "response_success": { "success": true, "logs": "some logs" },
+    "response_error": { "success": false, "logs": "some logs" }
+  },
+  {
+    "function_name": "block_tor_access",
+    "response_success": { "success": true, "logs": "some logs" },
+    "response_error": { "success": false, "logs": "some logs" }
+  },
+  {
+    "function_name": "check_tor_blocked",
+    "response_success": { "enabled": true },
+    "response_error": { "enabled": true }
+  }
+]
