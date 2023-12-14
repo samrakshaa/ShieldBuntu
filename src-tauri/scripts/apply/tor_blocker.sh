@@ -5,6 +5,32 @@ is_ipv6() {
   [[ "$1" == *:* ]]
 }
 
+block_tor_ports() {
+  # Block Tor ports
+  ufw deny 9001     # Tor ORPort
+  ufw deny 9030     # Tor DirPort
+  ufw deny 9050     # Tor SOCKS Port
+  ufw deny 9051     # Tor Control Port
+  ufw deny 9000
+  ufw deny 9150
+  ufw deny 9040
+}
+
+ensure_ufw_enabled() {
+  if ! command -v ufw &> /dev/null; then
+    echo "Installing ufw..."
+    sudo apt-get update
+    sudo apt-get install -y ufw
+  fi
+
+  if ! sudo ufw status | grep -q "Status: active"; then
+    echo "Enabling ufw..."
+    sudo ufw enable
+    echo "ufw has been enabled."
+  fi
+}
+
+
 # Function to download Tor node list from URL
 download_tor_nodes() {
   local url="$1"
@@ -30,18 +56,10 @@ block_ip_addresses() {
       iptables -A INPUT -s "$ip" -j DROP
       iptables -A OUTPUT -d "$ip" -j DROP
     fi
-    echo "Blocked IP address: $ip"
+    # echo "Blocked IP address: $ip"
   done < "$file"
 }
 
-block_tor_ports() {
-  # Block Tor ports
-  sudo ufw deny 9000     # Tor ORPort
-  sudo ufw deny 9001
-  sudo ufw deny 9030     # Tor DirPort
-  sudo ufw deny 9050     # Tor SOCKS Port
-  sudo ufw deny 9051     # Tor Control Port
-}
 # Function to create iptables rule files and directories if they don't exist
 create_iptables_files() {
   local ipv4_file="/etc/iptables/rules.v4"
@@ -64,8 +82,11 @@ create_iptables_files() {
 
 # Function to install iptables and iptables-persistent if not present
 install_iptables() {
-  if ! command -v iptables &> /dev/null; then
-    echo "Installing iptables..."
+
+  apt remove -y iptables
+  
+  if ! command -v ip6tables &> /dev/null; then
+    echo "Installing ip6tables..."
     apt-get update
     apt-get install -y --reinstall iptables
   fi
@@ -80,6 +101,7 @@ install_iptables() {
     update-rc.d iptables enable
   fi
 }
+
 
 # Function to reload iptables rules
 reload_iptables_rules() {
@@ -106,7 +128,7 @@ main() {
     echo "Please run as root (sudo)." >&2
     exit 1
   fi
-
+  
   # Install iptables and iptables-persistent if not present
   install_iptables
 
@@ -126,7 +148,10 @@ main() {
   # Reload iptables rules
   reload_iptables_rules
 
+  ensure_ufw_enabled
+
   block_tor_ports
+  
   # Clean up temporary files
   cleanup
 
