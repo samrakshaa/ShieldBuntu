@@ -13,6 +13,7 @@ import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { invoke } from "@tauri-apps/api/tauri";
 import { HiOutlineInformationCircle } from "react-icons/hi";
+import { SiFirewalla } from "react-icons/si";
 import {
   Tooltip,
   TooltipContent,
