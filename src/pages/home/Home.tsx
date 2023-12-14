@@ -15,7 +15,7 @@ import { GiFirewall } from "react-icons/gi";
 const networkLinks = [
   {
     title: "Dashboard",
-    link: "/",
+    link: "/dashboard",
     icon: <MdDashboard size={25}/>,
   },
   {
@@ -29,7 +29,6 @@ const networkLinks = [
   // },
   {
     title: "USB Blocking",
-
     link: "/",
     icon: <TbUsb size={25}  />,
   },
@@ -47,10 +46,10 @@ const networkLinks = [
 const Home = () => {
   return (
     <>
-      <div className="home flex h-full mx-auto ">
-        <Sidemenu menuOptions={networkLinks} />
-        <Outlet />
-      </div>
+        <div className="home flex h-full mx-auto">
+          <Sidemenu menuOptions={networkLinks} />
+          <Outlet />
+        </div>
     </>
   );
 };
