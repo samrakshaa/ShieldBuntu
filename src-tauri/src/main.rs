@@ -17,6 +17,7 @@ mod rkhunter;
 mod tor;
 mod autoupdate;
 mod ssh;
+mod check_username;
 
 // #[derive(Debug, Serialize, Deserialize)]
 // struct UsbDevice {
@@ -154,6 +155,7 @@ pub async fn main() {
             ssh::apply_ssh_rules,
             ssh::reverse_ssh_rules,
             ssh::check_ssh,
+            check_username::check_username,
             ]
         )
         .run(tauri::generate_context!())

@@ -2,6 +2,8 @@ import { ReactNode, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSidemenuStore } from "@/store";
 import  {useLocation } from "react-router-dom"
+import useLoading from "@/hooks/useLoading";
+import { invoke } from "@tauri-apps/api/tauri";
 
 interface MenuItem {
   title: string;
@@ -15,6 +17,17 @@ interface SidemenuProps {
 
 const Sidemenu: React.FC<SidemenuProps> = ({ menuOptions }) => {
 
+  const { isLoading } = useLoading({
+    functionToExecute: () => invoke("check_username"),
+    onSuccess: (res: any) => {
+      const resJSON = JSON.parse(res);
+      console.log(resJSON);
+    },
+    onError: (err) => {
+      console.log(err);
+    }
+  })
+  
 
   const location = useLocation();
   const { pathname } = location
