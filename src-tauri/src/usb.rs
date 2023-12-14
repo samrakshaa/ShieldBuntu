@@ -6,7 +6,7 @@ use std::process::Stdio;
 
 
 #[derive(Debug, Serialize, Deserialize)]
-struct UsbDevice {
+struct UsbDevice1 {
     sequence: u32,
     id: String,
     name: String,
@@ -38,15 +38,16 @@ pub async fn list_usb_devices() -> Result<String, String> {
     if output.status.success() {
         // Process the output and extract device information
         let result = String::from_utf8_lossy(&output.stdout);
-        let devices: Vec<UsbDevice> = result
+        let devices: Vec<UsbDevice1> = result
             .lines()
-            .filter_map(|line| {
-                let parts: Vec<&str> = line.trim().split_whitespace().collect();
-                if parts.len() >= 7 && parts[0].parse::<u32>().is_ok() {
-                    let sequence = parts[0].parse().unwrap();
-                    let id = parts[1];
-                    let name = parts[6..].join(" ");
-                    Some(UsbDevice { sequence, id: id.to_string(), name })
+            .enumerate()
+            .filter_map(|(index, line)| {
+                let parts: Vec<&str> = line.split_whitespace().collect();
+                if parts.len() >= 6 {
+                    let sequence = (index + 1) as u32;
+                    let id = parts[6];
+                    let name = parts[7..].join(" ");
+                    Some(UsbDevice1 { sequence, id: id.to_string(), name })
                 } else {
                     None
                 }
@@ -64,68 +65,42 @@ pub async fn list_usb_devices() -> Result<String, String> {
 }
 
 
-// use std::process::{Command, Stdio};
-// use serde::{Serialize, Deserialize};
-// use std::env;
-// use tokio::process::Command as AsyncCommand;
-// use tokio::io::{AsyncReadExt};
 
-// #[derive(Debug, Serialize, Deserialize)]
-// struct UsbDevice {
-//     sequence: u32,
-//     id: String,
-//     name: String,
-// }
+#[derive(Debug, Serialize, Deserialize)]
+struct UsbDevice2 {
+    full_info: String,
+}
 
 
-// #[tauri::command]
-// pub fn list_usb_devices() -> Result<String, String> {
-//     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+#[tauri::command]
+pub async fn list_usb_devices_usbguard() -> Result<String, String> {
+    // Use tokio::process::Command to execute the script asynchronously
+    let output = AsyncCommand::new("bash")
+        .arg("-c")
+        .arg("sudo usbguard list-devices")
+        .stdin(Stdio::null()) // Inherit standard input for password prompt
+        .output()
+        .await
+        .map_err(|e| format!("Error executing command: {}", e))?;
 
-//     let script_path = current_dir.join("scripts/list_usb.sh");
+    // Check if the command was successful
+    if output.status.success() {
+        // Process the output and extract device information
+        let result = String::from_utf8_lossy(&output.stdout);
+        let devices: Vec<UsbDevice2> = result
+            .lines()
+            .map(|line| UsbDevice2 {
+                full_info: line.trim().to_string(),
+            })
+            .collect();
 
+        // Convert the device information to JSON
+        let json_output = serde_json::to_string_pretty(&devices).map_err(|e| format!("Error converting to JSON: {}", e))?;
+        Ok(json_output)
+    } else {
+        // Return the error if the command failed
+        let error_output = String::from_utf8_lossy(&output.stderr);
+        Err(error_output.into_owned())
+    }
+}
 
-//     let output = Command::new("bash")
-//         .arg(script_path)
-//         .stdin(Stdio::inherit()) // Inherit standard input for password prompt
-//         .output();
-
-//         match output {
-//             Ok(output) => {
-//                 // Check if the command was successful
-//                 if output.status.success() {
-//                     // Process the output and extract device information
-//                     let result = String::from_utf8_lossy(&output.stdout);
-//                     let devices: Vec<UsbDevice> = result
-//                         .lines()
-//                         .filter_map(|line| {
-//                             let parts: Vec<&str> = line.trim().split_whitespace().collect();
-//                             if parts.len() >= 7 && parts[0].parse::<u32>().is_ok() {
-//                                 let sequence = parts[0].parse().unwrap();
-//                                 let id = parts[1];
-//                                 let name = parts[6..].join(" ");
-//                                 Some(UsbDevice { sequence, id: id.to_string(), name })
-//                             } else {
-//                                 None
-//                             }
-//                         })
-//                         .collect();
-    
-//                     // Convert the device information to JSON
-//                     let json_output = serde_json::to_string_pretty(&devices);
-//                     match json_output {
-//                         Ok(json) => Ok(json),
-//                         Err(err) => Err(format!("Error converting to JSON: {}", err)),
-//                     }
-//                 } else {
-//                     // Return the error if the command failed
-//                     let error: std::borrow::Cow<'_, str> = String::from_utf8_lossy(&output.stderr);
-//                     Err(error.into_owned())
-//                 }
-//             }
-//             Err(err) => {
-//                 // Return the error if the command couldn't be executed
-//                 Err(format!("Error executing command: {}", err))
-//             }
-//         }
-// }
