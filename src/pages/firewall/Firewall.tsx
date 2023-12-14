@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "../../components/ui/button";
 import {
@@ -26,8 +26,11 @@ import BackButton from "@/components/BackButton";
 
 const Firewall = () => {
   const { toast } = useToast();
-  const updateFirewallStatus = useFirewallStore(
+  const toggleFirewallStatus = useFirewallStore(
     (state) => state.toggleFirewall
+  );
+  const updateFirewallStatus = useFirewallStore(
+    (state) => state.changeFirewall
   );
   const firewallStatus = useFirewallStore((state) => state.firewall);
   const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
@@ -37,7 +40,7 @@ const Firewall = () => {
       console.log(resJSON);
       if (resJSON.success) {
         console.log("firewall on");
-        updateFirewallStatus();
+        toggleFirewallStatus();
       } else {
         console.log("not able to enable firewall");
         toast({
@@ -64,7 +67,7 @@ const Firewall = () => {
       console.log(resJSON);
       if (resJSON.success) {
         console.log("firewall off");
-        updateFirewallStatus();
+        toggleFirewallStatus();
       } else {
         console.log("not able to disable firewall");
         toast({
@@ -84,6 +87,28 @@ const Firewall = () => {
     },
   });
 
+  const { isLoading: isStatusLoading, execute: executeStatus } = useLoading({
+    functionToExecute: () => invoke("check_firewall"),
+    onSuccess: (res: any) => {
+      const resJSON = JSON.parse(res);
+      if (resJSON.enable) {
+        console.log("firewall is enabled");
+        updateFirewallStatus(true);
+      } else {
+        console.log("firewall is disabled");
+        updateFirewallStatus(false);
+      }
+    },
+    onError: (err) => {
+      console.log(err);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "Firewall is ofline...",
+      });
+    },
+  });
+
   const handleSwitchChange = () => {
     if (!firewallStatus) {
       console.log("trying to enable firewall");
@@ -94,14 +119,16 @@ const Firewall = () => {
     }
   };
 
+  useEffect(() => {
+    executeStatus();
+  }, []);
+
   return (
-    <div className="firewall flex flex-row justify-center mx-auto max-w-[900px] p-8">
+    <div className="firewall flex flex-row justify-center mx-auto max-w-[900px] p-6 pt-0">
       <div className="main-section py-12">
         <div className=" flex gap-2  items-center ">
           <BackButton />
-          <h1 className="text-3xl text-primary font-bold">
-            Firewall Configuration{" "}
-          </h1>
+          <h1 className="text-3xl font-bold">Firewall Configuration </h1>
           <TooltipProvider>
             <Tooltip delayDuration={20}>
               <TooltipTrigger className="">
@@ -121,12 +148,14 @@ const Firewall = () => {
         <div className="toggle-firewall bg-secondary/60 mt-2 p-2 px-4 text-lg border-2 rounded-lg flex flex-row justify-between items-center">
           <div className="flex flex-row items-center">
             <p>Enable/Disable Firewall</p>
-            {(isDisablelLoading || isEnablelLoading) && <Loader />}
+            {(isDisablelLoading || isEnablelLoading || isStatusLoading) && (
+              <Loader />
+            )}
           </div>
           <Switch
             className=""
             checked={firewallStatus}
-            disabled={isDisablelLoading || isEnablelLoading}
+            disabled={isDisablelLoading || isEnablelLoading || isStatusLoading}
             onClick={handleSwitchChange}
           />
         </div>

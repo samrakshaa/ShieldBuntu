@@ -4,11 +4,16 @@ import { persist, createJSONStorage } from "zustand/middleware";
 interface GFireStore {
   firewall: boolean;
   toggleFirewall: () => void;
+  changeFirewall: (status: boolean) => void;
 }
 
 interface GNetworkStore {
   ssh: boolean;
+  tor: boolean;
   toggleSSH: () => void;
+  changeSSH: (status: boolean) => void;
+  toggleTor: () => void;
+  changeTor: (status: boolean) => void;
 }
 interface GSidemenuStore {
   activeTab: number;
@@ -20,6 +25,7 @@ export const useFirewallStore = create(
     (set) => ({
       firewall: false,
       toggleFirewall: () => set((state) => ({ firewall: !state.firewall })),
+      changeFirewall: (status: boolean) => set(() => ({ firewall: status })),
     }),
     {
       name: "firewall-store",
@@ -32,7 +38,11 @@ export const useNetworkStore = create(
   persist<GNetworkStore>(
     (set) => ({
       ssh: false,
+      tor: false,
+      toggleTor: () => set((state) => ({ tor: !state.tor })),
+      changeTor: (status: boolean) => set(() => ({ ssh: status })),
       toggleSSH: () => set((state) => ({ ssh: !state.ssh })),
+      changeSSH: (status: boolean) => set(() => ({ ssh: status })),
     }),
     {
       name: "network-store",
