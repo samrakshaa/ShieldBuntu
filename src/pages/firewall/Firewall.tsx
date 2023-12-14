@@ -91,7 +91,7 @@ const Firewall = () => {
     functionToExecute: () => invoke("check_firewall"),
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
-      if (resJSON.enable) {
+      if (resJSON.enabled) {
         console.log("firewall is enabled");
         updateFirewallStatus(true);
       } else {

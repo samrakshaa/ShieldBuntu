@@ -77,7 +77,7 @@ const Tor = () => {
     functionToExecute: () => invoke("check_tor_blocked"),
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
-      if (resJSON.enable) {
+      if (resJSON.enabled) {
         console.log("Tor is enabled");
         updateTorStatus(true);
       } else {
