@@ -15,25 +15,12 @@ interface SidemenuProps {
 
 const Sidemenu: React.FC<SidemenuProps> = ({ menuOptions }) => {
 
-  // features-to-work-on: Add functionality to change active tab when we navigate to other page (for back button)
-  // const activeTab = useSidemenuStore((state) => state.activeTab);
-  // const setActiveTab = useSidemenuStore((state) => state.setActiveTab);
+
   const location = useLocation();
   const { pathname } = location
 
 
-  // useEffect(() => {
-  //   setActiveTab(0);
-  //   const activePage = menuOptions.filter(
-  //     (item, index) => index === activeTab
-  //   )[0];
-  //   navigate(activePage.link);
-  // }, []);
 
-  // const handleClick = (index: number) => {
-  //   setActiveTab(index);
-  //   console.log(index);
-  // };
 
   return (
     <div className=" overflow-autoDefend flex flex-col border-r-2 border-secondary gap-4 items-start w-full max-w-[250px] bg-secondary/20 py-10 h-auto">
