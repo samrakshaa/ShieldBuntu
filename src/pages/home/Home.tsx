@@ -13,7 +13,7 @@ import { SiFirewalla, SiTorbrowser } from "react-icons/si";
 const networkLinks = [
   {
     title: "Dashboard",
-    link: "/dashboard",
+    link: "/",
     icon: <MdDashboard size={25} />,
   },
   {

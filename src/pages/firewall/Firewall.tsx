@@ -9,11 +9,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import { invoke } from "@tauri-apps/api/tauri";
 import { HiOutlineInformationCircle } from "react-icons/hi";
-import { SiFirewalla } from "react-icons/si";
 import {
   Tooltip,
   TooltipContent,
@@ -24,6 +22,7 @@ import {
 import useLoading from "@/hooks/useLoading";
 import { useFirewallStore } from "@/store";
 import Loader from "@/components/Loader";
+import BackButton from "@/components/BackButton";
 
 const Firewall = () => {
   const { toast } = useToast();
@@ -99,6 +98,7 @@ const Firewall = () => {
     <div className="firewall flex flex-row justify-center mx-auto max-w-[900px] p-8">
       <div className="main-section py-12">
         <div className=" flex gap-2  items-center ">
+          <BackButton />
           <h1 className="text-3xl text-primary font-bold">
             Firewall Configuration{" "}
           </h1>

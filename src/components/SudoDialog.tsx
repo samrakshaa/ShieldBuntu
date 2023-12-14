@@ -25,10 +25,12 @@ const SudoDialog = () => {
     functionToExecute: () => invoke("set_password", { password }),
     onSuccess: () => {
       console.log("Authorized");
+      setPassword("");
       setIsDialogOpen(false);
     },
     onError: (err) => {
       console.log(err);
+      setPassword("");
       toast({
         variant: "destructive",
         title: "Wrong Password",

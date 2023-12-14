@@ -1,5 +1,5 @@
-import { ReactNode, useState } from "react";
-import { Link } from "react-router-dom";
+import { ReactNode, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useSidemenuStore } from "@/store";
 
 interface MenuItem {
@@ -16,6 +16,14 @@ const Sidemenu: React.FC<SidemenuProps> = ({ menuOptions }) => {
   // const [activeTab, setActiveTab] = useState(0);
   const activeTab = useSidemenuStore((state) => state.activeTab);
   const setActiveTab = useSidemenuStore((state) => state.setActiveTab);
+  const navigate = useNavigate();
+  useEffect(() => {
+    setActiveTab(0);
+    const activePage = menuOptions.filter(
+      (item, index) => index === activeTab
+    )[0];
+    navigate(activePage.link);
+  }, []);
 
   const handleClick = (index: number) => {
     setActiveTab(index);
@@ -25,7 +33,7 @@ const Sidemenu: React.FC<SidemenuProps> = ({ menuOptions }) => {
   return (
     <div className=" overflow-autoDefend flex flex-col border-r-2 border-secondary gap-4 items-start w-full max-w-[250px] bg-secondary/20 py-10 h-auto">
       <Link to={"/"} className=" px-4 text-2xl">
-        SheildBuntu
+        ShieldBuntu
       </Link>
       {menuOptions.map((item, itemIndex) => (
         <Link

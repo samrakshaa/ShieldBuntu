@@ -22,7 +22,7 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<Home />}>
-              <Route path={"/dashboard"} element={<Dashboard />} />
+              <Route path={"/"} element={<Dashboard />} />
               <Route path={"/firewall"} element={<Firewall />} />
               <Route path={"/usbblock"} element={<USBPage />} />
               <Route

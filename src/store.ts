@@ -22,7 +22,7 @@ export const useFirewallStore = create(
       toggleFirewall: () => set((state) => ({ firewall: !state.firewall })),
     }),
     {
-      name: "global-store",
+      name: "firewall-store",
       storage: createJSONStorage(() => localStorage),
     }
   )
@@ -35,7 +35,7 @@ export const useNetworkStore = create(
       toggleSSH: () => set((state) => ({ ssh: !state.ssh })),
     }),
     {
-      name: "global-store",
+      name: "network-store",
       storage: createJSONStorage(() => localStorage),
     }
   )
@@ -48,7 +48,7 @@ export const useSidemenuStore = create(
       setActiveTab: (index) => set(() => ({ activeTab: index })),
     }),
     {
-      name: "global-store",
+      name: "sidemenu-store",
       storage: createJSONStorage(() => localStorage),
     }
   )
