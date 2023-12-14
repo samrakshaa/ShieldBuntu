@@ -17,5 +17,5 @@ sudo systemctl stop usbguard
 # Disable the USBGuard service
 echo "Disabling USBGuard service from starting at boot..."
 sudo systemctl disable usbguard
-
+sudo apt remove usbguard
 echo "USBGuard has been reset and disabled."

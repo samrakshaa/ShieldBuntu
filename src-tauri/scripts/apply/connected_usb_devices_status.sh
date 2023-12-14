@@ -7,4 +7,4 @@ if ! command -v usbguard &> /dev/null; then
 fi
 
 # List all USB devices with their status
-sudo usbguard list-devices
+sudo usbguard list-devices | cat -n
