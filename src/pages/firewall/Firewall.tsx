@@ -33,9 +33,10 @@ const Firewall = () => {
   const firewallStatus = useFirewallStore((state) => state.firewall);
   const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
     functionToExecute: () => invoke("apply_firewall_rules"),
-    onSuccess: (res) => {
-      console.log(res);
-      if (res === "true") {
+    onSuccess: (res: any) => {
+      const resJSON = JSON.parse(res);
+      console.log(resJSON);
+      if (resJSON.success) {
         console.log("firewall on");
         updateFirewallStatus();
       } else {
@@ -59,8 +60,10 @@ const Firewall = () => {
 
   const { isLoading: isDisablelLoading, execute: executeDisable } = useLoading({
     functionToExecute: () => invoke("reverse_firewall_rules"),
-    onSuccess: (res) => {
-      if (res === "true") {
+    onSuccess: (res: any) => {
+      const resJSON = JSON.parse(res);
+      console.log(resJSON);
+      if (resJSON.success) {
         console.log("firewall off");
         updateFirewallStatus();
       } else {
