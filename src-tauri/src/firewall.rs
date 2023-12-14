@@ -7,6 +7,7 @@ use std::fs::OpenOptions;
 use std::io::Write;
 use tokio::process::Command as AsyncCommand;
 use std::io::Read;
+use serde_json::json;
 
 
 #[tauri::command]
@@ -63,11 +64,10 @@ pub async fn apply_firewall_rules() -> Result<String, String> {
 
     // Construct the JSON-like return value
     let result = if output.status.success() {
-        format!(r#"{{"success": true, "logs": "{}"}}"#, log_contents)
+        json!({ "success": true, "logs": log_contents }).to_string()
     } else {
-        format!(r#"{{"success": false, "logs": "{}"}}"#, log_contents)
+        json!({ "success": false, "logs": log_contents }).to_string()
     };
-
     Ok(result)
 }
 
@@ -126,9 +126,9 @@ pub async fn reverse_firewall_rules() -> Result<String, String> {
 
     // Construct the JSON-like return value
     let result = if output.status.success() {
-        format!(r#"{{"success": true, "logs": "{}"}}"#, log_contents)
+        json!({ "success": true, "logs": log_contents }).to_string()
     } else {
-        format!(r#"{{"success": false, "logs": "{}"}}"#, log_contents)
+        json!({ "success": false, "logs": log_contents }).to_string()
     };
 
     Ok(result)

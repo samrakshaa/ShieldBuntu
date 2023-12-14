@@ -34,6 +34,7 @@ const Firewall = () => {
   const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
     functionToExecute: () => invoke("apply_firewall_rules"),
     onSuccess: (res) => {
+      console.log(res);
       if (res === "true") {
         console.log("firewall on");
         updateFirewallStatus();
