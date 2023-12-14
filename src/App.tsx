@@ -1,18 +1,17 @@
-import { useState } from "react";
 import { ThemeProvider } from "./components/theme-provider";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster";
 import Home from "./pages/home/Home";
-import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
 import { attachConsole } from "tauri-plugin-log-api";
-import USBPage from "./pages/USBPage";
+import USBPage from "./pages/TestingArea";
 import StorageProvider from "./components/storageProvider";
 import SudoDialog from "./components/SudoDialog";
 import Firewall from "./pages/firewall/Firewall";
-import Ssh from "./pages/network/Network";
 import Dashboard from "./pages/dashboard/Dashboard";
 import Network from "./pages/network/Network";
+import TestingArea from "./pages/TestingArea";
+import Usb from "./pages/usb/Usb";
 
 attachConsole();
 function App() {
@@ -25,8 +24,9 @@ function App() {
             <Route path="/" element={<Home />}>
               <Route path={"/"} element={<Dashboard />} />
               <Route path={"/firewall"} element={<Firewall />} />
-              <Route path={"/usbblock"} element={<USBPage />} />
+              <Route path={"/usb"} element={<Usb />} />
               <Route path={"/network"} element={<Network />} />
+              <Route path={"/testing"} element={<TestingArea />} />
             </Route>
             {/* <Route path="/network-security/firewall" element={<Firewall />} />
             <Route path="/network-security/usbblock" element={<USBPage />} /> */}

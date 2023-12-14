@@ -23,12 +23,17 @@ const networkLinks = [
   },
   {
     title: "USB Settings",
-    link: "/usbblock",
+    link: "/usb",
     icon: <TbUsb size={25} />,
   },
   {
     title: "Network Settings",
     link: "/network",
+    icon: <SiTorbrowser size={25} />,
+  },
+  {
+    title: "Testing Area",
+    link: "/testing",
     icon: <SiTorbrowser size={25} />,
   },
   // {

@@ -16,16 +16,14 @@ import Loader from "@/components/Loader";
 const Tor = () => {
   const [logs, setLogs] = useState("");
   const { toast } = useToast();
-  const toggleTorStatus = useNetworkStore((state) => state.toggleTor);
-  const updateTorStatus = useNetworkStore((state) => state.changeTor);
-  const TorStatus = useNetworkStore((state) => state.tor);
+  const { changeTor: updateTorStatus, tor: TorStatus } = useNetworkStore();
   const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
     functionToExecute: () => invoke("block_tor_access"),
     onSuccess: (res: any) => {
       const resJson = JSON.parse(res);
       if (resJson.success) {
         console.log("Tor on");
-        toggleTorStatus();
+        updateTorStatus(true);
       } else {
         const currLog = res as string;
 
@@ -53,7 +51,7 @@ const Tor = () => {
       const resJson = JSON.parse(res);
       if (resJson.success) {
         console.log("Tor off");
-        toggleTorStatus();
+        updateTorStatus(false);
       } else {
         console.log("not able to disable Tor");
         toast({

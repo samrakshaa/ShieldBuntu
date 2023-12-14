@@ -3,28 +3,35 @@ import { persist, createJSONStorage } from "zustand/middleware";
 
 interface GFireStore {
   firewall: boolean;
-  toggleFirewall: () => void;
   changeFirewall: (status: boolean) => void;
 }
 
+interface USBDevice {
+  sequence: number;
+  id: string;
+  name: string;
+}
+interface GUsbStore {
+  usbStatus: boolean;
+  connectedUsbs: USBDevice[];
+  whiteListedUsbs: USBDevice[];
+  blackListedUsbs: USBDevice[];
+  changeUsbStatus: (status: boolean) => void;
+  setConnectedUsbs: (usbs: USBDevice[]) => void;
+  setWhiteUsbs: (usbs: USBDevice[]) => void;
+  setBlackUsbs: (usbs: USBDevice[]) => void;
+}
 interface GNetworkStore {
   ssh: boolean;
   tor: boolean;
-  toggleSSH: () => void;
   changeSSH: (status: boolean) => void;
-  toggleTor: () => void;
   changeTor: (status: boolean) => void;
-}
-interface GSidemenuStore {
-  activeTab: number;
-  setActiveTab: (index: GSidemenuStore["activeTab"]) => void;
 }
 
 export const useFirewallStore = create(
   persist<GFireStore>(
     (set) => ({
       firewall: false,
-      toggleFirewall: () => set((state) => ({ firewall: !state.firewall })),
       changeFirewall: (status: boolean) => set(() => ({ firewall: status })),
     }),
     {
@@ -39,9 +46,7 @@ export const useNetworkStore = create(
     (set) => ({
       ssh: false,
       tor: false,
-      toggleTor: () => set((state) => ({ tor: !state.tor })),
-      changeTor: (status: boolean) => set(() => ({ ssh: status })),
-      toggleSSH: () => set((state) => ({ ssh: !state.ssh })),
+      changeTor: (status: boolean) => set(() => ({ tor: status })),
       changeSSH: (status: boolean) => set(() => ({ ssh: status })),
     }),
     {
@@ -51,14 +56,23 @@ export const useNetworkStore = create(
   )
 );
 
-export const useSidemenuStore = create(
-  persist<GSidemenuStore>(
+export const useUsbStore = create(
+  persist<GUsbStore>(
     (set) => ({
-      activeTab: 0,
-      setActiveTab: (index) => set(() => ({ activeTab: index })),
+      usbStatus: false,
+      connectedUsbs: [],
+      whiteListedUsbs: [],
+      blackListedUsbs: [],
+      changeUsbStatus: (status: boolean) => set(() => ({ usbStatus: status })),
+      setConnectedUsbs: (connUsbs: USBDevice[]) =>
+        set(() => ({ connectedUsbs: connUsbs })),
+      setBlackUsbs: (blackUsbs: USBDevice[]) =>
+        set(() => ({ blackListedUsbs: blackUsbs })),
+      setWhiteUsbs: (whiteUsbs: USBDevice[]) =>
+        set(() => ({ whiteListedUsbs: whiteUsbs })),
     }),
     {
-      name: "sidemenu-store",
+      name: "usb-store",
       storage: createJSONStorage(() => localStorage),
     }
   )

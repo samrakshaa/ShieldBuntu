@@ -26,13 +26,8 @@ import BackButton from "@/components/BackButton";
 
 const Firewall = () => {
   const { toast } = useToast();
-  const toggleFirewallStatus = useFirewallStore(
-    (state) => state.toggleFirewall
-  );
-  const updateFirewallStatus = useFirewallStore(
-    (state) => state.changeFirewall
-  );
-  const firewallStatus = useFirewallStore((state) => state.firewall);
+  const { changeFirewall: updateFirewallStatus, firewall: firewallStatus } =
+    useFirewallStore();
   const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
     functionToExecute: () => invoke("apply_firewall_rules"),
     onSuccess: (res: any) => {
@@ -40,7 +35,7 @@ const Firewall = () => {
       console.log(resJSON);
       if (resJSON.success) {
         console.log("firewall on");
-        toggleFirewallStatus();
+        updateFirewallStatus(true);
       } else {
         console.log("not able to enable firewall");
         toast({
@@ -67,7 +62,7 @@ const Firewall = () => {
       console.log(resJSON);
       if (resJSON.success) {
         console.log("firewall off");
-        toggleFirewallStatus();
+        updateFirewallStatus(false);
       } else {
         console.log("not able to disable firewall");
         toast({

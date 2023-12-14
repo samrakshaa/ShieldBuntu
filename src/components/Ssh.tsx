@@ -16,16 +16,14 @@ import Loader from "@/components/Loader";
 const Ssh = () => {
   const [logs, setLogs] = useState("");
   const { toast } = useToast();
-  const toggleSSHStatus = useNetworkStore((state) => state.toggleSSH);
-  const updateSSHStatus = useNetworkStore((state) => state.changeSSH);
-  const SSHStatus = useNetworkStore((state) => state.ssh);
+  const { changeSSH: updateSSHStatus, ssh: SSHStatus } = useNetworkStore();
   const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
     functionToExecute: () => invoke("apply_ssh_rules"),
     onSuccess: (res: any) => {
       const resJson = JSON.parse(res);
       if (resJson.success) {
         console.log("ssh on");
-        toggleSSHStatus();
+        updateSSHStatus(true);
       } else {
         const currLog = res as string;
 
@@ -53,7 +51,7 @@ const Ssh = () => {
       const resJson = JSON.parse(res);
       if (resJson.success) {
         console.log("SSH off");
-        toggleSSHStatus();
+        updateSSHStatus(false);
       } else {
         console.log("not able to disable SSH");
         toast({
