@@ -2,7 +2,7 @@ use std::fs::OpenOptions;
 use std::io::{Read, Write};
 use std::process::{Command, Stdio};
 use chrono::Utc;
-use serde_json::Value;
+// use serde_json::Value;
 use tokio::io::AsyncWriteExt;
 use tokio::process::Command as AsyncCommand;
 use crate::get_password;
@@ -137,43 +137,39 @@ pub async fn reverse_ssh_rules() -> Result<String, String> {
 
 #[tauri::command]
 pub async fn check_ssh() -> Result<String, String> {
-    let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/check/check_ssh.sh");
-
-    // Run the bash script for checking firewall rules
-    let mut child = AsyncCommand::new("sudo")
-        .arg("-k")
-        .arg("-S") // Read the password from stdin
-        .arg("bash")
-        .arg(&script_path)
-        .stdin(Stdio::piped())
-        .stdout(Stdio::piped()) // Capture stdout
-        .stderr(Stdio::piped()) // Capture stderr
-        .spawn()
-        .map_err(|e| format!("Error spawning process: {}", e))?;
-
-    if let Some(mut stdin) = child.stdin.take() {
-        stdin.write_all(format!("{}\n", password).as_bytes()).await
-            .map_err(|e| format!("Error writing to stdin: {}", e))?;
-    }
-
-    // Await the child process completion
-    let output = child.wait_with_output().await
-        .map_err(|e| format!("Error waiting for process: {}", e))?;
-
-    // Check if the command executed successfully
-    if output.status.success() {
-        let output_str = String::from_utf8(output.stdout)
-            .map_err(|e| format!("Failed to read output: {}", e))?;
-
-        // Parse the output as JSON and return
-        serde_json::from_str::<Value>(&output_str)
-            .map(|json| json.to_string())
-            .map_err(|e| format!("Failed to parse output as JSON: {}", e))
-    } else {
-        let error_output = String::from_utf8(output.stderr)
-            .map_err(|e| format!("Failed to read error output: {}", e))?;
-        Err(format!("Error executing command: {}", error_output))
-    }
+        let password = get_password().ok_or_else(|| "Password not available".to_string())?;
+        let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+        let script_path = current_dir.join("scripts/check/check_ssh.sh");
+    
+        // Run the bash script for checking firewall status
+        let mut child = AsyncCommand::new("sudo")
+            .arg("-S")
+            .arg("bash")
+            .arg(script_path)
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .spawn()
+            .map_err(|e| format!("Error spawning process: {}", e))?;
+    
+        if let Some(mut stdin) = child.stdin.take() {
+            stdin.write_all(format!("{}\n", password).as_bytes()).await
+                .map_err(|e| format!("Error writing to stdin: {}", e))?;
+        }
+    
+        // Await the child process completion
+        let output = child.wait_with_output().await
+            .map_err(|e| format!("Error waiting for process: {}", e))?;
+    
+        // Check if the command executed successfully
+        if output.status.success() {
+            let output_str = String::from_utf8(output.stdout)
+                .map_err(|e| format!("Failed to read output: {}", e))?;
+    
+            Ok(output_str)  // Return the output directly
+        } else {
+            let error_output = String::from_utf8(output.stderr)
+                .map_err(|e| format!("Failed to read error output: {}", e))?;
+            Err(format!("Error executing command: {}", error_output))
+        }
 }

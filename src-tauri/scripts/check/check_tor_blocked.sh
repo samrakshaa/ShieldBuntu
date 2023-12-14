@@ -72,8 +72,8 @@ ip_addresses=($(extract_ip_addresses "$merged_file"))
 all_blocked=true
 for ip in "${ip_addresses[@]}"; do
   if ! is_ip_blocked "$ip"; then
-    all_blocked=false
-    break
+    echo "{\"enabled\": false}"
+    exit 0
   fi
 done
 
@@ -81,12 +81,12 @@ done
 tor_ports=(9001 9030 9050 9051 9000 9150 9040) 
 for port in "${tor_ports[@]}"; do
   if ! is_tor_port_blocked "$port"; then
-    all_blocked=false
-    break
+    echo "{\"enabled\": false}"
+    exit 0
   fi
 done
 
 # Clean up temporary files
 cleanup
 
-echo "{\"tor_state\": \"$all_blocked\"}"
+echo "{\"enabled\": true}"

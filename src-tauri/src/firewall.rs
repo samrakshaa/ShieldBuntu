@@ -1,5 +1,5 @@
 use std::process::{Stdio, Command};
-use serde_json::Value;
+// use serde_json::Value;
 use tokio::io::AsyncWriteExt;
 use crate::get_password;
 use chrono::Utc;
@@ -141,15 +141,14 @@ pub async fn check_firewall() -> Result<String, String> {
     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
     let script_path = current_dir.join("scripts/check/check_firewall.sh");
 
-    // Run the bash script for checking firewall rules
+    // Run the bash script for checking firewall status
     let mut child = AsyncCommand::new("sudo")
-        .arg("-k")
-        .arg("-S") // Read the password from stdin
+        .arg("-S")
         .arg("bash")
-        .arg(&script_path)
+        .arg(script_path)
         .stdin(Stdio::piped())
-        .stdout(Stdio::piped()) // Capture stdout
-        .stderr(Stdio::piped()) // Capture stderr
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
         .spawn()
         .map_err(|e| format!("Error spawning process: {}", e))?;
 
@@ -167,10 +166,7 @@ pub async fn check_firewall() -> Result<String, String> {
         let output_str = String::from_utf8(output.stdout)
             .map_err(|e| format!("Failed to read output: {}", e))?;
 
-        // Parse the output as JSON and return
-        serde_json::from_str::<Value>(&output_str)
-            .map(|json| json.to_string())
-            .map_err(|e| format!("Failed to parse output as JSON: {}", e))
+        Ok(output_str)  // Return the output directly
     } else {
         let error_output = String::from_utf8(output.stderr)
             .map_err(|e| format!("Failed to read error output: {}", e))?;

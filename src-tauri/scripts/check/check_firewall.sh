@@ -1,18 +1,22 @@
 #!/bin/bash
 
-# Check if UFW is installed
-if ! command -v ufw > /dev/null 2>&1; then
-  echo "UFW is not installed."
-  exit 1
+# Check if UFW is installed and active
+if ! sudo ufw status | grep -qi 'Status: active'; then
+  echo "{\"enabled\": false}"
+  exit 0
 fi
 
-# Check if UFW is enabled
-ufw_enabled=$(sudo ufw status | grep -qi 'Status: active'; echo $?)
+# Check if SSH rule is enabled
+if ! sudo ufw status | grep -qi '22/tcp.*ALLOW'; then
+  echo "{\"enabled\": false}"
+  exit 0
+fi
 
-# Check if the specific rules are already applied
-ssh_rule=$(sudo ufw status | grep -qi '22/tcp'; echo $?)
-https_rule=$(sudo ufw status | grep -qi '443/tcp'; echo $?)
+# Check if HTTPS rule is enabled
+if ! sudo ufw status | grep -qi '443/tcp.*ALLOW'; then
+  echo "{\"enabled\": false}"
+  exit 0
+fi
 
-# echo {"firewall" : {"ufw_enabled": "$((!ufw_enabled))", "ssh_rule": "$((!ssh_rule))", "https_rule": "$((!https_rule))"}}
-
-echo "{\"firewall\" : {\"ufw_enabled\": \"$((!ufw_enabled))\", \"ssh_rule\": \"$((!ssh_rule))\", \"https_rule\": \"$((!https_rule))\"}}"
+# If all checks pass, return true
+echo "{\"enabled\": true}"

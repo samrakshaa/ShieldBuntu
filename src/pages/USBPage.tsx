@@ -63,6 +63,21 @@ const USBPage = () => {
       .then((res) => console.log(res))
       .catch((err) => console.error(err));
   };
+  const handleClick13 = () => {
+    invoke("selinux")
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
+  };
+  const handleClick14 = () => {
+    invoke("reverse_selinux")
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
+  };
+  const handleClick15 = () => {
+    invoke("check_selinux")
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
+  };
 
   return (
     <div className="">
@@ -101,6 +116,15 @@ const USBPage = () => {
       </Button>
       <Button onClick={handleClick12} className=" mt-32">
         Check TOR
+      </Button>
+      <Button onClick={handleClick13} className=" mt-32">
+        selinux
+      </Button>
+      <Button onClick={handleClick14} className=" mt-32">
+        Rev selinux
+      </Button>
+      <Button onClick={handleClick15} className=" mt-32">
+        Check selinux
       </Button>
     </div>
   );

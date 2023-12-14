@@ -6,14 +6,13 @@
 # Check if SSH service is enabled
 is_ssh_enabled() {
     if sudo systemctl status ssh | grep -w active &> /dev/null; then
-        echo true
+        echo "{\"enabled\": true}"
+        exit 0
     else
-        echo false
+        echo "{\"enabled\": false}"
+        exit 0
     fi
 }
 
-# Get the SSH state
-ssh_state=$(is_ssh_enabled)
-
-# Return the SSH state in JSON format
-echo "{\"ssh_state\": \"$ssh_state\"}"
+# Check if SSH service is enabled
+is_ssh_enabled
