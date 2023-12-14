@@ -13,7 +13,7 @@ interface SidemenuProps {
 }
 
 const Sidemenu: React.FC<SidemenuProps> = ({ menuOptions }) => {
-  // const [activeTab, setActiveTab] = useState(0);
+  // features-to-work-on: Add functionality to change active tab when we navigate to other page (for back button)
   const activeTab = useSidemenuStore((state) => state.activeTab);
   const setActiveTab = useSidemenuStore((state) => state.setActiveTab);
   const navigate = useNavigate();
