@@ -14,7 +14,7 @@ mod usb;
 mod fail2ban;
 mod apparmor;
 mod rkhunter;
-mod tor_blocker;
+mod tor;
 mod autoupdate;
 mod ssh;
 
@@ -141,17 +141,18 @@ pub async fn main() {
             usb::list_usb_devices,
             unused_packages::remove_unused_packages,
             update_packages::update_and_upgrade_packages,
-            firewall::reverse_firewall_rules,
             firewall::apply_firewall_rules,
+            firewall::reverse_firewall_rules,
             firewall::check_firewall,
             fail2ban::install_and_configure_fail2ban,
             apparmor::install_and_configure_apparmor,
             rkhunter::install_and_configure_rkhunter,
             autoupdate::run_autoupdate_script,
-            tor_blocker::block_tor_access,
-            tor_blocker::check_tor_blocked,
-            ssh::reverse_ssh_rules,
+            tor::block_tor_access,
+            tor::reverse_tor_block,
+            tor::check_tor_blocked,
             ssh::apply_ssh_rules,
+            ssh::reverse_ssh_rules,
             ssh::check_ssh,
             ]
         )

@@ -48,6 +48,21 @@ const USBPage = () => {
       .then((res) => console.log(res))
       .catch((err) => console.error(err));
   };
+  const handleClick10 = () => {
+    invoke("block_tor_access")
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
+  };
+  const handleClick11 = () => {
+    invoke("reverse_tor_block")
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
+  };
+  const handleClick12 = () => {
+    invoke("check_tor_blocked")
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
+  };
 
   return (
     <div className="">
@@ -77,6 +92,15 @@ const USBPage = () => {
       </Button>
       <Button onClick={handleClick9} className=" mt-32">
         Check SSH
+      </Button>
+      <Button onClick={handleClick10} className=" mt-32">
+        Tor
+      </Button>
+      <Button onClick={handleClick11} className=" mt-32">
+        Rev TOR
+      </Button>
+      <Button onClick={handleClick12} className=" mt-32">
+        Check TOR
       </Button>
     </div>
   );
