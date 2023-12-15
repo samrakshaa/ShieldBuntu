@@ -1,8 +1,12 @@
+use chrono::Utc;
 use serde::{Serialize, Deserialize};
+use serde_json::json;
 use tokio::process::Command as AsyncCommand;
 use tokio::fs::File;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
-use std::process::Stdio;
+use std::fs::OpenOptions;
+use std::io::{Write, Read};
+use std::process::{Stdio, Command};
 use crate::get_password;
 
 
@@ -142,3 +146,279 @@ pub async fn list_usb_devices_usbguard() -> Result<String, String> {
         Err(error_output.into_owned())
     }
 }
+
+
+#[tauri::command]
+pub async fn apply_usb_blocking() -> Result<String, String> {
+    let password = get_password().ok_or_else(|| "Password not available".to_string())?;
+    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    let script_path = current_dir.join("scripts/apply/usb_blocking.sh");
+    let log_file_path = current_dir.join("logs/usb_blocking_log.txt");
+
+    // Open or create the log file for appending
+    let mut file = OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(&log_file_path)
+        .map_err(|e| format!("Error opening log file: {}", e))?;
+
+    // Write the current date and time to the log file
+    let datetime = Utc::now().format("[%Y-%m-%d %H:%M:%S]").to_string();
+    file.write_all(format!("\n\n{}\n\n", datetime).as_bytes())
+        .map_err(|e| format!("Error writing to log file: {}", e))?;
+
+    // Run the bash script for applying firewall rules
+    let mut child = Command::new("sudo")
+        .arg("-S")
+        .arg("bash")
+        .arg(script_path)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .map_err(|e| format!("Error spawning process: {}", e))?;
+
+    if let Some(mut stdin) = child.stdin.take() {
+        stdin.write_all(format!("{}\n", password).as_bytes()).map_err(|e| format!("Error writing to stdin: {}", e))?;
+    }
+
+    // Capture the output
+    let output = child.wait_with_output().map_err(|e| format!("Error waiting for process: {}", e))?;
+    
+    // Write the output to the log file
+    file.write_all(&output.stdout)
+        .and_then(|_| file.write_all(&output.stderr))
+        .map_err(|e| format!("Error writing to log file: {}", e))?;
+
+    // Read the entire log file to include in the response
+    let mut file = OpenOptions::new()
+        .read(true)
+        .open(&log_file_path)
+        .map_err(|e| format!("Error opening log file: {}", e))?;
+
+    let mut log_contents = String::new();
+    file.read_to_string(&mut log_contents)
+        .map_err(|e| format!("Error reading log file: {}", e))?;
+
+    // Construct the JSON-like return value
+    let result = if output.status.success() {
+        json!({ "success": true, "logs": log_contents }).to_string()
+    } else {
+        json!({ "success": false, "logs": log_contents }).to_string()
+    };
+    Ok(result)
+}
+
+
+#[tauri::command]
+pub async fn reverse_usb_blocking() -> Result<String, String> {
+    let password = get_password().ok_or_else(|| "Password not available".to_string())?;
+    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    let script_path = current_dir.join("scripts/reverse/r-usb_blocking.sh");
+    let log_file_path = current_dir.join("logs/reverse_usb_blocking_log.txt");
+
+    // Open or create the log file for appending
+    let mut file = OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(&log_file_path)
+        .map_err(|e| format!("Error opening log file: {}", e))?;
+
+    // Write the current date and time to the log file
+    let datetime = Utc::now().format("[%Y-%m-%d %H:%M:%S]").to_string();
+    file.write_all(format!("\n\n{}\n\n", datetime).as_bytes())
+        .map_err(|e| format!("Error writing to log file: {}", e))?;
+
+    // Run the bash script for applying firewall rules
+    let mut child = Command::new("sudo")
+        .arg("-S")
+        .arg("bash")
+        .arg(script_path)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .map_err(|e| format!("Error spawning process: {}", e))?;
+
+    if let Some(mut stdin) = child.stdin.take() {
+        stdin.write_all(format!("{}\n", password).as_bytes()).map_err(|e| format!("Error writing to stdin: {}", e))?;
+    }
+
+    // Capture the output
+    let output = child.wait_with_output().map_err(|e| format!("Error waiting for process: {}", e))?;
+    
+    // Write the output to the log file
+    file.write_all(&output.stdout)
+        .and_then(|_| file.write_all(&output.stderr))
+        .map_err(|e| format!("Error writing to log file: {}", e))?;
+
+    // Read the entire log file to include in the response
+    let mut file = OpenOptions::new()
+        .read(true)
+        .open(&log_file_path)
+        .map_err(|e| format!("Error opening log file: {}", e))?;
+
+    let mut log_contents = String::new();
+    file.read_to_string(&mut log_contents)
+        .map_err(|e| format!("Error reading log file: {}", e))?;
+
+    // Construct the JSON-like return value
+    let result = if output.status.success() {
+        json!({ "success": true, "logs": log_contents }).to_string()
+    } else {
+        json!({ "success": false, "logs": log_contents }).to_string()
+    };
+    Ok(result)
+}
+
+
+#[warn(non_snake_case)]
+#[tauri::command]
+pub async fn whitelist_usb(usbIds: Vec<String>) -> Result<String, String> {
+    let password = get_password().ok_or_else(|| "Password not available".to_string())?;
+    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    let script_path = current_dir.join("scripts/apply/whitelist_usbs.sh");
+    let log_file_path = current_dir.join("logs/whitelist_usb_log.txt");
+
+    // Open or create the log file for appending
+    let mut file = OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(&log_file_path)
+        .map_err(|e| format!("Error opening log file: {}", e))?;
+
+    // Write the current date and time to the log file
+    let datetime = Utc::now().format("[%Y-%m-%d %H:%M:%S]").to_string();
+    file.write_all(format!("\n\n{}\n\n", datetime).as_bytes())
+        .map_err(|e| format!("Error writing to log file: {}", e))?;
+
+    // Prepare the command with USB IDs as arguments
+    let mut command = AsyncCommand::new("sudo")
+        .arg("-S")
+        .arg("bash")
+        .arg(script_path)
+        .args(usbIds) // Pass the USB IDs to the script
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .map_err(|e| format!("Error spawning process: {}", e))?;
+
+    // Write the password to stdin
+    if let Some(mut stdin) = command.stdin.take() {
+        stdin.write_all(format!("{}\n", password).as_bytes()).await
+            .map_err(|e| format!("Error writing to stdin: {}", e))?;
+    }
+
+    // Capture the output
+    let output = command.wait_with_output().await.map_err(|e| format!("Error waiting for process: {}", e))?;
+
+    // Write the output to the log file
+    file.write_all(&output.stdout)
+        .and_then(|_| file.write_all(&output.stderr))
+        .map_err(|e| format!("Error writing to log file: {}", e))?;
+
+    // Read the entire log file to include in the response
+    let mut file = OpenOptions::new()
+        .read(true)
+        .open(&log_file_path)
+        .map_err(|e| format!("Error opening log file: {}", e))?;
+
+    let mut log_contents = String::new();
+    file.read_to_string(&mut log_contents)
+        .map_err(|e| format!("Error reading log file: {}", e))?;
+
+    // Construct the JSON-like return value
+    let result = if output.status.success() {
+        json!({ "success": true, "logs": log_contents }).to_string()
+    } else {
+        json!({ "success": false, "logs": log_contents }).to_string()
+    };
+
+    Ok(result)
+}
+
+
+#[tauri::command]
+pub async fn blacklist_usb(usbIds: Vec<String>) -> Result<String, String> {
+    let password = get_password().ok_or_else(|| "Password not available".to_string())?;
+    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    let script_path = current_dir.join("scripts/apply/blacklist_usbs.sh");
+    let log_file_path = current_dir.join("logs/blacklist_usb_log.txt");
+
+    // Open or create the log file for appending
+    let mut file = OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(&log_file_path)
+        .map_err(|e| format!("Error opening log file: {}", e))?;
+
+    // Write the current date and time to the log file
+    let datetime = Utc::now().format("[%Y-%m-%d %H:%M:%S]").to_string();
+    file.write_all(format!("\n\n{}\n\n", datetime).as_bytes())
+        .map_err(|e| format!("Error writing to log file: {}", e))?;
+
+    // Prepare the command with USB IDs as arguments
+    let mut command = AsyncCommand::new("sudo")
+        .arg("-S")
+        .arg("bash")
+        .arg(script_path)
+        .args(usbIds) // Pass the USB IDs to the script
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .map_err(|e| format!("Error spawning process: {}", e))?;
+
+    // Write the password to stdin
+    if let Some(mut stdin) = command.stdin.take() {
+        stdin.write_all(format!("{}\n", password).as_bytes()).await
+            .map_err(|e| format!("Error writing to stdin: {}", e))?;
+    }
+
+    // Capture the output
+    let output = command.wait_with_output().await.map_err(|e| format!("Error waiting for process: {}", e))?;
+
+    // Write the output to the log file
+    file.write_all(&output.stdout)
+        .and_then(|_| file.write_all(&output.stderr))
+        .map_err(|e| format!("Error writing to log file: {}", e))?;
+
+    // Read the entire log file to include in the response
+    let mut file = OpenOptions::new()
+        .read(true)
+        .open(&log_file_path)
+        .map_err(|e| format!("Error opening log file: {}", e))?;
+
+    let mut log_contents = String::new();
+    file.read_to_string(&mut log_contents)
+        .map_err(|e| format!("Error reading log file: {}", e))?;
+
+    // Construct the JSON-like return value
+    let result = if output.status.success() {
+        json!({ "success": true, "logs": log_contents }).to_string()
+    } else {
+        json!({ "success": false, "logs": log_contents }).to_string()
+    };
+
+    Ok(result)
+}
+
+
+
+
+
+
+// #[tokio::main]
+// async fn main() {
+//     // Example USB IDs to pass to the function
+//     let usb_ids = vec!["17ef:6099".to_string(), "0bda:c123".to_string()];
+
+//     println!("{:?}", usb_ids);
+
+//     // Call the whitelist_usb function
+//     match whitelist_usb(usb_ids).await {
+//         Ok(result) => println!("Result: {}", result),
+//         Err(e) => eprintln!("Error: {}", e),
+//     }
+// }

@@ -78,6 +78,26 @@ const USBPage = () => {
       .then((res) => console.log(res))
       .catch((err) => console.error(err));
   };
+  const handleClick16 = () => {
+    invoke("list_usb_devices_usbguard")
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
+  };
+  const handleClick17 = () => {
+    invoke("apply_usb_blocking")
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
+  };
+  const handleClick18 = () => {
+    invoke("whitelist_usb", { usbIds: ["0bda:c123", "17ef:6099", "413c:301a", "04f2:b725"] })
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
+  };
+  const handleClick19 = () => {
+    invoke("blacklist_usb", { usbIds: ["0bda:c123", "17ef:6099", "413c:301a", "04f2:b725"]})
+      .then((res) => console.log(res))
+      .catch((err) => console.error(err));
+  };
 
   return (
     <div className="">
@@ -125,6 +145,15 @@ const USBPage = () => {
       </Button>
       <Button onClick={handleClick15} className=" mt-32">
         Check selinux
+      </Button>
+      <Button onClick={handleClick16} className=" mt-32">
+        Connected USB
+      </Button>
+      <Button onClick={handleClick18} className=" mt-32">
+        Whitelist Usb Devices
+      </Button>
+      <Button onClick={handleClick19} className=" mt-32">
+        Blacklist Usb Devices
       </Button>
     </div>
   );
