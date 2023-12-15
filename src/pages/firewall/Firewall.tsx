@@ -132,14 +132,14 @@ const Firewall = () => {
             className="bg-secondary text-2xl py-0 hover:bg-secondary/50"
             onClick={handleBack}
           />
-          <h1 className="text-3xl font-bold">Firewall Configuration</h1>
+          <h1 className="text-3xl pl-2 font-bold">Firewall Configuration</h1>
           <TooltipProvider>
             <Tooltip delayDuration={20}>
               <TooltipTrigger className="">
                 {" "}
                 <HiOutlineInformationCircle size={25} />
               </TooltipTrigger>
-              <TooltipContent>Hover</TooltipContent>
+              <TooltipContent className="content-tooltip max-w-[440px]">Firewall is software that monitors incoming and outgoing traffic based on pre-defined network rules. This section provides concise list of all enabled firewall rules - the section also involves options to block/manage open port configurations.</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>

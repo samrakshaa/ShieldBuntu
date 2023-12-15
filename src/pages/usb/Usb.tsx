@@ -190,22 +190,19 @@ const Usb = () => {
       <div className="main-section py-12">
         <div className=" flex gap-2 items-center ">
           <BackButton />
-          <h1 className="text-3xl font-bold">USB Configuration</h1>
+          <h1  className="text-3xl pl-2 font-bold">USB Configuration</h1>
           <TooltipProvider>
             <Tooltip delayDuration={20}>
               <TooltipTrigger className="">
                 {" "}
                 <HiOutlineInformationCircle size={25} />
               </TooltipTrigger>
-              <TooltipContent>Hover</TooltipContent>
+              <TooltipContent className="content-tooltip max-w-[440px]">USB ports and external devices pose security risks, inviting malware and data theft. Managing these devices and ports prevents unauthorized access, malware injection, and data exfiltration, ensuring a secure and robust system.</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>
         <p className="py-2 text-foreground/50 leading-6">
-          {/* feature-to-do: Add relevant text here... */}
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod quae
-          perferendis quasi assumenda illum repellat neque possimus ipsa earum
-          similique.
+          allow/deny/blacklist external USB devices; manage access and use of USB ports on your system - view list of managable USB devices and ports.
         </p>
         <br />
         <div className="toggle-usb bg-secondary/60 mt-2 p-2 px-4 text-lg border-2 rounded-lg flex flex-row justify-between items-center">
