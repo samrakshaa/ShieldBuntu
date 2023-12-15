@@ -24,6 +24,7 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import Loader from "@/components/Loader";
+import { useNavigate } from "react-router-dom";
 
 const Usb = () => {
   const {
@@ -35,6 +36,7 @@ const Usb = () => {
     setConnectedUsbs,
   } = useUsbStore();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   // Enabling USB blocking
   const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
@@ -174,9 +176,14 @@ const Usb = () => {
     setSelectedUnblockedRows(updatedSelectedRows);
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   const handleBlock = () => {
     // blocks selected USBS
   };
+  
   const handleUnblock = () => {
     // unblocks selected USBS
   };
@@ -189,7 +196,10 @@ const Usb = () => {
     <div className="usb flex flex-row justify-center mx-auto max-w-[900px] p-6 pt-0">
       <div className="main-section py-12">
         <div className=" flex gap-2 items-center ">
-          <BackButton />
+          <BackButton 
+            className="bg-secondary text-2xl py-0 hover:bg-secondary/50"
+            onClick={handleBack}
+          />
           <h1  className="text-3xl pl-2 font-bold">USB Configuration</h1>
           <TooltipProvider>
             <Tooltip delayDuration={20}>
