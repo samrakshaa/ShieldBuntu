@@ -42,19 +42,21 @@ download_tor_nodes() {
 merge_and_deduplicate() {
   local file1="$1"
   local file2="$2"
-  sort -u "$file1" "$file2" > merged_list.txt
+  local merged_list="/var/log/merged_list.txt"
+  sort -u "$file1" "$file2" > "$merged_list"
 }
+
 
 # Function to block IP addresses using iptables
 block_ip_addresses() {
   local file="$1"
   while IFS= read -r ip; do
     if is_ipv6 "$ip"; then
-      ip6tables -A INPUT -s "$ip" -j DROP
-      ip6tables -A OUTPUT -d "$ip" -j DROP
+      sudo ip6tables -A INPUT -s "$ip" -j DROP
+      sudo ip6tables -A OUTPUT -d "$ip" -j DROP
     else
-      iptables -A INPUT -s "$ip" -j DROP
-      iptables -A OUTPUT -d "$ip" -j DROP
+      sudo iptables -A INPUT -s "$ip" -j DROP
+      sudo iptables -A OUTPUT -d "$ip" -j DROP
     fi
     # echo "Blocked IP address: $ip"
   done < "$file"
@@ -69,12 +71,12 @@ create_iptables_files() {
   local ipv6_dir=$(dirname "$ipv6_file")
 
   # Create directories if they don't exist
-  mkdir -p "$ipv4_dir"
-  mkdir -p "$ipv6_dir"
+  sudo mkdir -p "$ipv4_dir"
+  sudo mkdir -p "$ipv6_dir"
 
   # Create iptables rule files if they don't exist
-  touch "$ipv4_file"
-  touch "$ipv6_file"
+  sudo touch "$ipv4_file"
+  sudo touch "$ipv6_file"
 
   echo "Created $ipv4_file"
   echo "Created $ipv6_file"
@@ -82,23 +84,22 @@ create_iptables_files() {
 
 # Function to install iptables and iptables-persistent if not present
 install_iptables() {
-
-  apt remove -y iptables
+  sudo apt-get remove -y iptables
   
   if ! command -v ip6tables &> /dev/null; then
     echo "Installing ip6tables..."
-    apt-get update
-    apt-get install -y --reinstall iptables
+    sudo apt-get update
+    sudo apt-get install -y --reinstall iptables
   fi
 
   if ! command -v iptables-save &> /dev/null; then
     echo "Installing iptables-persistent..."
-    apt-get install -y iptables-persistent
+    sudo apt-get install -y iptables-persistent
   fi
 
   # Ensure iptables service is enabled if the package is installed
   if [ -x /etc/init.d/iptables ]; then
-    update-rc.d iptables enable
+    sudo update-rc.d iptables enable
   fi
 }
 
@@ -107,18 +108,17 @@ install_iptables() {
 reload_iptables_rules() {
   # Check if iptables-persistent is installed
   if command -v systemctl &> /dev/null && systemctl list-unit-files | grep -q iptables; then
-    systemctl restart iptables
+    sudo systemctl restart iptables
   else
     # Reload iptables rules using appropriate command
-    iptables-restore < /etc/iptables/rules.v4
-    ip6tables-restore < /etc/iptables/rules.v6
+    sudo iptables-restore < /etc/iptables/rules.v4
+    sudo ip6tables-restore < /etc/iptables/rules.v6
   fi
 }
 
 # Function to clean up temporary files
 cleanup() {
-  rm -f "merged_list.txt" "tor_full_list.txt" "tor_exit_list.txt"
-  # echo "Temporary files cleaned up."
+  sudo rm -f "/var/log/tor_full_list.txt" "/var/log/tor_exit_list.txt" "/var/log/merged_list.txt"
 }
 
 # Main function to execute blocking measures
@@ -133,17 +133,17 @@ main() {
   install_iptables
 
   # Download Tor node lists
-  download_tor_nodes "https://www.dan.me.uk/torlist/?full" "tor_full_list.txt"
-  download_tor_nodes "https://www.dan.me.uk/torlist/?exit" "tor_exit_list.txt"
+  download_tor_nodes "https://www.dan.me.uk/torlist/?full" "/var/log/tor_full_list.txt"
+  download_tor_nodes "https://www.dan.me.uk/torlist/?exit" "/var/log/tor_exit_list.txt"
 
   # Merge and deduplicate IP addresses
-  merge_and_deduplicate "tor_full_list.txt" "tor_exit_list.txt"
+  merge_and_deduplicate "/var/log/tor_full_list.txt" "/var/log/tor_exit_list.txt"
 
   # Create iptables rule files if they don't exist
   create_iptables_files
 
   # Block IP addresses from the merged list
-  block_ip_addresses "merged_list.txt"
+  block_ip_addresses "/var/log/merged_list.txt"
 
   # Reload iptables rules
   reload_iptables_rules
