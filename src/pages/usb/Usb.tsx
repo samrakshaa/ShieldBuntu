@@ -150,28 +150,7 @@ const Usb = () => {
       },
     });
 
-  // Check status of USB blocking
-  const { isLoading: isStatusLoading, execute: executeStatus } = useLoading({
-    functionToExecute: () => invoke("check_usb"),
-    onSuccess: (res: any) => {
-      const resJSON = JSON.parse(res);
-      if (resJSON.enabled) {
-        console.log("usb is enabled");
-        changeUsbStatus(true);
-      } else {
-        console.log("usb is disabled");
-        changeUsbStatus(false);
-      }
-    },
-    onError: (err) => {
-      console.log(err);
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "usb is ofline...",
-      });
-    },
-  });
+
 
   // List connected usbs
   const { isLoading: isAllUsbsLoading, execute: executeGetAll } = useLoading({
@@ -332,14 +311,14 @@ const Usb = () => {
         <div className="toggle-usb bg-secondary/60 mt-2 p-2 px-4 text-lg border-2 rounded-lg flex flex-row justify-between items-center">
           <div className="flex flex-row items-center">
             <p>USB Blocking</p>
-            {(isDisablelLoading || isEnablelLoading || isStatusLoading) && (
+            {(isDisablelLoading || isEnablelLoading) && (
               <Loader />
             )}
           </div>
           <Switch
             className=""
             checked={usbStatus}
-            disabled={isDisablelLoading || isEnablelLoading || isStatusLoading}
+            disabled={isDisablelLoading || isEnablelLoading}
             onClick={handleSwitchChange}
           />
         </div>
