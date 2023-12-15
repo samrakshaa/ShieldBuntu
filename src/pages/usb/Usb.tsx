@@ -219,7 +219,7 @@ const Usb = () => {
     []
   );
 
-  const handleBlockedCheckboxClick = (usbId: string) => {
+  const handleBlockedRowClick = (usbId: string) => {
     const isSelected = selectedBlockedRows.includes(usbId);
     let updatedSelectedRows: string[];
 
@@ -232,7 +232,7 @@ const Usb = () => {
     setSelectedBlockedRows(updatedSelectedRows);
   };
 
-  const handleUnblockedCheckboxClick = (usbId: string) => {
+  const handleUnblockedRowClick = (usbId: string) => {
     const isSelected = selectedUnblockedRows.includes(usbId);
     let updatedSelectedRows: string[];
 
@@ -357,12 +357,11 @@ const Usb = () => {
                   <TableBody>
                     {connectedUsbs.map((usb, index) => {
                       if(usb.state === "block") return (
-                      <TableRow key={index}>
+                      <TableRow key={index} onClick={() =>
+                        handleBlockedRowClick(usb.id)
+                      }>
                         <TableCell className="py-2">
                           <Checkbox
-                            onCheckedChange={() =>
-                              handleBlockedCheckboxClick(usb.id)
-                            }
                             checked={selectedBlockedRows.includes(usb.id)}
                             disabled={!usbStatus}
                           />
@@ -400,12 +399,9 @@ const Usb = () => {
                   <TableBody>
                   {connectedUsbs.map((usb, index) => {
                       if(usb.state === "allow") return (
-                      <TableRow key={index}>
+                      <TableRow key={index} onClick={() => handleUnblockedRowClick(usb.id)}>
                         <TableCell className="py-2">
-                          <Checkbox
-                            onCheckedChange={() =>
-                              handleUnblockedCheckboxClick(usb.id)
-                            }
+                          <Checkbox 
                             checked={selectedUnblockedRows.includes(usb.id)}
                             disabled={!usbStatus}
                           />
