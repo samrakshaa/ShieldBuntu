@@ -20,7 +20,7 @@ const Sidemenu: React.FC<SidemenuProps> = ({ menuOptions }) => {
   const { pathname } = location
 
   return (
-    <div className=" overflow-autoDefend flex flex-col border-r-2 border-secondary gap-4 items-start w-full max-w-[250px] bg-secondary/20 py-10 h-auto">
+    <div className=" overflow-auto Defend flex flex-col border-r-2 border-secondary gap-4 items-start w-full max-w-[250px] bg-secondary/20 py-10 h-auto">
       <Link to={"/"} className=" px-4 text-2xl">
         ShieldBuntu
       </Link>
