@@ -162,7 +162,7 @@ pub async fn main() {
             usb::apply_usb_blocking,
             usb::whitelist_usb,
             usb::blacklist_usb,
-            usb::reverse_usb_blocking
+            usb::reverse_usb_blocking,
             basic_check::check_fail2ban,
             basic_check::check_rkhunter,
             basic_check::check_unused_package
