@@ -21,6 +21,7 @@ import {
 // import { GiSheikahEye } from "react-icons/gi";
 import useLoading from "@/hooks/useLoading";
 import { useFirewallStore } from "@/store";
+import { useNavigate } from "react-router-dom";
 import Loader from "@/components/Loader";
 import BackButton from "@/components/BackButton";
 
@@ -28,6 +29,7 @@ const Firewall = () => {
   const { toast } = useToast();
   const { changeFirewall: updateFirewallStatus, firewall: firewallStatus } =
     useFirewallStore();
+  const navigate = useNavigate();
   const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
     functionToExecute: () => invoke("apply_firewall_rules"),
     onSuccess: (res: any) => {
@@ -114,6 +116,10 @@ const Firewall = () => {
     }
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   useEffect(() => {
     executeStatus();
   }, []);
@@ -121,9 +127,12 @@ const Firewall = () => {
   return (
     <div className="firewall flex flex-row justify-center mx-auto max-w-[900px] p-6 pt-0">
       <div className="main-section py-12">
-        <div className=" flex gap-2  items-center ">
-          <BackButton />
-          <h1 className="text-3xl font-bold">Firewall Configuration </h1>
+        <div className=" flex gap-4  items-center">
+          <BackButton
+            className="bg-secondary text-2xl py-0 hover:bg-secondary/50"
+            onClick={handleBack}
+          />
+          <h1 className="text-3xl font-bold">Firewall Configuration</h1>
           <TooltipProvider>
             <Tooltip delayDuration={20}>
               <TooltipTrigger className="">

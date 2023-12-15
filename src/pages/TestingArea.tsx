@@ -89,12 +89,16 @@ const USBPage = () => {
       .catch((err) => console.error(err));
   };
   const handleClick18 = () => {
-    invoke("whitelist_usb", { usbIds: ["0bda:c123", "17ef:6099", "413c:301a", "04f2:b725"] })
+    invoke("whitelist_usb", {
+      usbIds: ["0bda:c123", "17ef:6099", "413c:301a", "04f2:b725"],
+    })
       .then((res) => console.log(res))
       .catch((err) => console.error(err));
   };
   const handleClick19 = () => {
-    invoke("blacklist_usb", { usbIds: ["0bda:c123", "17ef:6099", "413c:301a", "04f2:b725"]})
+    invoke("blacklist_usb", {
+      usbIds: ["0bda:c123", "17ef:6099", "413c:301a", "04f2:b725"],
+    })
       .then((res) => console.log(res))
       .catch((err) => console.error(err));
   };
@@ -145,6 +149,9 @@ const USBPage = () => {
       </Button>
       <Button onClick={handleClick15} className=" mt-32">
         Check selinux
+      </Button>
+      <Button onClick={handleClick17} className=" mt-32">
+        Enable USB Blocking
       </Button>
       <Button onClick={handleClick16} className=" mt-32">
         Connected USB

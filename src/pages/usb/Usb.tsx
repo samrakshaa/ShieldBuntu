@@ -23,6 +23,7 @@ import useLoading from "@/hooks/useLoading";
 import { invoke } from "@tauri-apps/api/tauri";
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import Loader from "@/components/Loader";
 
 const Usb = () => {
   const {
@@ -32,8 +33,6 @@ const Usb = () => {
     blackListedUsbs,
     changeUsbStatus,
     setConnectedUsbs,
-    setBlackUsbs,
-    setWhiteUsbs,
   } = useUsbStore();
   const { toast } = useToast();
 
@@ -212,15 +211,15 @@ const Usb = () => {
         <div className="toggle-usb bg-secondary/60 mt-2 p-2 px-4 text-lg border-2 rounded-lg flex flex-row justify-between items-center">
           <div className="flex flex-row items-center">
             <p>USB Blocking</p>
-            {/* {(isDisablelLoading || isEnablelLoading || isStatusLoading) && (
+            {(isDisablelLoading || isEnablelLoading || isStatusLoading) && (
               <Loader />
-            )} */}
+            )}
           </div>
           <Switch
             className=""
-            // checked={usbStatus}
-            // disabled={isDisablelLoading || isEnablelLoading || isStatusLoading}
-            // onClick={handleSwitchChange}
+            checked={usbStatus}
+            disabled={isDisablelLoading || isEnablelLoading || isStatusLoading}
+            onClick={handleSwitchChange}
           />
         </div>
         <br />
@@ -228,7 +227,7 @@ const Usb = () => {
         {/* USB table */}
         <div className="usbtable mt-6">
           <h2 className="text-2xl mb-4 font-bold ">Connected USBs</h2>
-          {usbStatus ? (
+          {!usbStatus ? (
             <div>
               <div className="blacklistTable flex flex-col">
                 <h2 className="text-lg underline">Blocked USB Devices</h2>
@@ -240,10 +239,11 @@ const Usb = () => {
                         ID
                       </TableHead>
                       <TableHead className="font-bold text-lg">Name</TableHead>
+                      <TableHead className="text-lg">Status</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {blackListedUsbs.map((usb, index) => (
+                    {connectedUsbs.map((usb, index) => (
                       <TableRow key={index}>
                         <TableCell className="py-2">
                           <Checkbox
@@ -256,6 +256,7 @@ const Usb = () => {
                         </TableCell>
                         <TableCell className="py-2">{usb.id}</TableCell>
                         <TableCell className="py-2">{usb.name}</TableCell>
+                        <TableCell className="py-2">{usb.status}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -278,10 +279,11 @@ const Usb = () => {
                       <TableHead className="w-[50px]"></TableHead>
                       <TableHead className="text-lg">ID</TableHead>
                       <TableHead className="text-lg">Name</TableHead>
+                      <TableHead className="text-lg">Status</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {whiteListedUsbs.map((usb, index) => (
+                    {connectedUsbs.map((usb, index) => (
                       <TableRow key={index}>
                         <TableCell className="py-2">
                           <Checkbox
@@ -294,6 +296,7 @@ const Usb = () => {
                         </TableCell>
                         <TableCell className="py-2">{usb.id}</TableCell>
                         <TableCell className="py-2">{usb.name}</TableCell>
+                        <TableCell className="py-2">{usb.status}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -314,6 +317,7 @@ const Usb = () => {
                   <TableHead className="w-[50px]"></TableHead>
                   <TableHead className="text-lg">ID</TableHead>
                   <TableHead className="text-lg">Name</TableHead>
+                  <TableHead className="text-lg">Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

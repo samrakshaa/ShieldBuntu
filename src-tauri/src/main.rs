@@ -156,6 +156,12 @@ pub async fn main() {
             ssh::reverse_ssh_rules,
             ssh::check_ssh,
             check_username::check_username,
+            usb::list_usb_devices,
+            usb::list_usb_devices_usbguard,
+            usb::apply_usb_blocking,
+            usb::whitelist_usb,
+            usb::blacklist_usb,
+            usb::reverse_usb_blocking
             ]
         )
         .run(tauri::generate_context!())

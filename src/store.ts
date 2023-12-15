@@ -10,6 +10,7 @@ interface USBDevice {
   sequence: number;
   id: string;
   name: string;
+  status: "blocked" | "active";
 }
 interface GUsbStore {
   usbStatus: boolean;
@@ -18,8 +19,6 @@ interface GUsbStore {
   blackListedUsbs: USBDevice[];
   changeUsbStatus: (status: boolean) => void;
   setConnectedUsbs: (usbs: USBDevice[]) => void;
-  setWhiteUsbs: (usbs: USBDevice[]) => void;
-  setBlackUsbs: (usbs: USBDevice[]) => void;
 }
 interface GNetworkStore {
   ssh: boolean;
@@ -66,10 +65,6 @@ export const useUsbStore = create(
       changeUsbStatus: (status: boolean) => set(() => ({ usbStatus: status })),
       setConnectedUsbs: (connUsbs: USBDevice[]) =>
         set(() => ({ connectedUsbs: connUsbs })),
-      setBlackUsbs: (blackUsbs: USBDevice[]) =>
-        set(() => ({ blackListedUsbs: blackUsbs })),
-      setWhiteUsbs: (whiteUsbs: USBDevice[]) =>
-        set(() => ({ whiteListedUsbs: whiteUsbs })),
     }),
     {
       name: "usb-store",
@@ -77,4 +72,3 @@ export const useUsbStore = create(
     }
   )
 );
-
