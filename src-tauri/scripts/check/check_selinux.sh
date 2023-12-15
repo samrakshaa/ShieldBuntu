@@ -20,4 +20,4 @@ if dpkg -l | grep -qw selinux-utils; then
 fi
 
 # Output the SELinux state in JSON format
-echo "{\"selinux_state\": \"$selinux_state\"}"
+echo "{\"enabled\": \"$selinux_state\"}"

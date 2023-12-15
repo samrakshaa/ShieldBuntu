@@ -18,6 +18,7 @@ mod tor;
 mod autoupdate;
 mod ssh;
 mod check_username;
+mod basic_check;
 
 // #[derive(Debug, Serialize, Deserialize)]
 // struct UsbDevice {
@@ -162,6 +163,9 @@ pub async fn main() {
             usb::whitelist_usb,
             usb::blacklist_usb,
             usb::reverse_usb_blocking
+            basic_check::check_fail2ban,
+            basic_check::check_rkhunter,
+            basic_check::check_unused_package
             ]
         )
         .run(tauri::generate_context!())
