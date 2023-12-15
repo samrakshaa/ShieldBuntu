@@ -12,28 +12,31 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import Network from "./pages/network/Network";
 import TestingArea from "./pages/TestingArea";
 import Usb from "./pages/usb/Usb";
+import LoadingScreenProvider from "./components/LoadingScreenProvider";
 
 attachConsole();
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <StorageProvider>
-        <SudoDialog />
-        <Router>
-          <Routes>
-            <Route path="/" element={<Home />}>
-              <Route path={"/"} element={<Dashboard />} />
-              <Route path={"/firewall"} element={<Firewall />} />
-              <Route path={"/usb"} element={<Usb />} />
-              <Route path={"/network"} element={<Network />} />
-              <Route path={"/testing"} element={<TestingArea />} />
-            </Route>
-            {/* <Route path="/network-security/firewall" element={<Firewall />} />
+      <LoadingScreenProvider>
+        <StorageProvider>
+          <SudoDialog />
+          <Router>
+            <Routes>
+              <Route path="/" element={<Home />}>
+                <Route path={"/"} element={<Dashboard />} />
+                <Route path={"/firewall"} element={<Firewall />} />
+                <Route path={"/usb"} element={<Usb />} />
+                <Route path={"/network"} element={<Network />} />
+                <Route path={"/testing"} element={<TestingArea />} />
+              </Route>
+              {/* <Route path="/network-security/firewall" element={<Firewall />} />
             <Route path="/network-security/usbblock" element={<USBPage />} /> */}
-          </Routes>
-        </Router>
-        <Toaster />
-      </StorageProvider>
+            </Routes>
+          </Router>
+          <Toaster />
+        </StorageProvider>
+      </LoadingScreenProvider>
     </ThemeProvider>
   );
 }
