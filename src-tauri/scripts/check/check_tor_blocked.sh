@@ -41,29 +41,24 @@ extract_ip_addresses() {
 merge_and_deduplicate() {
   local file1="$1"
   local file2="$2"
-  sort -u "$file1" "$file2" > merged_list.txt
+  local merged_list="/var/log/merged_list.txt"
+  sort -u "$file1" "$file2" > "$merged_list"
 }
 
 # Function to clean up temporary files
 cleanup() {
-  rm -f "merged_list.txt" "tor_full_list.txt" "tor_exit_list.txt"
+  sudo rm -f "/var/log/tor_full_list.txt" "/var/log/tor_exit_list.txt" "/var/log/merged_list.txt"
 }
 
-# File to store Tor full node list
-tor_full_list_file="tor_full_list.txt"
-
-# File to store Tor exit node list
-tor_exit_list_file="tor_exit_list.txt"
-
 # Download Tor node lists
-download_tor_nodes "https://www.dan.me.uk/torlist/?full" "$tor_full_list_file"
-download_tor_nodes "https://www.dan.me.uk/torlist/?exit" "$tor_exit_list_file"
+download_tor_nodes "https://www.dan.me.uk/torlist/?full" "/var/log/tor_full_list.txt"
+download_tor_nodes "https://www.dan.me.uk/torlist/?exit" "/var/log/tor_exit_list.txt"
 
 # Merge and deduplicate IP addresses
-merge_and_deduplicate "$tor_full_list_file" "$tor_exit_list_file"
+  merge_and_deduplicate "/var/log/tor_full_list.txt" "/var/log/tor_exit_list.txt"
 
 # File containing merged and deduplicated IP addresses
-merged_file="merged_list.txt"
+merged_file="/var/log/merged_list.txt"
 
 # Extract IP addresses from the merged file
 ip_addresses=($(extract_ip_addresses "$merged_file"))

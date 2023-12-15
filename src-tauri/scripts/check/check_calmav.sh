@@ -2,11 +2,15 @@
 
 # Check if ClamAV is installed
 if ! command -v clamscan > /dev/null 2>&1; then
-  echo "{\"clamav_status\": \"0\"}"  # ClamAV is not installed
-  exit 1
+  echo "{\"enabled\": false}"
+  exit 0
 fi
 
 # Check if ClamAV daemon is running
 clamav_daemon_running=$(sudo systemctl is-active clamav-daemon | grep -qi 'active'; echo $?)
 
-echo "{\"clamav_status\": \"$((!clamav_daemon_running))\"}"
+if (( clamav_daemon_running == 0 )); then
+  echo "{\"enabled\": true}"
+else
+  echo "{\"enabled\": false}"
+fi

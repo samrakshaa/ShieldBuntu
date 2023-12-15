@@ -2,7 +2,7 @@
 
 # Check if script is run with root privileges
 if [ "$EUID" -ne 0 ]; then
-    echo "{\"security_tools_status\": \"0\", \"message\": \"Please run this script as root or using sudo.\"}"
+    echo "{\"enabled\": false, \"message\": \"Please run this script as root or using sudo.\"}"
     exit 1
 fi
 
@@ -46,5 +46,5 @@ security_tools=(
 for tool in "${security_tools[@]}"; do
     check_tool "$tool"
     status=$?
-    echo "{\"$tool\": \"$status\"}"
+    echo "{\"$tool\": $((!status))}"
 done
