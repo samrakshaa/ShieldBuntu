@@ -7,16 +7,13 @@ interface GFireStore {
 }
 
 interface USBDevice {
-  sequence: number;
   id: string;
   name: string;
-  status: "blocked" | "active";
+  state: "block" | "allow";
 }
 interface GUsbStore {
   usbStatus: boolean;
   connectedUsbs: USBDevice[];
-  whiteListedUsbs: USBDevice[];
-  blackListedUsbs: USBDevice[];
   changeUsbStatus: (status: boolean) => void;
   setConnectedUsbs: (usbs: USBDevice[]) => void;
 }
@@ -60,8 +57,6 @@ export const useUsbStore = create(
     (set) => ({
       usbStatus: false,
       connectedUsbs: [],
-      whiteListedUsbs: [],
-      blackListedUsbs: [],
       changeUsbStatus: (status: boolean) => set(() => ({ usbStatus: status })),
       setConnectedUsbs: (connUsbs: USBDevice[]) =>
         set(() => ({ connectedUsbs: connUsbs })),

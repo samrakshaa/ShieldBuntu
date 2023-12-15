@@ -1,31 +1,30 @@
 import { useState, useCallback } from 'react';
 
-type UseLoadingHookParams<T> = {
-    functionToExecute: () => T | Promise<T>;
+type UseLoadingHookParams<T, Args extends any[]> = {
+    functionToExecute: (...args: Args) => T | Promise<T>;
     onSuccess?: (result: T) => void;
     onError?: (error: any) => void;
 };
 
-type UseLoadingHookReturn<T> = {
+type UseLoadingHookReturn<T, Args extends any[]> = {
     isLoading: boolean;
     result: T | null;
     error: any;
-    execute: () => void;
+    execute: (...args: Args) => void;
 };
 
-function useLoading<T>(params: UseLoadingHookParams<T>): UseLoadingHookReturn<T> {
+function useLoading<T, Args extends any[] = []>(params: UseLoadingHookParams<T, Args>): UseLoadingHookReturn<T, Args> {
     const { functionToExecute, onSuccess, onError } = params;
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [result, setResult] = useState<T | null>(null);
     const [error, setError] = useState<any>(null);
 
-    const execute = useCallback(() => {
+    const execute = useCallback((...args: Args) => {
         setIsLoading(true);
         setResult(null);
         setError(null);
 
-        // Wrapping the execution in a Promise to handle both sync and async functions
-        Promise.resolve().then(() => functionToExecute())
+        Promise.resolve().then(() => functionToExecute(...args))
             .then(response => {
                 setResult(response);
                 if (onSuccess) {

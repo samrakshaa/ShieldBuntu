@@ -6,19 +6,19 @@ is_ipv6() {
 }
 
 # Function to download Tor node list from URL
-download_tor_nodes() {
-  local url="$1"
-  local output_file="$2"
-  curl -sSL "$url" > "$output_file"
-}
+# download_tor_nodes() {
+#   local url="$1"
+#   local output_file="$2"
+#   curl -sSL "$url" > "$output_file"
+# }
 
-# Function to merge and deduplicate IP addresses from two files
-merge_and_deduplicate() {
-  local file1="$1"
-  local file2="$2"
-  local merged_list="/var/log/merged_list.txt"
-  sort -u "$file1" "$file2" > "$merged_list"
-}
+# # Function to merge and deduplicate IP addresses from two files
+# merge_and_deduplicate() {
+#   local file1="$1"
+#   local file2="$2"
+#   local merged_list="/var/log/merged_list.txt"
+#   sort -u "$file1" "$file2" > "$merged_list"
+# }
 
 # Function to unblock Tor ports
 unblock_tor_ports() {
@@ -72,12 +72,12 @@ unblock_main() {
     exit 1
   fi
 
-  # Download fresh Tor node lists
-  download_tor_nodes "https://www.dan.me.uk/torlist/?full" "/var/log/tor_full_list.txt"
-  download_tor_nodes "https://www.dan.me.uk/torlist/?exit" "/var/log/tor_exit_list.txt"
+  # # Download fresh Tor node lists
+  # download_tor_nodes "https://www.dan.me.uk/torlist/?full" "/var/log/tor_full_list.txt"
+  # download_tor_nodes "https://www.dan.me.uk/torlist/?exit" "/var/log/tor_exit_list.txt"
 
-  # Merge and deduplicate IP addresses
-  merge_and_deduplicate "/var/log/tor_full_list.txt" "/var/log/tor_exit_list.txt"
+  # # Merge and deduplicate IP addresses
+  # merge_and_deduplicate "/var/log/tor_full_list.txt" "/var/log/tor_exit_list.txt"
 
   # Unblock Tor ports
   unblock_tor_ports

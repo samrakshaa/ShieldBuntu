@@ -104,7 +104,7 @@ const Tor = () => {
   };
 
   useEffect(() => {
-    // executeStatus();
+    executeStatus();
   }, []);
 
   return (

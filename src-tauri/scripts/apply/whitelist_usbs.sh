@@ -1,24 +1,19 @@
 #!/bin/bash
 
-# Check if USBGuard is installed
+# Install usbguard if not installed
 if ! command -v usbguard &> /dev/null; then
-    echo "USBGuard is not installed."
-    exit 1
+    sudo apt-get update
+    sudo apt-get install -y usbguard
 fi
 
-# Function to whitelist a device
-whitelist_device() {
-    sudo usbguard allow-device "$1"
-    echo "Device $1 whitelisted successfully."
-}
+sudo systemctl start usbguard
 
-# Check if at least one device ID is provided
-if [ $# -eq 0 ]; then
-    echo "No device IDs provided. Please provide at least one device ID to whitelist."
-    exit 1
+# Create initial policy if not exists
+if [ ! -f /etc/usbguard/rules.conf ]; then
+    sudo usbguard generate-policy > /etc/usbguard/rules.conf
 fi
 
-# Loop through all provided device IDs and whitelist each
 for device_id in "$@"; do
-    whitelist_device "$device_id"
+    usbguard allow-device "$device_id"
+    echo "Device $device_id unblocked successfully."
 done

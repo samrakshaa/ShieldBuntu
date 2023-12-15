@@ -23,12 +23,12 @@ is_tor_port_blocked() {
   return $?
 }
 
-# Function to download Tor node list from URL
-download_tor_nodes() {
-  local url="$1"
-  local output_file="$2"
-  curl -sSL "$url" >> "$output_file"
-}
+# # Function to download Tor node list from URL
+# download_tor_nodes() {
+#   local url="$1"
+#   local output_file="$2"
+#   curl -sSL "$url" >> "$output_file"
+# }
 
 # Function to extract IP addresses from a file
 extract_ip_addresses() {
@@ -38,24 +38,24 @@ extract_ip_addresses() {
 }
 
 # Function to merge and deduplicate IP addresses from two files
-merge_and_deduplicate() {
-  local file1="$1"
-  local file2="$2"
-  local merged_list="/var/log/merged_list.txt"
-  sort -u "$file1" "$file2" > "$merged_list"
-}
+# merge_and_deduplicate() {
+#   local file1="$1"
+#   local file2="$2"
+#   local merged_list="/var/log/merged_list.txt"
+#   sort -u "$file1" "$file2" > "$merged_list"
+# }
 
 # Function to clean up temporary files
-cleanup() {
-  sudo rm -f "/var/log/tor_full_list.txt" "/var/log/tor_exit_list.txt" "/var/log/merged_list.txt"
-}
+# cleanup() {
+#   sudo rm -f "/var/log/tor_full_list.txt" "/var/log/tor_exit_list.txt" "/var/log/merged_list.txt"
+# }
 
-# Download Tor node lists
-download_tor_nodes "https://www.dan.me.uk/torlist/?full" "/var/log/tor_full_list.txt"
-download_tor_nodes "https://www.dan.me.uk/torlist/?exit" "/var/log/tor_exit_list.txt"
+# # Download Tor node lists
+# download_tor_nodes "https://www.dan.me.uk/torlist/?full" "/var/log/tor_full_list.txt"
+# download_tor_nodes "https://www.dan.me.uk/torlist/?exit" "/var/log/tor_exit_list.txt"
 
 # Merge and deduplicate IP addresses
-  merge_and_deduplicate "/var/log/tor_full_list.txt" "/var/log/tor_exit_list.txt"
+# merge_and_deduplicate "/var/log/tor_full_list.txt" "/var/log/tor_exit_list.txt"
 
 # File containing merged and deduplicated IP addresses
 merged_file="/var/log/merged_list.txt"

@@ -1,21 +1,19 @@
 #!/bin/bash
 
-# Check if USBGuard is installed
+# Install usbguard if not installed
 if ! command -v usbguard &> /dev/null; then
-    echo "USBGuard is not installed. No actions required."
-    exit 0
+    sudo apt-get update
+    sudo apt-get install -y usbguard
 fi
 
-# Stop the USBGuard service
-echo "Stopping USBGuard service..."
-sudo systemctl stop usbguard
+sudo systemctl start usbguard
 
-# Optionally: Reset USBGuard rules to a default state
-# Warning: This will remove all existing rules. Uncomment the next line if needed.
-# sudo echo "" > /etc/usbguard/rules.conf
+# Create initial policy if not exists
+if [ ! -f /etc/usbguard/rules.conf ]; then
+    sudo usbguard generate-policy > /etc/usbguard/rules.conf
+fi
 
-# Disable the USBGuard service
-echo "Disabling USBGuard service from starting at boot..."
-sudo systemctl disable usbguard
-sudo apt remove usbguard
-echo "USBGuard has been reset and disabled."
+for device_id in "$@"; do
+    usbguard allow-device "$device_id"
+    echo "Device $device_id unblocked successfully."
+done

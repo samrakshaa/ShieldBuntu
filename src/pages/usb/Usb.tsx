@@ -25,13 +25,12 @@ import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import Loader from "@/components/Loader";
 import { useNavigate } from "react-router-dom";
+import { CloudCog } from "lucide-react";
 
 const Usb = () => {
   const {
     usbStatus,
     connectedUsbs,
-    whiteListedUsbs,
-    blackListedUsbs,
     changeUsbStatus,
     setConnectedUsbs,
   } = useUsbStore();
@@ -39,13 +38,14 @@ const Usb = () => {
   const navigate = useNavigate();
 
   // Enabling USB blocking
-  const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
-    functionToExecute: () => invoke("apply_usb_rules"),
+  const { isLoading: isEnablelLoading, execute: executeEnable} = useLoading({
+    functionToExecute: (usbIds: String[]) => invoke("apply_usb_blocking", {usbIds}),
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
       console.log(resJSON);
       if (resJSON.success) {
         console.log("usb on");
+        executeGetStatusAll();
         changeUsbStatus(true);
       } else {
         console.log("not able to enable usb");
@@ -68,7 +68,7 @@ const Usb = () => {
 
   // Disabling USB blocking
   const { isLoading: isDisablelLoading, execute: executeDisable } = useLoading({
-    functionToExecute: () => invoke("reverse_usb_rules"),
+    functionToExecute: (usbIds : String[]) => invoke("reverse_usb_blocking", {usbIds}),
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
       console.log(resJSON);
@@ -93,6 +93,62 @@ const Usb = () => {
       });
     },
   });
+
+    // Disabling Selected USB blocking
+    const { isLoading: isDisableSelectedLoading, execute: executeDisableSelected } = useLoading({
+      functionToExecute: (usbIds: String[]) => invoke("apply_usb_blocking", {usbIds}),
+      onSuccess: (res: any) => {
+        const resJSON = JSON.parse(res);
+        console.log(resJSON);
+        if (resJSON.success) {
+          console.log("Blocked Selected USBs");
+          executeGetStatusAll();
+        } else {
+          console.log("not able to enable usb");
+          toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: "Not able to enable/disable usb.",
+          });
+        }
+      },
+      onError: (err) => {
+        console.log(err);
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: "There was a problem with your request.",
+        });
+      },
+    });
+  
+    // Enabling Selected USB blocking
+    const { isLoading: isEnableSelectedLoading, execute: executeEnableSelected } = useLoading({
+      functionToExecute: (usbIds : String[]) => invoke("reverse_usb_blocking", {usbIds}),
+      onSuccess: (res: any) => {
+        const resJSON = JSON.parse(res);
+        console.log(resJSON);
+        if (resJSON.success) {
+          console.log("Enabled Selected USBs");
+          executeGetStatusAll();
+        } else {
+          console.log("not able to disable usb");
+          toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: "Not able to enable/disable usb.",
+          });
+        }
+      },
+      onError: (err) => {
+        console.log(err);
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: "There was a problem with your request.",
+        });
+      },
+    });
 
   // Check status of USB blocking
   const { isLoading: isStatusLoading, execute: executeStatus } = useLoading({
@@ -135,18 +191,31 @@ const Usb = () => {
     },
   });
 
-  const handleSwitchChange = () => {
-    if (!usbStatus) {
-      console.log("trying to enable usb");
-      executeEnable();
-    } else {
-      console.log("reverse_usb_rules");
-      executeDisable();
-    }
-  };
+  // List connected usbs with status
+  const { isLoading: isAllUsbsStatusLoading, execute: executeGetStatusAll } = useLoading({
+    functionToExecute: () => invoke("list_usb_devices_usbguard"),
+    onSuccess: (res: any) => {
+      const resJSON = JSON.parse(res);
+      console.log(res);
+      setConnectedUsbs(resJSON);
+    },
+    onError: (err) => {
+      console.log(err);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "Cannot fetch connected USBs...",
+      });
+    },
+  });
+
+
 
   const [selectedBlockedRows, setSelectedBlockedRows] = useState<string[]>([]);
   const [selectedUnblockedRows, setSelectedUnblockedRows] = useState<string[]>(
+    []
+  );
+  const [selectedMainRows, setSelectedMainRows] = useState<string[]>(
     []
   );
 
@@ -176,21 +245,53 @@ const Usb = () => {
     setSelectedUnblockedRows(updatedSelectedRows);
   };
 
+  const handleMainCheckboxClick = (usbId: string) => {
+    const isSelected = selectedMainRows.includes(usbId);
+    let updatedSelectedRows: string[];
+
+    if (isSelected) {
+      updatedSelectedRows = selectedMainRows.filter((id) => id !== usbId);
+    } else {
+      updatedSelectedRows = [...selectedMainRows, usbId];
+    }
+
+    setSelectedMainRows(updatedSelectedRows);
+  };
+
   const handleBack = () => {
     navigate(-1);
   };
 
   const handleBlock = () => {
     // blocks selected USBS
+    // console.log(selectedUnblockedRows);
+    executeDisableSelected(selectedUnblockedRows)
   };
   
   const handleUnblock = () => {
     // unblocks selected USBS
+    // console.log(selectedBlockedRows);
+    executeEnableSelected(selectedBlockedRows)
+  };
+
+  const handleSwitchChange = () => {
+    if (!usbStatus) {
+      console.log("trying to enable usb");
+      console.log(selectedMainRows);
+      executeEnable(selectedMainRows);
+    } else {
+      console.log("reverse_usb_rules");
+      const blockedUsbIds =connectedUsbs
+      .filter(usb => usb.state === 'block')
+      .map(usb => usb.id);
+      executeDisable(blockedUsbIds);
+    }
   };
 
   useEffect(() => {
-    executeGetAll();
-  }, []);
+    if(!usbStatus) executeGetAll();
+    else executeGetStatusAll();
+  }, [usbStatus]);
 
   return (
     <div className="usb flex flex-row justify-center mx-auto max-w-[900px] p-6 pt-0">
@@ -233,11 +334,15 @@ const Usb = () => {
 
         {/* USB table */}
         <div className="usbtable mt-6">
-          <h2 className="text-2xl mb-4 font-bold ">Connected USBs</h2>
-          {!usbStatus ? (
+          <h2 className="text-2xl font-bold ">Connected USBs</h2>
+          <p className="text-foreground/60 mb-4">Select USBs to block.</p>
+          {usbStatus ? (
             <div>
               <div className="blacklistTable flex flex-col">
-                <h2 className="text-lg underline">Blocked USB Devices</h2>
+                <div className="flex flex-row gap-4">
+                  <h2 className="text-lg underline">Blocked USB Devices</h2>
+                  {(isAllUsbsStatusLoading || isEnableSelectedLoading)   && <Loader />}
+                </div>
                 <Table className="usbBlocking">
                   <TableHeader>
                     <TableRow>
@@ -250,7 +355,8 @@ const Usb = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {connectedUsbs.map((usb, index) => (
+                    {connectedUsbs.map((usb, index) => {
+                      if(usb.state === "block") return (
                       <TableRow key={index}>
                         <TableCell className="py-2">
                           <Checkbox
@@ -263,9 +369,9 @@ const Usb = () => {
                         </TableCell>
                         <TableCell className="py-2">{usb.id}</TableCell>
                         <TableCell className="py-2">{usb.name}</TableCell>
-                        <TableCell className="py-2">{usb.status}</TableCell>
+                        <TableCell className="py-2">{usb.state}</TableCell>
                       </TableRow>
-                    ))}
+                    )})}
                   </TableBody>
                 </Table>
                 <Button
@@ -278,9 +384,11 @@ const Usb = () => {
               </div>
 
               <div className="whitelistTable flex flex-col">
-                <h2 className="text-lg underline">Unblocked USB Devices</h2>
+              <div className="flex flex-row gap-4">
+                  <h2 className="text-lg underline">Unblocked USB Devices</h2>
+                  {(isAllUsbsStatusLoading || isDisableSelectedLoading)  && <Loader />}
+                </div>
                 <Table className="usbBlocking">
-                  <TableCaption>Whitelisted USBs</TableCaption>
                   <TableHeader>
                     <TableRow>
                       <TableHead className="w-[50px]"></TableHead>
@@ -290,7 +398,8 @@ const Usb = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {connectedUsbs.map((usb, index) => (
+                  {connectedUsbs.map((usb, index) => {
+                      if(usb.state === "allow") return (
                       <TableRow key={index}>
                         <TableCell className="py-2">
                           <Checkbox
@@ -303,9 +412,9 @@ const Usb = () => {
                         </TableCell>
                         <TableCell className="py-2">{usb.id}</TableCell>
                         <TableCell className="py-2">{usb.name}</TableCell>
-                        <TableCell className="py-2">{usb.status}</TableCell>
+                        <TableCell className="py-2">{usb.state}</TableCell>
                       </TableRow>
-                    ))}
+                    )})}
                   </TableBody>
                 </Table>
                 <Button
@@ -331,10 +440,15 @@ const Usb = () => {
                 {connectedUsbs.map((usb, index) => (
                   <TableRow key={index}>
                     <TableCell>
-                      <Checkbox disabled />
+                      <Checkbox onCheckedChange={() =>
+                              handleMainCheckboxClick(usb.id)
+                            }
+                            checked={selectedMainRows.includes(usb.id)} />
                     </TableCell>
                     <TableCell>{usb.id}</TableCell>
                     <TableCell>{usb.name}</TableCell>
+                    <TableCell>Enabled</TableCell>
+
                   </TableRow>
                 ))}
               </TableBody>
