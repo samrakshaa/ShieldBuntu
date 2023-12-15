@@ -1,8 +1,9 @@
 import { Outlet } from "react-router-dom";
 import Sidemenu from "@/components/Sidemenu";
 import { MdDashboard } from "react-icons/md";
-import { TbUsb } from "react-icons/tb";
+import { TbUsb, TbBrandPowershell } from "react-icons/tb";
 import { SiFirewalla, SiTorbrowser } from "react-icons/si";
+import { PiWallFill } from "react-icons/pi";
 
 // interface MenuItem {
 //   title: string;
@@ -19,7 +20,7 @@ const networkLinks = [
   {
     title: "Firewall",
     link: "/firewall",
-    icon: <SiFirewalla size={25} />,
+    icon: <PiWallFill size={25} />,
   },
   {
     title: "USB Settings",
@@ -30,6 +31,11 @@ const networkLinks = [
     title: "Network Settings",
     link: "/network",
     icon: <SiTorbrowser size={25} />,
+  },
+  {
+    title: "SSH Connect",
+    link: "/sshconnect",
+    icon: <TbBrandPowershell size={25} />,
   },
   {
     title: "Testing Area",

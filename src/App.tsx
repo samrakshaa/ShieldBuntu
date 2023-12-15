@@ -13,6 +13,7 @@ import Network from "./pages/network/Network";
 import TestingArea from "./pages/TestingArea";
 import Usb from "./pages/usb/Usb";
 import LoadingScreenProvider from "./components/LoadingScreenProvider";
+import SshConnect from "./pages/ssh/SshConnect";
 
 attachConsole();
 function App() {
@@ -28,6 +29,7 @@ function App() {
                 <Route path={"/firewall"} element={<Firewall />} />
                 <Route path={"/usb"} element={<Usb />} />
                 <Route path={"/network"} element={<Network />} />
+                <Route path={"/sshconnect"} element={<SshConnect />} />
                 <Route path={"/testing"} element={<TestingArea />} />
               </Route>
               {/* <Route path="/network-security/firewall" element={<Firewall />} />
