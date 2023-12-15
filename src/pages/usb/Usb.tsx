@@ -209,7 +209,7 @@ const Usb = () => {
     },
   });
 
-
+  
 
   const [selectedBlockedRows, setSelectedBlockedRows] = useState<string[]>([]);
   const [selectedUnblockedRows, setSelectedUnblockedRows] = useState<string[]>(
@@ -217,7 +217,18 @@ const Usb = () => {
   );
   const [selectedMainRows, setSelectedMainRows] = useState<string[]>(
     []
-  );
+  ); 
+  
+  const clearAllSelectedRows = () => {
+    setSelectedBlockedRows([]);
+    setSelectedUnblockedRows([]);
+    setSelectedMainRows([]);
+  }
+  console.log("selectedrows",selectedBlockedRows);
+  console.log("selectedublockedrows",selectedUnblockedRows);
+  
+  
+  console.log("mainrows", selectedMainRows);
 
   const handleBlockedRowClick = (usbId: string) => {
     const isSelected = selectedBlockedRows.includes(usbId);
@@ -265,12 +276,14 @@ const Usb = () => {
   const handleBlock = () => {
     // blocks selected USBS
     // console.log(selectedUnblockedRows);
+    clearAllSelectedRows();
     executeDisableSelected(selectedUnblockedRows)
-  };
+  }; 
   
   const handleUnblock = () => {
     // unblocks selected USBS
     // console.log(selectedBlockedRows);
+    clearAllSelectedRows();
     executeEnableSelected(selectedBlockedRows)
   };
 
