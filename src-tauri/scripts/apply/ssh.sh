@@ -2,17 +2,14 @@
 
 # Check if a password is provided as a parameter
 
+
+
 # Secure SSH Configuration
 echo "Securing SSH configuration..."
 
 # Check if OpenSSH is installed
-if ! command -v sshd &> /dev/null; then
-    echo "OpenSSH is not installed. Installing..."
-    sudo apt update
-    sudo apt install ssh -y
-fi
 
-sudo systemctl enable ssh
+
 # Locate SSH configuration file
 sshd_config_path="/etc/ssh/sshd_config"
 
@@ -20,15 +17,17 @@ sshd_config_path="/etc/ssh/sshd_config"
 sudo cp "$sshd_config_path" "$sshd_config_path.bak"
 
 # Update SSH configuration
-sudo sed -i 's/PermitRootLogin no/PermitRootLogin yes/' "$sshd_config_path"
 sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' "$sshd_config_path"
-sudo sed -i 's/PermitEmptyPasswords yes/PermitEmptyPasswords no/' "$sshd_config_path"
+sudo sed -i 's/#PermitEmptyPasswords no/PermitEmptyPasswords no/' "$sshd_config_path"
 sudo sed -i 's/#PermitUserEnvironment no/PermitUserEnvironment no/' "$sshd_config_path"
 sudo sed -i 's/X11Forwarding yes/X11Forwarding no/' "$sshd_config_path"
 echo "AllowTcpForwarding no" | sudo -S tee -a "$sshd_config_path" > /dev/null
-sudo sed -i 's/Port 22/Port 2222/' "$sshd_config_path"
-sudo ufw allow 2222/tcp
+sudo sed -i 's/#Port 22/Port 6969/' "$sshd_config_path"
+sudo ufw allow in 6969
+sudo ufw allow out 6969
 echo "Protocol 2" | sudo -S tee -a "$sshd_config_path" > /dev/null
+echo "#Hardend" | sudo -S tee -a "$sshd_config_path" > /dev/null
+
 
 # Restart SSH service
 if command -v systemctl &> /dev/null; then

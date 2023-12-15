@@ -5,6 +5,7 @@ use chrono::Utc;
 // use serde_json::Value;
 use tokio::io::AsyncWriteExt;
 use tokio::process::Command as AsyncCommand;
+use serde_json::json;
 use crate::get_password;
 
 #[tauri::command]
@@ -59,12 +60,19 @@ pub async fn apply_ssh_rules() -> Result<String, String> {
     file.read_to_string(&mut log_contents)
         .map_err(|e| format!("Error reading log file: {}", e))?;
 
-    // Construct the JSON-like return value
-    let result = if output.status.success() {
-        format!(r#"{{"success": true, "logs": "{}"}}"#, log_contents)
-    } else {
-        format!(r#"{{"success": false, "logs": "{}"}}"#, log_contents)
-    };
+        let result = if output.status.success() {
+            json!({
+                "success": true,
+                "logs": log_contents.trim().to_string()
+            })
+            .to_string()
+        } else {
+            json!({
+                "success": false,
+                "logs": log_contents.trim().to_string()
+            })
+            .to_string()
+        };
 
     Ok(result)
 }
@@ -126,9 +134,17 @@ pub async fn reverse_ssh_rules() -> Result<String, String> {
 
     // Construct the JSON-like return value
     let result = if output.status.success() {
-        format!(r#"{{"success": true, "logs": "{}"}}"#, log_contents)
+        json!({
+            "success": true,
+            "logs": log_contents.trim().to_string()
+        })
+        .to_string()
     } else {
-        format!(r#"{{"success": false, "logs": "{}"}}"#, log_contents)
+        json!({
+            "success": false,
+            "logs": log_contents.trim().to_string()
+        })
+        .to_string()
     };
 
     Ok(result)

@@ -26,7 +26,6 @@ const Ssh = () => {
         updateSSHStatus(true);
       } else {
         const currLog = res as string;
-
         console.log(currLog);
         toast({
           variant: "destructive",
@@ -39,7 +38,7 @@ const Ssh = () => {
       console.log(err);
       toast({
         variant: "destructive",
-        title: "Uh oh! Something went wrong.",
+        title: "Uh oh! Something went wrong while applying rules.",
         description: "There was a problem with your request.",
       });
     },
@@ -65,7 +64,7 @@ const Ssh = () => {
       console.log(err);
       toast({
         variant: "destructive",
-        title: "Uh oh! Something went wrong.",
+        title: "Uh oh! Something went wrong while applying rules.",
         description: "There was a problem with your request.",
       });
     },
@@ -75,7 +74,8 @@ const Ssh = () => {
     functionToExecute: () => invoke("check_ssh"),
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
-      if (resJSON.enabled) {
+
+      if (resJSON.success) {
         console.log("SSH is enabled");
         updateSSHStatus(true);
       } else {
@@ -87,7 +87,7 @@ const Ssh = () => {
       console.log(err);
       toast({
         variant: "destructive",
-        title: "Uh oh! Something went wrong.",
+        title: "Uh oh! Something went wrong while checking SSH status.",
         description: "SSH is ofline...",
       });
     },
