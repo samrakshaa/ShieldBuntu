@@ -19,6 +19,7 @@ mod autoupdate;
 mod ssh;
 mod check_username;
 mod basic_check;
+mod ssh_conn;
 
 // #[derive(Debug, Serialize, Deserialize)]
 // struct UsbDevice {
@@ -140,7 +141,6 @@ pub async fn main() {
     )
         .invoke_handler(tauri::generate_handler![
             set_password,
-            usb::list_usb_devices,
             unused_packages::remove_unused_packages,
             update_packages::update_and_upgrade_packages,
             firewall::apply_firewall_rules,
@@ -150,13 +150,13 @@ pub async fn main() {
             apparmor::install_and_configure_apparmor,
             rkhunter::install_and_configure_rkhunter,
             autoupdate::run_autoupdate_script,
+            check_username::check_username,
             tor::block_tor_access,
             tor::reverse_tor_block,
             tor::check_tor_blocked,
             ssh::apply_ssh_rules,
             ssh::reverse_ssh_rules,
             ssh::check_ssh,
-            check_username::check_username,
             usb::list_usb_devices,
             usb::list_usb_devices_usbguard,
             usb::apply_usb_blocking,
@@ -165,7 +165,9 @@ pub async fn main() {
             usb::reverse_usb_blocking,
             basic_check::check_fail2ban,
             basic_check::check_rkhunter,
-            basic_check::check_unused_package
+            basic_check::check_unused_package,
+            ssh_conn::first_time_ssh,
+            ssh_conn::second_time_ssh,
             ]
         )
         .run(tauri::generate_context!())

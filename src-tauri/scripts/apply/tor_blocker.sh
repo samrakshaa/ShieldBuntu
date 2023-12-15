@@ -116,10 +116,10 @@ reload_iptables_rules() {
   fi
 }
 
-# # Function to clean up temporary files
-# cleanup() {
-#   sudo rm -f "/var/log/tor_full_list.txt" "/var/log/tor_exit_list.txt" "/var/log/merged_list.txt"
-# }
+# Function to clean up temporary files
+cleanup() {
+  sudo rm -f "/var/log/tor_full_list.txt" "/var/log/tor_exit_list.txt" "/var/log/merged_list.txt"
+}
 
 # Main function to execute blocking measures
 main() {
