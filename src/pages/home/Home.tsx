@@ -47,7 +47,9 @@ const Home = () => {
     <>
       <div className="home flex h-full mx-auto">
         <Sidemenu menuOptions={networkLinks} />
-        <Outlet />
+        <div className="overflow-auto w-full">
+          <Outlet />
+        </div>
       </div>
     </>
   );

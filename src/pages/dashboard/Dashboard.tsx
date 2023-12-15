@@ -1,6 +1,34 @@
 import { Button } from "@/components/ui/button";
+import useLoading from "@/hooks/useLoading";
+import { invoke } from "@tauri-apps/api/tauri";
+import { useEffect, useState } from "react";
 
 const Dashboard = () => {
+  // const [username, setUsername] = useState("");
+  // const { isLoading, execute: checkUsername } = useLoading({
+  //   functionToExecute: () => invoke("check_username"),
+  //   onSuccess: (res: any) => {
+  //     const resJSON = JSON.parse(res);
+  //     setUsername(resJSON.username)
+  //   },
+  //   onError: (err) => {
+  //     console.log(err);
+  //   },
+  // });
+  // useEffect(() => {
+  //   checkUsername();
+  // }, [])
+
+  const { isLoading: removeUnusedLoading, execute: removeUnsedPackages } = useLoading({
+    functionToExecute: () => invoke("remove_unused_packages"),
+    onSuccess: (res: any) => {
+      console.log(res);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+
   return (
     <>
       {/* basic hardening section */}
@@ -23,8 +51,12 @@ const Dashboard = () => {
               >
                 Upgrade
               </Button>
-              <Button className="max-w-xl bg-primary borderW-2 border-secondary/90 rounded hover:bg-primary/80 my-2 mx-3">
-                Remove
+              <Button
+                className="max-w-xl bg-primary borderW-2 border-secondary/90 rounded hover:bg-primary/80 my-2 mx-3"
+                disabled={removeUnusedLoading}
+                onClick={removeUnsedPackages}
+              >
+                {removeUnusedLoading ? "Removing..." : "Remove Unused Packages"}
               </Button>
             </div>
           </div>
