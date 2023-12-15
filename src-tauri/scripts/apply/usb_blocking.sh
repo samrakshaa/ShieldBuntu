@@ -13,20 +13,15 @@ if [ ! -f /etc/usbguard/rules.conf ]; then
     sudo usbguard generate-policy > /etc/usbguard/rules.conf
 fi
 
-# Block all USB devices initially
-echo "Blocking all USB devices."
-# sudo usbguard generate-policy --implicit-policy-target=block | sudo tee /etc/usbguard/rules.conf > /dev/null
-
-# Whitelist specified USB devices
-# if [ $# -eq 0 ]; then
-#     echo "No USB device IDs provided. All USB devices are blocked."
-# else
-#     for device_id in "$@"; do
-#         sudo usbguard allow-device "$device_id"
-#         echo "Device $device_id whitelisted successfully."
-#     done
-# fi
-
-# Apply the new policy
-sudo systemctl restart usbguard
-echo "USBGuard policy updated and applied."
+# Check if parameters are provided
+if [ "$#" -eq 0 ]; then
+    # Block all devices
+    sudo usbguard block --any-device
+    echo "All devices blocked successfully."
+else
+    # Block specific devices
+    for device_id in "$@"; do
+        sudo usbguard block-device "$device_id"
+        echo "Device $device_id blocked successfully."
+    done
+fi
