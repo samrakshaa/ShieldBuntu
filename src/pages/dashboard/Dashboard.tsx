@@ -1,3 +1,4 @@
+import StatusOfAll from "@/components/statusOfAll";
 import { Button } from "@/components/ui/button";
 import useLoading from "@/hooks/useLoading";
 import { invoke } from "@tauri-apps/api/tauri";
@@ -71,6 +72,32 @@ const Dashboard = () => {
             <p className="content p-50">blah blah a lot of things go here!!</p>
           </div>
         </div>
+
+
+        {/* kernel section */}
+        <div className="flex flex-col">
+          <h1 className="settings-header text-lg font-bold py-4">
+            Kernel Parameters
+          </h1>
+          <div className="dashboard flex flex-row items-center p-4 bg-secondary/90 border-[1px] border-secondary/70 rounded-lg">
+            <p className="content p-50">Enhances the security of a Linux system by configuring various kernel parameters related to network security and system protection.</p>
+          </div>
+        </div>
+
+        {/* kernel section */}
+        <div className="flex flex-col">
+          <h1 className="settings-header text-lg font-bold py-4">
+           Status of your device
+          </h1>
+          <div className="dashboard flex flex-row items-center p-4 bg-secondary/90 border-[1px] border-secondary/70 rounded-lg">
+            <p className="content p-50">Enhances the security of a Linux system by configuring various kernel parameters related to network security and system protection.</p>
+          </div>
+          <StatusOfAll/>
+        </div>
+
+        <br/>
+        <br/>
+
       </div>
     </>
   );

@@ -72,7 +72,10 @@ const Tor = () => {
   });
 
   const { isLoading: isStatusLoading, execute: executeStatus } = useLoading({
-    functionToExecute: () => invoke("check_tor_blocked"),
+    functionToExecute: () => {
+      console.log("started check_tor_blocked")
+      invoke("check_tor_blocked")
+    },
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
       if (resJSON.enabled) {

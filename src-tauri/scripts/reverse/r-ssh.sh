@@ -26,5 +26,3 @@ elif command -v service &> /dev/null; then
 else
     echo "Unable to restart SSH service. Please restart it manually."
 fi
-
-sudo systemctl stop ssh
