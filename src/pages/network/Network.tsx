@@ -11,8 +11,8 @@ const Network = () => {
   };
 
   return (
-    <div className="mt-12 mx-auto">
-      <h1 className="text-3xl font-bold px-8 flex flex-row items-center gap-4">
+    <div className="mt-12 mx-auto max-w-[900px] ">
+      <h1 className="text-3xl font-bold px-8 flex flex-row items-center gap-4 ">
         <BackButton 
           className="bg-secondary text-2xl py-0 hover:bg-secondary/50"
           onClick={handleBack}

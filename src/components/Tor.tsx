@@ -111,7 +111,7 @@ const Tor = () => {
   }, []);
 
   return (
-    <div className="Tor flex flex-row justify-center mx-auto max-w-[900px] p-8">
+    <div className="Tor flex flex-row justify-center p-8">
       <div className="main-section">
         <div className=" flex gap-2  items-center ">
           <h1 className="text-2xl text-primary font-bold">
