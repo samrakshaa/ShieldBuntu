@@ -52,7 +52,7 @@ export const useNetworkStore = create(
         if (status) {
           setTimeout(() => {
             set(() => ({ torTimeout: false }));
-          }, 6000); // 10 minutes timeout
+          }, 10 * 60 * 1000); // 10 minutes timeout
         }
       },
     }),

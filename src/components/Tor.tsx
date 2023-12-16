@@ -77,7 +77,6 @@ const Tor = () => {
   //   },
   // });
 
-<<<<<<< Updated upstream
   // const { isLoading: isStatusLoading, execute: executeStatus } = useLoading({
   //   functionToExecute: () => {
   //     console.log("started check_tor_blocked");
@@ -103,33 +102,6 @@ const Tor = () => {
   //     });
   //   },
   // });
-=======
-  const { isLoading: isStatusLoading, execute: executeStatus } = useLoading({
-    functionToExecute: () => {
-      console.log("started check_tor_blocked");
-      invoke("check_tor_blocked");
-    },
-    onSuccess: (res: any) => {
-      console.log(res);
-      const resJSON = JSON.parse(res);
-      if (resJSON.enabled) {
-        console.log("Tor is enabled");
-        updateTorStatus(true);
-      } else {
-        console.log("Tor is disabled");
-        updateTorStatus(false);
-      }
-    },
-    onError: (err) => {
-      console.log(err);
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "Tor status unavailable.",
-      });
-    },
-  });
->>>>>>> Stashed changes
 
   const handleSwitchChange = () => {
     if (!torTimeout) {
@@ -181,7 +153,11 @@ const Tor = () => {
             disabled={isEnablelLoading || torTimeout}
             onClick={handleSwitchChange}
           >
-            {torStatus ? "Run Update" : "Run Block"}
+            {torStatus ? (
+              <>{torTimeout ? "Tor Blocked" : "Run Update"}</>
+            ) : (
+              "Run Block"
+            )}
           </Button>
         </div>
         <br />
