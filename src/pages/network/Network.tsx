@@ -11,15 +11,9 @@ const Network = () => {
   };
 
   return (
-<<<<<<< Updated upstream
     <div className="mt-12 mx-auto max-w-[900px] ">
       <h1 className="text-3xl font-bold px-8 flex flex-row items-center gap-4 ">
-        <BackButton 
-=======
-    <div className="mt-12 mx-auto">
-      <h1 className="text-3xl font-bold flex flex-row mx-auto max-w-[900px] px-8 gap-4 items-center">
         <BackButton
->>>>>>> Stashed changes
           className="bg-secondary text-2xl py-0 hover:bg-secondary/50"
           onClick={handleBack}
         />

@@ -20,8 +20,10 @@ interface GUsbStore {
 interface GNetworkStore {
   ssh: boolean;
   tor: boolean;
+  torTimeout: boolean;
   changeSSH: (status: boolean) => void;
-  changeTor: (status: boolean) => void;
+  runTorDisable: (status: boolean) => void;
+  setTorTimeout: (status: boolean) => void;
 }
 
 export const useFirewallStore = create(
@@ -42,8 +44,17 @@ export const useNetworkStore = create(
     (set) => ({
       ssh: false,
       tor: false,
-      changeTor: (status: boolean) => set(() => ({ tor: status })),
+      torTimeout: false,
+      runTorDisable: (status: boolean) => set(() => ({ tor: status })),
       changeSSH: (status: boolean) => set(() => ({ ssh: status })),
+      setTorTimeout: (status: boolean) => {
+        set(() => ({ torTimeout: status }));
+        if (status) {
+          setTimeout(() => {
+            set(() => ({ torTimeout: false }));
+          }, 6000); // 10 minutes timeout
+        }
+      },
     }),
     {
       name: "network-store",
@@ -67,4 +78,3 @@ export const useUsbStore = create(
     }
   )
 );
-

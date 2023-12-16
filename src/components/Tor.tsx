@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Switch } from "@/components/ui/switch";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { invoke } from "@tauri-apps/api/tauri";
 import { HiOutlineInformationCircle } from "react-icons/hi";
@@ -16,14 +16,20 @@ import Loader from "@/components/Loader";
 const Tor = () => {
   const [logs, setLogs] = useState("");
   const { toast } = useToast();
-  const { changeTor: updateTorStatus, tor: TorStatus } = useNetworkStore();
+  const {
+    runTorDisable,
+    tor: torStatus,
+    torTimeout,
+    setTorTimeout,
+  } = useNetworkStore();
   const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
     functionToExecute: () => invoke("block_tor_access"),
     onSuccess: (res: any) => {
       const resJson = JSON.parse(res);
       if (resJson.success) {
         console.log("Tor on");
-        updateTorStatus(true);
+        runTorDisable(true);
+        setTorTimeout(true);
       } else {
         const currLog = res as string;
 
@@ -45,32 +51,59 @@ const Tor = () => {
     },
   });
 
-  const { isLoading: isDisablelLoading, execute: executeDisable } = useLoading({
-    functionToExecute: () => invoke("reverse_tor_block"),
-    onSuccess: (res: any) => {
-      const resJson = JSON.parse(res);
-      if (resJson.success) {
-        console.log("Tor off");
-        updateTorStatus(false);
-      } else {
-        console.log("not able to disable Tor");
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: "Not able to enable/disable Tor.",
-        });
-      }
-    },
-    onError: (err) => {
-      console.log(err);
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "There was a problem with your request.",
-      });
-    },
-  });
+  // const { isLoading: isDisablelLoading, execute: executeDisable } = useLoading({
+  //   functionToExecute: () => invoke("reverse_tor_block"),
+  //   onSuccess: (res: any) => {
+  //     const resJson = JSON.parse(res);
+  //     if (resJson.success) {
+  //       console.log("Tor off");
+  //       runTorDisable(false);
+  //     } else {
+  //       console.log("not able to disable Tor");
+  //       toast({
+  //         variant: "destructive",
+  //         title: "Uh oh! Something went wrong.",
+  //         description: "Not able to enable/disable Tor.",
+  //       });
+  //     }
+  //   },
+  //   onError: (err) => {
+  //     console.log(err);
+  //     toast({
+  //       variant: "destructive",
+  //       title: "Uh oh! Something went wrong.",
+  //       description: "There was a problem with your request.",
+  //     });
+  //   },
+  // });
 
+<<<<<<< Updated upstream
+  // const { isLoading: isStatusLoading, execute: executeStatus } = useLoading({
+  //   functionToExecute: () => {
+  //     console.log("started check_tor_blocked");
+  //     invoke("check_tor_blocked");
+  //   },
+  //   onSuccess: (res: any) => {
+  //     console.log(res);
+  //     const resJSON = JSON.parse(res);
+  //     if (resJSON.enabled) {
+  //       console.log("Tor is enabled");
+  //       runTorDisable(true);
+  //     } else {
+  //       console.log("Tor is disabled");
+  //       runTorDisable(false);
+  //     }
+  //   },
+  //   onError: (err) => {
+  //     console.log(err);
+  //     toast({
+  //       variant: "destructive",
+  //       title: "Uh oh! Something went wrong.",
+  //       description: "Tor status unavailable.",
+  //     });
+  //   },
+  // });
+=======
   const { isLoading: isStatusLoading, execute: executeStatus } = useLoading({
     functionToExecute: () => {
       console.log("started check_tor_blocked");
@@ -96,20 +129,24 @@ const Tor = () => {
       });
     },
   });
+>>>>>>> Stashed changes
 
   const handleSwitchChange = () => {
-    if (!TorStatus) {
-      console.log("trying to enable Tor");
+    if (!torTimeout) {
       executeEnable();
     } else {
-      console.log("trying to disable tor");
-      executeDisable();
+      toast({
+        variant: "destructive",
+        title: "Timeout active",
+        description:
+          "Please wait for the timeout to finish before running again.",
+      });
     }
   };
 
-  useEffect(() => {
-    executeStatus();
-  }, []);
+  // useEffect(() => {
+  //   executeStatus();
+  // }, []);
 
   return (
     <div className="Tor flex flex-row justify-center p-8">
@@ -137,16 +174,15 @@ const Tor = () => {
         <div className="toggle-Tor bg-secondary/60 mt-2 p-2 px-4 text-lg border-2 rounded-lg flex flex-row justify-between items-center">
           <div className="flex flex-row items-center">
             <p>Enable/Disable Tor</p>
-            {(isDisablelLoading || isEnablelLoading || isStatusLoading) && (
-              <Loader />
-            )}
+            {isEnablelLoading && <Loader />}
           </div>
-          <Switch
+          <Button
             className=""
-            checked={TorStatus}
-            disabled={isDisablelLoading || isEnablelLoading || isStatusLoading}
+            disabled={isEnablelLoading || torTimeout}
             onClick={handleSwitchChange}
-          />
+          >
+            {torStatus ? "Run Update" : "Run Block"}
+          </Button>
         </div>
         <br />
       </div>
