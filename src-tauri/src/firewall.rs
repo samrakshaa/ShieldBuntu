@@ -135,16 +135,18 @@ pub async fn reverse_firewall_rules() -> Result<String, String> {
 
 
 #[tauri::command]
-pub async fn check_firewall() -> Result<String, String> {
+pub async fn check_firewall(handle: tauri::AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/check/check_firewall.sh");
-
+    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    // let script_path = current_dir.join("scripts/check/check_firewall.sh");
+    let resource_path = handle.path_resolver()
+        .resolve_resource("scripts/check/check_firewall.sh")
+        .expect("failed to resolve resource");
     // Run the bash script for checking firewall status
     let mut child = AsyncCommand::new("sudo")
         .arg("-S")
         .arg("bash")
-        .arg(script_path)
+        .arg(resource_path)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
