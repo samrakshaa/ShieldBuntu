@@ -32,11 +32,11 @@ const networkLinks = [
     link: "/network",
     icon: <SiTorbrowser size={25} />,
   },
-  {
-    title: "SSH Connect",
-    link: "/sshconnect",
-    icon: <TbBrandPowershell size={25} />,
-  },
+  // {
+  //   title: "SSH Connect",
+  //   link: "/sshconnect",
+  //   icon: <TbBrandPowershell size={25} />,
+  // },
   {
     title: "Testing Area",
     link: "/testing",

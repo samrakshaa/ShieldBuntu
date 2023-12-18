@@ -21,6 +21,7 @@ interface GNetworkStore {
   ssh: boolean;
   tor: boolean;
   torTimeout: boolean;
+  torTimeoutTimestamp: number;
   changeSSH: (status: boolean) => void;
   runTorDisable: (status: boolean) => void;
   setTorTimeout: (status: boolean) => void;
@@ -45,13 +46,15 @@ export const useNetworkStore = create(
       ssh: false,
       tor: false,
       torTimeout: false,
+      torTimeoutTimestamp: 0, // New property to store timestamp
       runTorDisable: (status: boolean) => set(() => ({ tor: status })),
       changeSSH: (status: boolean) => set(() => ({ ssh: status })),
       setTorTimeout: (status: boolean) => {
         set(() => ({ torTimeout: status }));
         if (status) {
+          set(() => ({ torTimeoutTimestamp: Date.now() })); // Set timestamp when torTimeout is true
           setTimeout(() => {
-            set(() => ({ torTimeout: false }));
+            set(() => ({ torTimeout: false, torTimeoutTimestamp: 0 })); // Reset torTimeout and timestamp
           }, 10 * 60 * 1000); // 10 minutes timeout
         }
       },

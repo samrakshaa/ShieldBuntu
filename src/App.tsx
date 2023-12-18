@@ -4,7 +4,6 @@ import { Toaster } from "./components/ui/toaster";
 import Home from "./pages/home/Home";
 import "./App.css";
 import { attachConsole } from "tauri-plugin-log-api";
-import USBPage from "./pages/TestingArea";
 import StorageProvider from "./components/storageProvider";
 import SudoDialog from "./components/SudoDialog";
 import Firewall from "./pages/firewall/Firewall";
@@ -14,6 +13,7 @@ import TestingArea from "./pages/TestingArea";
 import Usb from "./pages/usb/Usb";
 import LoadingScreenProvider from "./components/LoadingScreenProvider";
 import SshConnect from "./pages/ssh/SshConnect";
+import { Button } from "./components/ui/button";
 
 attachConsole();
 function App() {
@@ -22,6 +22,7 @@ function App() {
       <LoadingScreenProvider>
         <StorageProvider>
           <SudoDialog />
+          {/* <Button className="absolute top-0 right-0">Logs</Button> */}
           <Router>
             <Routes>
               <Route path="/" element={<Home />}>
