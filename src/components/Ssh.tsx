@@ -120,7 +120,7 @@ const Ssh = () => {
                 {" "}
                 <HiOutlineInformationCircle size={25} />
               </TooltipTrigger>
-              <TooltipContent>Hover</TooltipContent>
+              <TooltipContent className="content-tooltip max-w-[440px]">SSH encrypts remote access, bolstering security for safe and protected connections to your system.</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>
