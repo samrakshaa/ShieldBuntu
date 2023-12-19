@@ -13,39 +13,20 @@ import { PiWallFill } from "react-icons/pi";
 
 const networkLinks = [
   {
-    title: "Dashboard",
-    link: "/",
-    icon: <MdDashboard size={25} />,
-  },
-  {
-    title: "Firewall",
-    link: "/firewall",
+    title: "Basic",
+    link: "/basic",
     icon: <PiWallFill size={25} />,
   },
   {
-    title: "USB Settings",
-    link: "/usb",
+    title: "Moderate",
+    link: "/intermediate",
     icon: <TbUsb size={25} />,
   },
   {
-    title: "Network Settings",
-    link: "/network",
+    title: "Expert",
+    link: "/advanced",
     icon: <SiTorbrowser size={25} />,
   },
-  // {
-  //   title: "SSH Connect",
-  //   link: "/sshconnect",
-  //   icon: <TbBrandPowershell size={25} />,
-  // },
-  {
-    title: "Testing Area",
-    link: "/testing",
-    icon: <SiTorbrowser size={25} />,
-  },
-  // {
-  //   title: "Open Port Settings",
-  //   link: "/",
-  // },
 ];
 
 const Home = () => {

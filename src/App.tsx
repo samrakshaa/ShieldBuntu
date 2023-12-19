@@ -13,6 +13,9 @@ import TestingArea from "./pages/TestingArea";
 import Usb from "./pages/usb/Usb";
 import LoadingScreenProvider from "./components/LoadingScreenProvider";
 import SshConnect from "./pages/ssh/SshConnect";
+import Basic from "./pages/basic/Basic";
+import Intermediate from "./pages/intermediate/Intermediate";
+import Advance from "./pages/advance/Advance";
 
 attachConsole();
 function App() {
@@ -21,19 +24,14 @@ function App() {
       <LoadingScreenProvider>
         <StorageProvider>
           <SudoDialog>
-            {/* <Button className="absolute top-0 right-0">Logs</Button> */}
             <Router>
               <Routes>
                 <Route path="/" element={<Home />}>
                   <Route path={"/"} element={<Dashboard />} />
-                  <Route path={"/firewall"} element={<Firewall />} />
-                  <Route path={"/usb"} element={<Usb />} />
-                  <Route path={"/network"} element={<Network />} />
-                  <Route path={"/sshconnect"} element={<SshConnect />} />
-                  <Route path={"/testing"} element={<TestingArea />} />
+                  <Route path={"/basic"} element={<Basic />} />
+                  <Route path={"/intermediate"} element={<Intermediate />} />
+                  <Route path={"/advanced"} element={<Advance />} />
                 </Route>
-                {/* <Route path="/network-security/firewall" element={<Firewall />} />
-            <Route path="/network-security/usbblock" element={<USBPage />} /> */}
               </Routes>
             </Router>
           </SudoDialog>

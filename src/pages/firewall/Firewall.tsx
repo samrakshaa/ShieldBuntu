@@ -129,15 +129,17 @@ const Firewall = () => {
   }, []);
 
   return (
-    <div className="firewall flex flex-row justify-center mx-auto max-w-[900px] p-6 pt-0">
-      <div className="main-section py-12">
+    <div className="firewall flex flex-row justify-center mx-auto max-w-[900px]">
+      <div className="main-section pt-8">
         <div className=" flex items-center justify-between ">
           <div className=" flex gap-2  ">
-            <BackButton
+            {/* <BackButton
               className="bg-secondary text-2xl py-0 hover:bg-secondary/50"
               onClick={handleBack}
-            />
-            <h1 className="text-3xl pl-2 font-bold">Firewall Configuration</h1>
+            /> */}
+            <h1 className="text-2xl text-primary font-bold">
+              Firewall Configuration
+            </h1>
             <TooltipProvider>
               <Tooltip delayDuration={20}>
                 <TooltipTrigger className="flex-1">
@@ -182,10 +184,9 @@ const Firewall = () => {
         <br />
 
         {/* IP table config */}
-        <div className="iptable mt-12">
+        {/* <div className="iptable mt-12">
           <h2 className="text-xl mb-4 font-bold ">IP Table Configuration</h2>
           <Table className="">
-            {/* <TableCaption>IP table rules.</TableCaption> */}
             <TableHeader>
               <TableRow>
                 <TableHead className="text-lg" colSpan={2}>
@@ -205,7 +206,7 @@ const Firewall = () => {
               </TableRow>
             </TableBody>
           </Table>
-        </div>
+        </div> */}
       </div>
     </div>
   );
