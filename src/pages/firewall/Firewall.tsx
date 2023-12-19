@@ -27,11 +27,14 @@ import BackButton from "@/components/BackButton";
 
 const Firewall = () => {
   const { toast } = useToast();
-  const { changeFirewall: updateFirewallStatus, firewall: firewallStatus } =
-    useGStore();
+  const {
+    changeFirewall: updateFirewallStatus,
+    firewall: firewallStatus,
+    isRemote,
+  } = useGStore();
   const navigate = useNavigate();
   const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
-    functionToExecute: () => invoke("apply_firewall_rules"),
+    functionToExecute: () => invoke("apply_firewall_rules", { isRemote }),
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
       console.log(resJSON);
@@ -58,7 +61,7 @@ const Firewall = () => {
   });
 
   const { isLoading: isDisablelLoading, execute: executeDisable } = useLoading({
-    functionToExecute: () => invoke("reverse_firewall_rules"),
+    functionToExecute: () => invoke("reverse_firewall_rules", { isRemote }),
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
       console.log(resJSON);
@@ -85,7 +88,7 @@ const Firewall = () => {
   });
 
   const { isLoading: isStatusLoading, execute: executeStatus } = useLoading({
-    functionToExecute: () => invoke("check_firewall"),
+    functionToExecute: () => invoke("check_firewall", { isRemote }),
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
       if (resJSON.enabled) {

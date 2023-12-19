@@ -1,15 +1,15 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-type Flow = "local" | "remote";
+type remote = boolean;
 interface USBDevice {
   id: string;
   name: string;
   state: "block" | "allow";
 }
 interface GStore {
-  flow: Flow;
-  setFlow: (client: Flow) => void;
+  isRemote: remote;
+  setRemote: (client: remote) => void;
   firewall: boolean;
   changeFirewall: (status: boolean) => void;
   usbStatus: boolean;
@@ -28,8 +28,8 @@ interface GStore {
 export const useGStore = create(
   persist<GStore>(
     (set) => ({
-      flow: "local",
-      setFlow: (client) => set(() => ({ flow: client })),
+      isRemote: false,
+      setRemote: () => set((state) => ({ isRemote: !state.isRemote })),
       firewall: false,
       changeFirewall: (status: boolean) => set(() => ({ firewall: status })),
       ssh: false,

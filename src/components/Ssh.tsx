@@ -16,9 +16,9 @@ import Loader from "@/components/Loader";
 const Ssh = () => {
   const [logs, setLogs] = useState("");
   const { toast } = useToast();
-  const { changeSSH: updateSSHStatus, ssh: SSHStatus } = useGStore();
+  const { changeSSH: updateSSHStatus, ssh: SSHStatus, isRemote } = useGStore();
   const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
-    functionToExecute: () => invoke("apply_ssh_rules"),
+    functionToExecute: () => invoke("apply_ssh_rules", { isRemote }),
     onSuccess: (res: any) => {
       const resJson = JSON.parse(res);
       if (resJson.success) {
@@ -45,7 +45,7 @@ const Ssh = () => {
   });
 
   const { isLoading: isDisablelLoading, execute: executeDisable } = useLoading({
-    functionToExecute: () => invoke("reverse_ssh_rules"),
+    functionToExecute: () => invoke("reverse_ssh_rules", { isRemote }),
     onSuccess: (res: any) => {
       const resJson = JSON.parse(res);
       if (resJson.success) {
@@ -71,7 +71,7 @@ const Ssh = () => {
   });
 
   const { isLoading: isStatusLoading, execute: executeStatus } = useLoading({
-    functionToExecute: () => invoke("check_ssh"),
+    functionToExecute: () => invoke("check_ssh", { isRemote }),
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
 

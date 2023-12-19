@@ -24,9 +24,10 @@ const Tor = () => {
     torTimeout,
     torTimeoutTimestamp,
     setTorTimeout,
+    isRemote,
   } = useGStore();
   const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
-    functionToExecute: () => invoke("block_tor_access"),
+    functionToExecute: () => invoke("block_tor_access", { isRemote }),
     onSuccess: (res: any) => {
       const resJson = JSON.parse(res);
       if (resJson.success) {

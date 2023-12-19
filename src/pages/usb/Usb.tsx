@@ -27,15 +27,20 @@ import Loader from "@/components/Loader";
 import { useNavigate } from "react-router-dom";
 
 const Usb = () => {
-  const { usbStatus, connectedUsbs, changeUsbStatus, setConnectedUsbs } =
-    useGStore();
+  const {
+    usbStatus,
+    connectedUsbs,
+    changeUsbStatus,
+    setConnectedUsbs,
+    isRemote,
+  } = useGStore();
   const { toast } = useToast();
   const navigate = useNavigate();
 
   // Enabling USB blocking
   const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
     functionToExecute: (usbIds: String[]) =>
-      invoke("apply_usb_blocking", { usbIds }),
+      invoke("apply_usb_blocking", { usbIds, isRemote }),
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
       console.log(resJSON);
@@ -65,7 +70,7 @@ const Usb = () => {
   // Disabling USB blocking
   const { isLoading: isDisablelLoading, execute: executeDisable } = useLoading({
     functionToExecute: (usbIds: String[]) =>
-      invoke("reverse_usb_blocking", { usbIds }),
+      invoke("reverse_usb_blocking", { usbIds, isRemote }),
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
       console.log(resJSON);
@@ -97,7 +102,7 @@ const Usb = () => {
     execute: executeDisableSelected,
   } = useLoading({
     functionToExecute: (usbIds: String[]) =>
-      invoke("apply_usb_blocking", { usbIds }),
+      invoke("apply_usb_blocking", { usbIds, isRemote }),
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
       console.log(resJSON);
@@ -127,7 +132,7 @@ const Usb = () => {
   const { isLoading: isEnableSelectedLoading, execute: executeEnableSelected } =
     useLoading({
       functionToExecute: (usbIds: String[]) =>
-        invoke("reverse_usb_blocking", { usbIds }),
+        invoke("reverse_usb_blocking", { usbIds, isRemote }),
       onSuccess: (res: any) => {
         const resJSON = JSON.parse(res);
         console.log(resJSON);
@@ -155,7 +160,7 @@ const Usb = () => {
 
   // List connected usbs
   const { isLoading: isAllUsbsLoading, execute: executeGetAll } = useLoading({
-    functionToExecute: () => invoke("list_usb_devices"),
+    functionToExecute: () => invoke("list_usb_devices", { isRemote }),
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
       console.log(resJSON);
@@ -174,7 +179,8 @@ const Usb = () => {
   // List connected usbs with status
   const { isLoading: isAllUsbsStatusLoading, execute: executeGetStatusAll } =
     useLoading({
-      functionToExecute: () => invoke("list_usb_devices_usbguard"),
+      functionToExecute: () =>
+        invoke("list_usb_devices_usbguard", { isRemote }),
       onSuccess: (res: any) => {
         const resJSON = JSON.parse(res);
         console.log(res);
