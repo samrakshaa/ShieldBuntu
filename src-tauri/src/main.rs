@@ -20,7 +20,6 @@ mod ssh;
 mod check_username;
 mod basic_check;
 mod ssh_conn;
-
 // #[derive(Debug, Serialize, Deserialize)]
 // struct UsbDevice {
 //     sequence: u32,
@@ -168,6 +167,7 @@ pub async fn main() {
             basic_check::check_unused_package,
             ssh_conn::first_time_ssh,
             ssh_conn::second_time_ssh,
+            usb::check_usb
             ]
         )
         .run(tauri::generate_context!())

@@ -1,5 +1,5 @@
 // Import statements
-import { useState, useEffect, FormEvent } from "react";
+import React, { useState, useEffect, FormEvent, ReactNode } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { appWindow } from "@tauri-apps/api/window";
 import {
@@ -16,15 +16,18 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "./ui/use-toast";
 import useLoading from "../hooks/useLoading";
 
-const SudoDialog = () => {
+const SudoDialog = (props: { children: ReactNode }) => {
+  const { children } = props;
   const [password, setPassword] = useState("");
   const [attemptsRemaining, setAttemptsRemaining] = useState(3);
+  const [authorized, setAuthorized] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(true);
   const { toast } = useToast();
+
   const { isLoading, execute } = useLoading({
     functionToExecute: () => invoke("set_password", { password }),
     onSuccess: () => {
-      console.log("Authorized");
+      setAuthorized(true);
       setPassword("");
       setIsDialogOpen(false);
     },
@@ -54,7 +57,9 @@ const SudoDialog = () => {
     execute();
   };
 
-  return (
+  return authorized ? (
+    <div>{children}</div>
+  ) : (
     <div>
       <Dialog open={isDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">

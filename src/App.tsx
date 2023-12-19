@@ -21,22 +21,23 @@ function App() {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <LoadingScreenProvider>
         <StorageProvider>
-          <SudoDialog />
-          {/* <Button className="absolute top-0 right-0">Logs</Button> */}
-          <Router>
-            <Routes>
-              <Route path="/" element={<Home />}>
-                <Route path={"/"} element={<Dashboard />} />
-                <Route path={"/firewall"} element={<Firewall />} />
-                <Route path={"/usb"} element={<Usb />} />
-                <Route path={"/network"} element={<Network />} />
-                <Route path={"/sshconnect"} element={<SshConnect />} />
-                <Route path={"/testing"} element={<TestingArea />} />
-              </Route>
-              {/* <Route path="/network-security/firewall" element={<Firewall />} />
+          <SudoDialog>
+            {/* <Button className="absolute top-0 right-0">Logs</Button> */}
+            <Router>
+              <Routes>
+                <Route path="/" element={<Home />}>
+                  <Route path={"/"} element={<Dashboard />} />
+                  <Route path={"/firewall"} element={<Firewall />} />
+                  <Route path={"/usb"} element={<Usb />} />
+                  <Route path={"/network"} element={<Network />} />
+                  <Route path={"/sshconnect"} element={<SshConnect />} />
+                  <Route path={"/testing"} element={<TestingArea />} />
+                </Route>
+                {/* <Route path="/network-security/firewall" element={<Firewall />} />
             <Route path="/network-security/usbblock" element={<USBPage />} /> */}
-            </Routes>
-          </Router>
+              </Routes>
+            </Router>
+          </SudoDialog>
           <Toaster />
         </StorageProvider>
       </LoadingScreenProvider>
