@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Check if deborphan is installed
 if command -v deborphan > /dev/null 2>&1; then
   echo "{\"enabled\": true}"
 else
