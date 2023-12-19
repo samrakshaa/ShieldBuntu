@@ -2,7 +2,7 @@ use std::{process::Stdio, path::Path, fs::OpenOptions, io::Write};
 use chrono::Utc;
 use serde_json::json;
 use tokio::{process::Command as AsyncCommand, io::AsyncWriteExt};
-use tokio::io::AsyncReadExt;
+
 use std::{fs, env};
 
 use crate::get_password;

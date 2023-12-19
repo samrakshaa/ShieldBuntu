@@ -10,8 +10,7 @@ use tokio::process::Command as AsyncCommand;
 #[tauri::command]
 pub async fn check_fail2ban(handle: tauri::AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    // let script_path = current_dir.join("scripts/check/check_fail2ban.sh");
+   
 
     let script_path = handle
     .path_resolver()
@@ -38,17 +37,7 @@ pub async fn check_fail2ban(handle: tauri::AppHandle) -> Result<String, String> 
     let output = child.wait_with_output().await
         .map_err(|e| format!("Error waiting for process: {}", e))?;
 
-    // Check if the command executed successfully
-    // if output.status.success() {
-    //     let output_str = String::from_utf8(output.stdout)
-    //         .map_err(|e| format!("Failed to read output: {}", e))?;
-
-    //     Ok(output_str)  // Return the output directly
-    // } else {
-    //     let error_output = String::from_utf8(output.stderr)
-    //         .map_err(|e| format!("Failed to read error output: {}", e))?;
-    //     Err(format!("Error executing command: {}", error_output))
-    // }
+   
 
     let result = if output.status.success() {
         json!({ "success": true }).to_string()
@@ -62,8 +51,7 @@ pub async fn check_fail2ban(handle: tauri::AppHandle) -> Result<String, String> 
 #[tauri::command]
 pub async fn check_calmav(handle: tauri::AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    // let script_path = current_dir.join("scripts/check/check_calmav.sh");
+   
 
     let script_path = handle
         .path_resolver()
@@ -90,17 +78,7 @@ pub async fn check_calmav(handle: tauri::AppHandle) -> Result<String, String> {
     let output = child.wait_with_output().await
         .map_err(|e| format!("Error waiting for process: {}", e))?;
 
-    // Check if the command executed successfully
-    // if output.status.success() {
-    //     let output_str = String::from_utf8(output.stdout)
-    //         .map_err(|e| format!("Failed to read output: {}", e))?;
-
-    //     Ok(output_str)  // Return the output directly
-    // } else {
-    //     let error_output = String::from_utf8(output.stderr)
-    //         .map_err(|e| format!("Failed to read error output: {}", e))?;
-    //     Err(format!("Error executing command: {}", error_output))
-    // }
+  
     let result = if output.status.success() {
         json!({ "success": true }).to_string()
     } else {
@@ -113,8 +91,6 @@ pub async fn check_calmav(handle: tauri::AppHandle) -> Result<String, String> {
 #[tauri::command]
 pub async fn check_rkhunter(handle: tauri::AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    // let script_path = current_dir.join("scripts/check/check_rkhunter.sh");
 
     let script_path = handle
         .path_resolver()
@@ -141,17 +117,7 @@ pub async fn check_rkhunter(handle: tauri::AppHandle) -> Result<String, String> 
     let output = child.wait_with_output().await
         .map_err(|e| format!("Error waiting for process: {}", e))?;
 
-    // Check if the command executed successfully
-    // if output.status.success() {
-    //     let output_str = String::from_utf8(output.stdout)
-    //         .map_err(|e| format!("Failed to read output: {}", e))?;
 
-    //     Ok(output_str)  // Return the output directly
-    // } else {
-    //     let error_output = String::from_utf8(output.stderr)
-    //         .map_err(|e| format!("Failed to read error output: {}", e))?;
-    //     Err(format!("Error executing command: {}", error_output))
-    // }
     let result = if output.status.success() {
         json!({ "success": true }).to_string()
     } else {
@@ -203,8 +169,6 @@ pub async fn check_unused_package() -> Result<String, String> {
 #[tauri::command]
 pub async fn check_apparmor(handle: tauri::AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    // let script_path = current_dir.join("scripts/check/check_rkhunter.sh");
 
     let script_path = handle
         .path_resolver()

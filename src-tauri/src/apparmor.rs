@@ -5,8 +5,7 @@ use std::fs;
 
 #[tauri::command]
 pub async fn install_and_configure_apparmor(handle : tauri::AppHandle) -> Result<String, String> {
-    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    // let script_path = current_dir.join("scripts/apply/apparmor.sh");
+   
 
     let script_path = handle
     .path_resolver()
@@ -35,16 +34,6 @@ pub async fn install_and_configure_apparmor(handle : tauri::AppHandle) -> Result
     let output: std::process::Output = child.wait_with_output().await
         .map_err(|e| format!("Error waiting for process: {}", e))?;
 
-    // Check if the command executed successfully
-    // if status.success() {
-    //     Ok(true.to_string())
-    // } else {
-    //     let mut error_output = String::new();
-    //     if let Some(mut stderr) = child.stderr.take() {
-    //         stderr.read_to_string(&mut error_output).await.map_err(|e| format!("Error reading stderr: {}", e))?;
-    //     }
-    //     Err(format!("Error executing AppArmor script: {}", error_output))
-    // }
 
     if output.status.success() {
         let output_str = String::from_utf8(output.stdout)

@@ -1,19 +1,34 @@
+use std::path::Path;
+use std::{env, fs};
 use std::fs::OpenOptions;
 use std::io::{Read, Write};
 use std::process::Stdio;
+use serde_json::json;
 use tokio::process::Command as AsyncCommand;
 use tokio::io::AsyncWriteExt;
 use chrono::Utc;
 use crate::get_password;
 
 #[tauri::command]
-pub async fn update_and_upgrade_packages() -> Result<String, String> {
+pub async fn update_and_upgrade_packages(handle : tauri::AppHandle) -> Result<String, String> {
     let sudo_password = get_password();
 
     if let Some(password) = sudo_password {
-        let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-        let script_path = current_dir.join("scripts/apply/update_packages.sh");
-        let log_file_path = current_dir.join("logs/update_packages_log.txt");
+      
+        let script_path = handle
+        .path_resolver()
+        .resolve_resource("scripts/apply/update_packages.sh")
+        .expect("failed to resolve resource");
+
+    let log_directory = match env::var("HOME") {
+        Ok(home) => format!("{}/.samrakshak_logs", home),
+        Err(_) => return Err("Could not retrieve user's home directory".to_string()),
+    };
+
+    fs::create_dir_all(&log_directory)
+        .map_err(|e| format!("Error creating directory: {}", e))?;
+
+    let log_file_path = Path::new(&log_directory).join("update_packages_log.txt");
 
         // Open or create the log file for appending
         let mut file = OpenOptions::new()
@@ -63,12 +78,13 @@ pub async fn update_and_upgrade_packages() -> Result<String, String> {
 
         // Construct the JSON-like return value
         let result = if output.status.success() {
-            format!(r#"{{"success": true, "logs": "{}"}}"#, log_contents)
+            json!({ "success": true }).to_string()
         } else {
-            format!(r#"{{"success": false, "logs": "{}"}}"#, log_contents)
+            json!({ "success": false }).to_string()
         };
-
         Ok(result)
+
+        
     } else {
         Err("Sudo password not available".to_string())
     }

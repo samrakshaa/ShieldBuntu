@@ -15,9 +15,7 @@ use serde_json::json;
 #[tauri::command]
 pub async fn block_tor_access(handle : tauri::AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    // let script_path = current_dir.join("scripts/apply/tor_blocker.sh");
-    // let log_file_path = current_dir.join("logs/tor_log.txt");
+    
 
     let log_directory = match env::var("HOME") {
         Ok(home) => format!("{}/.samrakshak_logs", home),
@@ -155,8 +153,7 @@ pub async fn reverse_tor_block() -> Result<String, String> {
 #[tauri::command]
 pub async fn check_tor_blocked(handle : tauri::AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    // let script_path = current_dir.join("scripts/check/check_tor_blocked.sh");
+
 
     let script_path = handle
         .path_resolver()

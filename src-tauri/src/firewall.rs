@@ -157,10 +157,7 @@ pub async fn list_ports(handle: tauri::AppHandle) -> Result<String, String> {
 #[tauri::command]
 pub async fn reverse_firewall_rules(handle: tauri::AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    // let script_path = current_dir.join("scripts/reverse/r-firewall.sh");
-    // let log_file_path = current_dir.join("logs/reverse_firewall_log.txt");
-
+   
     let log_directory = match env::var("HOME") {
         Ok(home) => format!("{}/.samrakshak_logs", home),
         Err(_) => return Err("Could not retrieve user's home directory".to_string()),

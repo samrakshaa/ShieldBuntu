@@ -4,7 +4,6 @@ use std::io::{Read, Write};
 use std::path::Path;
 use std::process::{Command, Stdio};
 use chrono::Utc;
-// use serde_json::Value;
 use tokio::io::AsyncWriteExt;
 use tokio::process::Command as AsyncCommand;
 use serde_json::json;
@@ -13,9 +12,7 @@ use crate::get_password;
 #[tauri::command]
 pub async fn apply_ssh_rules(handle : tauri::AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    // let script_path = current_dir.join("scripts/apply/ssh.sh");
-    // let log_file_path = current_dir.join("logs/ssh_apply_log.txt");
+
 
     let log_directory = match env::var("HOME") {
         Ok(home) => format!("{}/.samrakshak_logs", home),
@@ -101,9 +98,7 @@ pub async fn apply_ssh_rules(handle : tauri::AppHandle) -> Result<String, String
 pub async fn reverse_ssh_rules(handle : tauri::AppHandle) -> Result<String, String> {
     // Similar setup as apply_ssh_rules
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    // let script_path = current_dir.join("scripts/reverse/r-ssh.sh");
-    // let log_file_path = current_dir.join("logs/ssh_reverse_log.txt");
+   
     let log_directory = match env::var("HOME") {
         Ok(home) => format!("{}/.samrakshak_logs", home),
         Err(_) => return Err("Could not retrieve user's home directory".to_string()),
@@ -187,8 +182,6 @@ pub async fn reverse_ssh_rules(handle : tauri::AppHandle) -> Result<String, Stri
 #[tauri::command]
 pub async fn check_ssh(handle : tauri::AppHandle) -> Result<String, String> {
         let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-        // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-        // let script_path = current_dir.join("scripts/check/check_ssh.sh");
     
             let script_path = handle
             .path_resolver()
