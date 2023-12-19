@@ -6,7 +6,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-function LoadingScreenProvider({ duration = 500, children }: Props) {
+function LoadingScreenProvider({ duration = 1000, children }: Props) {
   const [isLoading, setIsLoading] = React.useState(true);
 
   useEffect(() => {
@@ -19,18 +19,20 @@ function LoadingScreenProvider({ duration = 500, children }: Props) {
 
   return (
     <>
-      <CSSTransition
-        in={isLoading}
-        timeout={200}
-        classNames="fade"
-        unmountOnExit
-      >
-        <div className="h-screen w-screen transition-all duration-75 ease-in-out flex justify-center items-center font-black ">
-          SheildBuntu
-        </div>
-      </CSSTransition>
+      {isLoading ? (
+        <>
 
-      {!isLoading && children}
+          <div className="h-screen w-screen transition-all duration-75 ease-in-out font-normal flex justify-center items-center  flex-col text-4xl gap-4 ">
+          <img src="shield.svg" alt="logo" className=" bg-blend-soft-light " width={"10%"}  />
+          <div>
+
+            Sheild<span className="font-black text-primary">Buntu</span>
+          </div>
+          </div>
+        </>
+      ) : (
+        children
+      )}
     </>
   );
 }
