@@ -19,7 +19,7 @@ const USBPage = () => {
       .catch((err) => console.error(err));
   };
   const handleClick4 = () => {
-    invoke("apply_firewall_rules")
+    invoke("apply_firewall_rules", {"port": "3000", "action": "d"})
       .then((res) => console.log(res))
       .catch((err) => console.error(err));
   };
@@ -34,7 +34,7 @@ const USBPage = () => {
       .catch((err) => console.error(err));
   };
   const handleClick7 = () => {
-    invoke("apply_ssh_rules")
+    invoke("list_ports")
       .then((res) => console.log(res))
       .catch((err) => console.error(err));
   };
@@ -133,7 +133,7 @@ const USBPage = () => {
         Check Firewall
       </Button>
       <Button onClick={handleClick7} className=" mt-32">
-        SSH
+        LIST PORTS
       </Button>
       <Button onClick={handleClick8} className=" mt-32">
         Rev SSH

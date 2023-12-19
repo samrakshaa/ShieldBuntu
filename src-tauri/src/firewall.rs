@@ -10,11 +10,13 @@ use tokio::process::Command as AsyncCommand;
 use std::io::Read;
 use serde_json::json;
 
-
 #[tauri::command]
-pub async fn apply_firewall_rules(handle: tauri::AppHandle) -> Result<String, String> {
+pub async fn apply_firewall_rules(handle: tauri::AppHandle, port: Option<String>, action: Option<String>) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-   
+    let script_path = handle
+        .path_resolver()
+        .resolve_resource("scripts/apply/firewall.sh")
+        .expect("failed to resolve resource");
 
     let log_directory = match env::var("HOME") {
         Ok(home) => format!("{}/.samrakshak_logs", home),
@@ -24,49 +26,49 @@ pub async fn apply_firewall_rules(handle: tauri::AppHandle) -> Result<String, St
     fs::create_dir_all(&log_directory)
         .map_err(|e| format!("Error creating directory: {}", e))?;
 
-        let script_path = handle
-        .path_resolver()
-        .resolve_resource("scripts/apply/firewall.sh")
-        .expect("failed to resolve resource");
+    let log_file_path = Path::new(&log_directory).join("firewall.txt");
 
-    // Open or create the log file for appending
-    let log_file_path = Path::new(&log_directory).join("firewall_log.txt");
-    // Open or create the log file for appending
     let mut file = OpenOptions::new()
         .create(true)
         .append(true)
         .open(&log_file_path)
         .map_err(|e| format!("Error opening log file: {}", e))?;
 
-    // Write the current date and time to the log file
     let datetime = Utc::now().format("[%Y-%m-%d %H:%M:%S]").to_string();
     file.write_all(format!("\n\n{}\n\n", datetime).as_bytes())
         .map_err(|e| format!("Error writing to log file: {}", e))?;
 
-    // Run the bash script for applying firewall rules
-    let mut child = Command::new("sudo")
-        .arg("-S")
+    let mut cmd = Command::new("sudo");
+    cmd.arg("-S")
         .arg("bash")
-        .arg(script_path)
+        .arg(&script_path)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
-        .spawn()
+        .stderr(Stdio::piped());
+
+    if let Some(p) = port {
+        cmd.arg(&p);
+    }
+    
+    if let Some(a) = action {
+        cmd.arg(&a);
+    }
+
+    let mut child = cmd.spawn()
         .map_err(|e| format!("Error spawning process: {}", e))?;
 
     if let Some(mut stdin) = child.stdin.take() {
-        stdin.write_all(format!("{}\n", password).as_bytes()).map_err(|e| format!("Error writing to stdin: {}", e))?;
+        stdin.write_all(format!("{}\n", password).as_bytes())
+            .map_err(|e| format!("Error writing to stdin: {}", e))?;
     }
 
-    // Capture the output
-    let output = child.wait_with_output().map_err(|e| format!("Error waiting for process: {}", e))?;
-    
-    // Write the output to the log file
+    let output = child.wait_with_output()
+        .map_err(|e| format!("Error waiting for process: {}", e))?;
+
     file.write_all(&output.stdout)
         .and_then(|_| file.write_all(&output.stderr))
         .map_err(|e| format!("Error writing to log file: {}", e))?;
 
-    // Read the entire log file to include in the response
     let mut file = OpenOptions::new()
         .read(true)
         .open(&log_file_path)
@@ -76,13 +78,73 @@ pub async fn apply_firewall_rules(handle: tauri::AppHandle) -> Result<String, St
     file.read_to_string(&mut log_contents)
         .map_err(|e| format!("Error reading log file: {}", e))?;
 
-    // Construct the JSON-like return value
-    let result = if output.status.success() {
-        json!({ "success": true, "logs": log_contents }).to_string()
-    } else {
-        json!({ "success": false, "logs": log_contents }).to_string()
-    };
+    let result = json!({ "logs": log_contents.trim() }).to_string();
     Ok(result)
+}
+
+
+
+// Function to parse the output of the firewall script into a JSON format
+fn parse_firewall_output(output: String) -> Vec<serde_json::Value> {
+    output.lines()
+        .skip_while(|line| !line.starts_with("To"))
+        .skip(1) // Skip the header line
+        .filter_map(|line| {
+            let parts: Vec<&str> = line.split_whitespace().collect();
+            if parts.len() >= 3 {
+                Some(json!({
+                    "To": parts[0],
+                    "Action": parts[1],
+                    "From": parts[2]
+                }))
+            } else {
+                None
+            }
+        })
+        .collect()
+}
+
+
+#[tauri::command]
+pub async fn list_ports(handle: tauri::AppHandle) -> Result<String, String> {
+    let password = get_password().ok_or_else(|| "Password not available".to_string())?;
+    let script_path = handle
+        .path_resolver()
+        .resolve_resource("scripts/apply/ufw_status.sh")
+        .expect("failed to resolve resource");
+
+        println!("Resolved script path: {:?}", script_path); // Debug: Print resolved script path
+
+        let mut child = Command::new("sudo")
+            .arg("-S")
+            .arg("bash")
+            .arg(&script_path)
+            .stdin(Stdio::piped())
+            .stdout(Stdio::piped())
+            .stderr(Stdio::piped())
+            .spawn()
+            .map_err(|e| format!("Error spawning process: {}", e))?;
+    
+        if let Some(mut stdin) = child.stdin.take() {
+            stdin.write_all(format!("{}\n", password).as_bytes())
+                .map_err(|e| format!("Error writing to stdin: {}", e))?;
+        }
+    
+        let output = child.wait_with_output()
+            .map_err(|e| format!("Error waiting for process: {}", e))?;
+    
+        // Debug: Print raw output and error output
+        println!("Raw script output:\n{}", String::from_utf8_lossy(&output.stdout));
+        if !output.stderr.is_empty() {
+            println!("Error output:\n{}", String::from_utf8_lossy(&output.stderr));
+        }
+    // Debug: Print raw output
+    println!("Raw script output:\n{}", String::from_utf8_lossy(&output.stdout));
+
+    // Parse the output to JSON
+    let firewall_status = parse_firewall_output(String::from_utf8_lossy(&output.stdout).to_string());
+
+    Ok(json!({ "firewall_status": firewall_status }).to_string())
 }
 
 

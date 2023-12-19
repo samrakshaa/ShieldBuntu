@@ -145,6 +145,7 @@ pub async fn main() {
             firewall::apply_firewall_rules,
             firewall::reverse_firewall_rules,
             firewall::check_firewall,
+            firewall::list_ports,
             fail2ban::install_and_configure_fail2ban,
             apparmor::install_and_configure_apparmor,
             rkhunter::install_and_configure_rkhunter,
