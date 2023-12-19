@@ -9,6 +9,7 @@ use std::process::Stdio;
 use crate::{get_ssh_credentials, get_password};
 
 
+#[tauri::command]
 pub async fn establish_ssh_connection() -> Result<String, String> {
     let ssh_credentials = get_ssh_credentials();
     if ssh_credentials.len() != 3 {
@@ -176,7 +177,7 @@ pub async fn establish_ssh_connection() -> Result<String, String> {
 //     Ok(result)
 // }
 
-
+#[tauri::command]
 pub async fn execute_scripts_ssh() -> Result<String, String> {
     let ssh_credentials = get_ssh_credentials();
     if ssh_credentials.len() != 3 {
