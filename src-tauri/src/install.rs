@@ -11,9 +11,24 @@ use crate::get_password;
 #[tauri::command]
 pub async fn install() -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/apply/install.sh");
-    let log_file_path = current_dir.join("logs/install.txt");
+    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    // let script_path = current_dir.join("scripts/apply/install.sh");
+    // let log_file_path = current_dir.join("logs/install.txt");
+    let log_directory = match env::var("HOME") {
+        Ok(home) => format!("{}/.samrakshak_logs", home),
+        Err(_) => return Err("Could not retrieve user's home directory".to_string()),
+    };
+
+    fs::create_dir_all(&log_directory)
+        .map_err(|e| format!("Error creating directory: {}", e))?;
+
+        let script_path = handle
+        .path_resolver()
+        .resolve_resource("scripts/apply/install.sh")
+        .expect("failed to resolve resource");
+
+    // Open or create the log file for appending
+    let log_file_path = Path::new(&log_directory).join("install_log.txt");
 
     // Open or create the log file for appending
     let mut file = OpenOptions::new()

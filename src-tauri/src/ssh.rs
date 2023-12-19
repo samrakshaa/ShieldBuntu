@@ -1,5 +1,7 @@
-use std::fs::OpenOptions;
+use std::env;
+use std::fs::{OpenOptions, self};
 use std::io::{Read, Write};
+use std::path::Path;
 use std::process::{Command, Stdio};
 use chrono::Utc;
 // use serde_json::Value;
@@ -9,11 +11,27 @@ use serde_json::json;
 use crate::get_password;
 
 #[tauri::command]
-pub async fn apply_ssh_rules() -> Result<String, String> {
+pub async fn apply_ssh_rules(handle : tauri::AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/apply/ssh.sh");
-    let log_file_path = current_dir.join("logs/ssh_apply_log.txt");
+    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    // let script_path = current_dir.join("scripts/apply/ssh.sh");
+    // let log_file_path = current_dir.join("logs/ssh_apply_log.txt");
+
+    let log_directory = match env::var("HOME") {
+        Ok(home) => format!("{}/.samrakshak_logs", home),
+        Err(_) => return Err("Could not retrieve user's home directory".to_string()),
+    };
+
+    fs::create_dir_all(&log_directory)
+        .map_err(|e| format!("Error creating directory: {}", e))?;
+
+        let script_path = handle
+        .path_resolver()
+        .resolve_resource("scripts/apply/ssh.sh")
+        .expect("failed to resolve resource");
+
+    // Open or create the log file for appending
+    let log_file_path = Path::new(&log_directory).join("ssh_apply_log.txt");
 
     // Open or create the log file for appending
     let mut file = OpenOptions::new()
@@ -80,12 +98,27 @@ pub async fn apply_ssh_rules() -> Result<String, String> {
 
 
 #[tauri::command]
-pub async fn reverse_ssh_rules() -> Result<String, String> {
+pub async fn reverse_ssh_rules(handle : tauri::AppHandle) -> Result<String, String> {
     // Similar setup as apply_ssh_rules
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/reverse/r-ssh.sh");
-    let log_file_path = current_dir.join("logs/ssh_reverse_log.txt");
+    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    // let script_path = current_dir.join("scripts/reverse/r-ssh.sh");
+    // let log_file_path = current_dir.join("logs/ssh_reverse_log.txt");
+    let log_directory = match env::var("HOME") {
+        Ok(home) => format!("{}/.samrakshak_logs", home),
+        Err(_) => return Err("Could not retrieve user's home directory".to_string()),
+    };
+
+    fs::create_dir_all(&log_directory)
+        .map_err(|e| format!("Error creating directory: {}", e))?;
+
+        let script_path = handle
+        .path_resolver()
+        .resolve_resource("scripts/reverse/r-ssh.sh")
+        .expect("failed to resolve resource");
+
+    // Open or create the log file for appending
+    let log_file_path = Path::new(&log_directory).join("ssh_reverse_log.txt");
 
     // Run the bash script for reversing firewall changes
     let mut file = OpenOptions::new()
@@ -148,14 +181,20 @@ pub async fn reverse_ssh_rules() -> Result<String, String> {
     };
 
     Ok(result)
-    }
+}
 
 
 #[tauri::command]
-pub async fn check_ssh() -> Result<String, String> {
+pub async fn check_ssh(handle : tauri::AppHandle) -> Result<String, String> {
         let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-        let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-        let script_path = current_dir.join("scripts/check/check_ssh.sh");
+        // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+        // let script_path = current_dir.join("scripts/check/check_ssh.sh");
+    
+            let script_path = handle
+            .path_resolver()
+            .resolve_resource("scripts/check/check_ssh.sh")
+            .expect("failed to resolve resource");
+    
     
         // Run the bash script for checking firewall status
         let mut child = AsyncCommand::new("sudo")
@@ -178,14 +217,11 @@ pub async fn check_ssh() -> Result<String, String> {
             .map_err(|e| format!("Error waiting for process: {}", e))?;
     
         // Check if the command executed successfully
-        if output.status.success() {
-            let output_str = String::from_utf8(output.stdout)
-                .map_err(|e| format!("Failed to read output: {}", e))?;
-    
-            Ok(output_str)  // Return the output directly
+        let result = if output.status.success() {
+            json!({ "success": true }).to_string()
         } else {
-            let error_output = String::from_utf8(output.stderr)
-                .map_err(|e| format!("Failed to read error output: {}", e))?;
-            Err(format!("Error executing command: {}", error_output))
-        }
+            json!({ "success": false }).to_string()
+        };
+    
+        Ok(result)
 }
