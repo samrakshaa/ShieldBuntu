@@ -285,26 +285,32 @@ const Usb = () => {
   }, [usbStatus]);
 
   return (
-    <div className="usb flex flex-row justify-center mx-auto max-w-[900px] p-6 pt-0">
+    <div className="usb flex flex-row justify-center mx-auto max-w-[900px]">
       <div className="main-section py-12">
         <div className=" flex gap-2 items-center justify-between ">
           <div className="flex gap-2">
-
-          <BackButton 
+            {/* <BackButton 
             className="bg-secondary text-2xl py-0 hover:bg-secondary/50"
             onClick={handleBack}
-          />
-          <h1 className="text-3xl pl-2 font-bold">USB Configuration</h1>
-          <TooltipProvider>
-            <Tooltip delayDuration={20}>
-              <TooltipTrigger className="">
-                {" "}
-                <HiOutlineInformationCircle size={25} />
-              </TooltipTrigger>
-              <TooltipContent className="content-tooltip max-w-[440px] ">USB ports and external devices pose security risks, inviting malware and data theft. Managing these devices and ports prevents unauthorized access, malware injection, and data exfiltration, ensuring a secure and robust system.</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-            </div>
+          /> */}
+            <h1 className="text-2xl font-bold font-primary">
+              USB Configuration
+            </h1>
+            <TooltipProvider>
+              <Tooltip delayDuration={20}>
+                <TooltipTrigger className="">
+                  {" "}
+                  <HiOutlineInformationCircle size={25} />
+                </TooltipTrigger>
+                <TooltipContent className="content-tooltip max-w-[440px] ">
+                  USB ports and external devices pose security risks, inviting
+                  malware and data theft. Managing these devices and ports
+                  prevents unauthorized access, malware injection, and data
+                  exfiltration, ensuring a secure and robust system.
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
           <RefreshButton
             loading={isAllUsbsStatusLoading}
             onClick={() => executeGetStatusAll()}

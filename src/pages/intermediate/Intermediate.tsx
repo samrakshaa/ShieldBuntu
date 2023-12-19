@@ -57,7 +57,7 @@ const Intermediate = () => {
 
   return (
     <div>
-      <div className=" flex flex-col max-w-[900px] mx-auto">
+      <div className=" flex flex-col max-w-[900px] mx-auto p-2">
         <div className=" flex gap-2 mt-12">
           <BackButton
             className="bg-secondary text-2xl py-0 hover:bg-secondary/50"
