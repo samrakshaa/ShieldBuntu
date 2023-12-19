@@ -1,3 +1,5 @@
+use std::path::Path;
+use std::{env, fs};
 use std::process::{Stdio, Command};
 use tokio::io::AsyncWriteExt;
 use crate::get_password;
@@ -10,12 +12,25 @@ use serde_json::json;
 
 
 #[tauri::command]
-pub async fn apply_firewall_rules() -> Result<String, String> {
+pub async fn apply_firewall_rules(handle: tauri::AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/apply/firewall.sh");
-    let log_file_path = current_dir.join("logs/firewall_log.txt");
+   
 
+    let log_directory = match env::var("HOME") {
+        Ok(home) => format!("{}/.samrakshak_logs", home),
+        Err(_) => return Err("Could not retrieve user's home directory".to_string()),
+    };
+
+    fs::create_dir_all(&log_directory)
+        .map_err(|e| format!("Error creating directory: {}", e))?;
+
+        let script_path = handle
+        .path_resolver()
+        .resolve_resource("scripts/apply/firewall.sh")
+        .expect("failed to resolve resource");
+
+    // Open or create the log file for appending
+    let log_file_path = Path::new(&log_directory).join("firewall_log.txt");
     // Open or create the log file for appending
     let mut file = OpenOptions::new()
         .create(true)
@@ -72,11 +87,27 @@ pub async fn apply_firewall_rules() -> Result<String, String> {
 
 
 #[tauri::command]
-pub async fn reverse_firewall_rules() -> Result<String, String> {
+pub async fn reverse_firewall_rules(handle: tauri::AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/reverse/r-firewall.sh");
-    let log_file_path = current_dir.join("logs/reverse_firewall_log.txt");
+    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    // let script_path = current_dir.join("scripts/reverse/r-firewall.sh");
+    // let log_file_path = current_dir.join("logs/reverse_firewall_log.txt");
+
+    let log_directory = match env::var("HOME") {
+        Ok(home) => format!("{}/.samrakshak_logs", home),
+        Err(_) => return Err("Could not retrieve user's home directory".to_string()),
+    };
+
+    fs::create_dir_all(&log_directory)
+        .map_err(|e| format!("Error creating directory: {}", e))?;
+
+        let script_path = handle
+        .path_resolver()
+        .resolve_resource("scripts/reverse/r-firewall.sh")
+        .expect("failed to resolve resource");
+
+    // Open or create the log file for appending
+    let log_file_path = Path::new(&log_directory).join("r-firewall_log.txt");
 
     // Open or create the log file for appending
     let mut file = OpenOptions::new()
@@ -134,23 +165,31 @@ pub async fn reverse_firewall_rules() -> Result<String, String> {
 }
 
 
+
+
 #[tauri::command]
-pub async fn check_firewall() -> Result<String, String> {
+pub async fn check_firewall(handle: tauri::AppHandle) -> Result<String, String> {
+    // Retrieve password or credentials (replace with your logic)
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/check/check_firewall.sh");
+
+    // Resolve the path to the bash script using Tauri's path_resolver
+    let script_path = handle
+        .path_resolver()
+        .resolve_resource("scripts/check/check_firewall.sh")
+        .expect("failed to resolve resource");
 
     // Run the bash script for checking firewall status
     let mut child = AsyncCommand::new("sudo")
         .arg("-S")
         .arg("bash")
-        .arg(script_path)
+        .arg(&script_path)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()
         .map_err(|e| format!("Error spawning process: {}", e))?;
 
+    // Write password to the stdin of the child process
     if let Some(mut stdin) = child.stdin.take() {
         stdin.write_all(format!("{}\n", password).as_bytes()).await
             .map_err(|e| format!("Error writing to stdin: {}", e))?;
@@ -160,15 +199,12 @@ pub async fn check_firewall() -> Result<String, String> {
     let output = child.wait_with_output().await
         .map_err(|e| format!("Error waiting for process: {}", e))?;
 
-    // Check if the command executed successfully
-    if output.status.success() {
-        let output_str = String::from_utf8(output.stdout)
-            .map_err(|e| format!("Failed to read output: {}", e))?;
-
-        Ok(output_str)  // Return the output directly
+    // Construct the JSON-like return value
+    let result = if output.status.success() {
+        json!({ "success": true }).to_string()
     } else {
-        let error_output = String::from_utf8(output.stderr)
-            .map_err(|e| format!("Failed to read error output: {}", e))?;
-        Err(format!("Error executing command: {}", error_output))
-    }
+        json!({ "success": false }).to_string()
+    };
+
+    Ok(result)
 }
