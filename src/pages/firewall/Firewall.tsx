@@ -35,7 +35,7 @@ const Firewall = () => {
   } = useGStore();
   const navigate = useNavigate();
   const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
-    functionToExecute: () => invoke("apply_firewall_rules", { isRemote }),
+    functionToExecute: () => invoke("apply_firewall_rules"),
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
       console.log(resJSON);

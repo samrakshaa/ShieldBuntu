@@ -6,7 +6,7 @@ use crate::get_password;
 use chrono::Utc;
 use std::fs::{OpenOptions, File};
 use std::io::Write;
-use tokio::process::Command as AsyncCommand;
+// use tokio::process::Command as AsyncCommand;
 use std::io::Read;
 use serde_json::json;
 
@@ -78,7 +78,12 @@ pub async fn apply_firewall_rules(handle: tauri::AppHandle, port: Option<String>
     file.read_to_string(&mut log_contents)
         .map_err(|e| format!("Error reading log file: {}", e))?;
 
-    let result = json!({ "logs": log_contents.trim() }).to_string();
+    let result = if output.status.success() {
+        json!({ "success": true, "logs": log_contents }).to_string()
+    } else {
+        json!({ "success": false, "logs": log_contents }).to_string()
+    };
+
     Ok(result)
 }
 
