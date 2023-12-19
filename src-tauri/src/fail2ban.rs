@@ -5,11 +5,14 @@ use tokio::process::Command as AsyncCommand;
 
 use std::fs;
 
+use crate::get_password;
+
 
 
 
 #[tauri::command]
 pub async fn install_and_configure_fail2ban(handle: tauri::AppHandle) -> Result<String, String> {
+
     // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
     // let script_path = current_dir.join("scripts/apply/fail2ban.sh");
 

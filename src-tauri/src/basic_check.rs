@@ -30,7 +30,7 @@ pub async fn check_fail2ban() -> Result<String, String> {
     }
 
     // Await the child process completion
-    let output = child.wait_with_output().await
+    let output: std::process::Output = child.wait_with_output().await
         .map_err(|e| format!("Error waiting for process: {}", e))?;
 
     // Check if the command executed successfully

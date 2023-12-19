@@ -1,12 +1,42 @@
-use std::process::Stdio;
-use tokio::process::Command as AsyncCommand;
+use std::{process::Stdio, path::Path, fs::OpenOptions, io::Write};
+use chrono::Utc;
+use serde_json::json;
+use tokio::{process::Command as AsyncCommand, io::AsyncWriteExt};
 use tokio::io::AsyncReadExt;
-use std::fs;
+use std::{fs, env};
+
+use crate::get_password;
 
 #[tauri::command]
-pub async fn install_and_configure_rkhunter() -> Result<String, String> {
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/apply/rkhunter.sh");
+pub async fn install_and_configure_rkhunter(handle : tauri::AppHandle) -> Result<String, String> {
+    let password = get_password().ok_or_else(|| "Password not available".to_string())?;
+
+    let log_directory = match env::var("HOME") {
+        Ok(home) => format!("{}/.samrakshak_logs", home),
+        Err(_) => return Err("Could not retrieve user's home directory".to_string()),
+    };
+
+    fs::create_dir_all(&log_directory)
+        .map_err(|e| format!("Error creating directory: {}", e))?;
+
+        let script_path = handle
+        .path_resolver()
+        .resolve_resource("scripts/apply/fail2ban.sh")
+        .expect("failed to resolve resource");
+
+    // Open or create the log file for appending
+    let log_file_path = Path::new(&log_directory).join("fail2ban_logs.txt");
+    // Open or create the log file for appending
+    let mut file = OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open(&log_file_path)
+        .map_err(|e| format!("Error opening log file: {}", e))?;
+
+    // Write the current date and time to the log file
+    let datetime = Utc::now().format("[%Y-%m-%d %H:%M:%S]").to_string();
+    file.write_all(format!("\n\n{}\n\n", datetime).as_bytes())
+        .map_err(|e| format!("Error writing to log file: {}", e))?;
 
     // Check if the script file exists
     if !script_path.exists() {
@@ -23,16 +53,21 @@ pub async fn install_and_configure_rkhunter() -> Result<String, String> {
         .map_err(|e| format!("Error spawning process: {}", e))?;
 
     // Await the child process completion
-    let status = child.wait().await.map_err(|e| format!("Error waiting for process: {}", e))?;
+    if let Some(mut stdin) = child.stdin.take() {
+        stdin.write_all(format!("{}\n", password).as_bytes()).await
+            .map_err(|e| format!("Error writing to stdin: {}", e))?;
+    }
+
+    // Await the child process completion
+    let output: std::process::Output = child.wait_with_output().await
+        .map_err(|e| format!("Error waiting for process: {}", e))?;
 
     // Check if the command executed successfully
-    if status.success() {
-        Ok(true.to_string())
+    let result = if output.status.success() {
+        json!({ "success": true }).to_string()
     } else {
-        let mut error_output = String::new();
-        if let Some(mut stderr) = child.stderr.take() {
-            stderr.read_to_string(&mut error_output).await.map_err(|e| format!("Error reading stderr: {}", e))?;
-        }
-        Err(format!("Error executing RKHunter script: {}", error_output))
-    }
+        json!({ "success": false }).to_string()
+    };
+
+    Ok(result)
 }
