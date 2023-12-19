@@ -12,6 +12,7 @@ import {
 import useLoading from "@/hooks/useLoading";
 import { useGStore } from "@/store";
 import Loader from "@/components/Loader";
+import RefreshButton from "./refreshButton";
 
 const Ssh = () => {
   const [logs, setLogs] = useState("");
@@ -126,6 +127,10 @@ const Ssh = () => {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
+          <RefreshButton
+            loading={isStatusLoading}
+            onClick={() => executeStatus()}
+          />
         </div>
         <p className="py-2 text-foreground/50 leading-6">
           Control network ports and SSH rules with UFW. Allow/deny specific

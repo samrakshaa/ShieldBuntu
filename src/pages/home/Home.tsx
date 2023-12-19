@@ -22,26 +22,26 @@ const networkLinks = [
     link: "/firewall",
     icon: <PiWallFill size={25} />,
   },
-  // {
-  //   title: "USB Settings",
-  //   link: "/usb",
-  //   icon: <TbUsb size={25} />,
-  // },
-  // {
-  //   title: "Network Settings",
-  //   link: "/network",
-  //   icon: <SiTorbrowser size={25} />,
-  // },
+  {
+    title: "USB Settings",
+    link: "/usb",
+    icon: <TbUsb size={25} />,
+  },
+  {
+    title: "Network Settings",
+    link: "/network",
+    icon: <SiTorbrowser size={25} />,
+  },
   // {
   //   title: "SSH Connect",
   //   link: "/sshconnect",
   //   icon: <TbBrandPowershell size={25} />,
   // },
-  // {
-  //   title: "Testing Area",
-  //   link: "/testing",
-  //   icon: <SiTorbrowser size={25} />,
-  // },
+  {
+    title: "Testing Area",
+    link: "/testing",
+    icon: <SiTorbrowser size={25} />,
+  },
   // {
   //   title: "Open Port Settings",
   //   link: "/",

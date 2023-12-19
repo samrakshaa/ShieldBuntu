@@ -24,6 +24,7 @@ import { useGStore } from "@/store";
 import { useNavigate } from "react-router-dom";
 import Loader from "@/components/Loader";
 import BackButton from "@/components/BackButton";
+import RefreshButton from "@/components/refreshButton";
 
 const Firewall = () => {
   const { toast } = useToast();
@@ -130,26 +131,33 @@ const Firewall = () => {
   return (
     <div className="firewall flex flex-row justify-center mx-auto max-w-[900px] p-6 pt-0">
       <div className="main-section py-12">
-        <div className=" flex gap-4  items-center">
-          <BackButton
-            className="bg-secondary text-2xl py-0 hover:bg-secondary/50"
-            onClick={handleBack}
+        <div className=" flex items-center justify-between ">
+          <div className=" flex gap-2  ">
+            <BackButton
+              className="bg-secondary text-2xl py-0 hover:bg-secondary/50"
+              onClick={handleBack}
+            />
+            <h1 className="text-3xl pl-2 font-bold">Firewall Configuration</h1>
+            <TooltipProvider>
+              <Tooltip delayDuration={20}>
+                <TooltipTrigger className="flex-1">
+                  {" "}
+                  <HiOutlineInformationCircle size={25} />
+                </TooltipTrigger>
+                <TooltipContent className="content-tooltip max-w-[440px]">
+                  Firewall is software that monitors incoming and outgoing
+                  traffic based on pre-defined network rules. This section
+                  provides concise list of all enabled firewall rules - the
+                  section also involves options to block/manage open port
+                  configurations.
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+          <RefreshButton
+            loading={isStatusLoading}
+            onClick={() => executeStatus()}
           />
-          <h1 className="text-3xl pl-2 font-bold">Firewall Configuration</h1>
-          <TooltipProvider>
-            <Tooltip delayDuration={20}>
-              <TooltipTrigger className="">
-                {" "}
-                <HiOutlineInformationCircle size={25} />
-              </TooltipTrigger>
-              <TooltipContent className="content-tooltip max-w-[440px]">
-                Firewall is software that monitors incoming and outgoing traffic
-                based on pre-defined network rules. This section provides
-                concise list of all enabled firewall rules - the section also
-                involves options to block/manage open port configurations.
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
         </div>
         <p className="py-2 text-foreground/50 leading-6">
           Control network ports and firewall rules with UFW. Allow/deny specific
