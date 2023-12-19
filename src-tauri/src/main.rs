@@ -20,6 +20,8 @@ mod ssh;
 mod check_username;
 mod basic_check;
 mod ssh_conn;
+mod check_sudo;
+mod no_exec;
 
 static mut PASSWORD: Option<String> = None;
 
@@ -107,7 +109,9 @@ pub async fn main() {
             basic_check::check_unused_package,
             ssh_conn::first_time_ssh,
             ssh_conn::second_time_ssh,
-            usb::check_usb
+            usb::check_usb,
+            check_sudo::check_sudo_user,
+            no_exec::no_exec,
             ]
         )
         .run(tauri::generate_context!())

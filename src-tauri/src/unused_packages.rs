@@ -40,7 +40,7 @@ pub async fn remove_unused_packages(handle: AppHandle) -> Result<String, String>
     file.write_all(format!("\n\n{}\n\n", datetime).as_bytes())
         .map_err(|e| format!("Error writing to log file: {}", e))?;
 
-    let mut child = Command::new("bash")
+    let child = Command::new("bash")
         .arg(script_path.to_str().unwrap())
         .arg(&password)
         .stdout(Stdio::piped())

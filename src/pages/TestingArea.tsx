@@ -64,12 +64,12 @@ const USBPage = () => {
       .catch((err) => console.error(err));
   };
   const handleClick13 = () => {
-    invoke("selinux")
+    invoke("check_sudo_user")
       .then((res) => console.log(res))
       .catch((err) => console.error(err));
   };
   const handleClick14 = () => {
-    invoke("reverse_selinux")
+    invoke("no_exec")
       .then((res) => console.log(res))
       .catch((err) => console.error(err));
   };
@@ -151,10 +151,10 @@ const USBPage = () => {
         Check TOR
       </Button>
       <Button onClick={handleClick13} className=" mt-32">
-        selinux
+        SUDO USER
       </Button>
       <Button onClick={handleClick14} className=" mt-32">
-        Rev selinux
+        NO EXEC
       </Button>
       <Button onClick={handleClick15} className=" mt-32">
         Check selinux
