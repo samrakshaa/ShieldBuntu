@@ -1,9 +1,7 @@
 use std::process::Stdio;
 use serde_json::json;
 use tokio::process::Command as AsyncCommand;
-
 use std::fs;
-
 
 
 #[tauri::command]
@@ -25,7 +23,7 @@ pub async fn run_autoupdate_script(handle: tauri::AppHandle) -> Result<String, S
         .map_err(|e| format!("Error reading script file: {}", e))?;
 
     // Run the bash script for autoupdate
-    let mut child = AsyncCommand::new("bash")
+    let child = AsyncCommand::new("bash")
         .arg("-c")
         .arg(&script_content)
         .stdout(Stdio::piped())

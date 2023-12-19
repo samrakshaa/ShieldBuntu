@@ -1,16 +1,14 @@
 use chrono::Utc;
-use serde::{Serialize, Deserialize};
 use serde_json::json;
 use tokio::process::Command as AsyncCommand;
-use tokio::fs::File;
-use tokio::io::{AsyncReadExt, AsyncWriteExt};
+use tokio::io::AsyncWriteExt;
 use std::fs::OpenOptions;
 use std::io::{Write, Read};
 use std::process::Stdio;
 use crate::get_password;
 
 
-#[warn(non_snake_case)]
+#[allow(non_snake_case)]
 #[tauri::command]
 pub async fn first_time_ssh(sshDetails: Vec<String>) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
@@ -77,7 +75,7 @@ pub async fn first_time_ssh(sshDetails: Vec<String>) -> Result<String, String> {
 }
 
 
-#[warn(non_snake_case)]
+#[allow(non_snake_case)]
 #[tauri::command]
 pub async fn second_time_ssh(sshDetails: Vec<String>) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;

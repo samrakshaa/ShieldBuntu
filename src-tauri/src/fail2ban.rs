@@ -20,7 +20,7 @@ pub async fn install_and_configure_fail2ban(handle: tauri::AppHandle) -> Result<
 
 
     // Run the bash script to install and configure Fail2Ban
-    let mut child = AsyncCommand::new("sudo")
+    let child = AsyncCommand::new("sudo")
     .arg("-S")
     .arg("bash")
     .arg(script_path)

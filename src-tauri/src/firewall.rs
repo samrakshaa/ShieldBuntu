@@ -1,14 +1,14 @@
 use std::path::Path;
 use std::{env, fs};
 use std::process::{Stdio, Command};
-use tokio::io::AsyncWriteExt;
 use crate::get_password;
 use chrono::Utc;
 use std::fs::{OpenOptions, File};
 use std::io::Write;
-// use tokio::process::Command as AsyncCommand;
 use std::io::Read;
 use serde_json::json;
+
+
 
 #[tauri::command]
 pub async fn apply_firewall_rules(handle: tauri::AppHandle, port: Option<String>, action: Option<String>) -> Result<String, String> {
@@ -88,16 +88,11 @@ pub async fn apply_firewall_rules(handle: tauri::AppHandle, port: Option<String>
 }
 
 
+
+
 #[tauri::command]
 pub async fn list_ports(handle: tauri::AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    // let script_relative_path = "scripts/apply/ufw_status.sh";
-
-    // let base_path = std::env::current_dir().unwrap(); // Get the current working directory
-    // let script_path = base_path.join(script_relative_path);
-
-    // let log_file_path = base_path.join("firewall_status.log");
-
 
     let script_path = handle
         .path_resolver()
@@ -113,9 +108,6 @@ pub async fn list_ports(handle: tauri::AppHandle) -> Result<String, String> {
         .map_err(|e| format!("Error creating directory: {}", e))?;
 
     let log_file_path = Path::new(&log_directory).join("firewall_status.txt");
-
-    // println!("{:?}", log_file_path);
-    // println!("{:?}", script_path);
 
     let mut child = Command::new("sudo")
         .arg("-S")
@@ -157,6 +149,8 @@ pub async fn list_ports(handle: tauri::AppHandle) -> Result<String, String> {
     let result = json!({ "ufw_status": log_contents.trim() }).to_string();
     Ok(result)
 }
+
+
 
 
 #[tauri::command]

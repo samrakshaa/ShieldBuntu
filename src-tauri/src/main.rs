@@ -63,13 +63,10 @@ pub fn get_password() -> Option<String> {
         PASSWORD.clone()
     }
 }
-// #[tauri::command]
-// pub async fn sudo_auth(pass: String) {
 
-// }
 
-const LOG_TARGETS: [LogTarget; 2] = [LogTarget::Stdout, LogTarget::Webview]; //logs to the web console - for debugging
-// const LOG_TARGETS: [LogTarget; 2] = [LogTarget::Stdout, LogTarget::LogDir]; //logs to the log file - for production
+const LOG_TARGETS: [LogTarget; 2] = [LogTarget::Stdout, LogTarget::Webview]; //logs to the web 
+
 
 #[tokio::main]
 pub async fn main() {

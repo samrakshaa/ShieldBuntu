@@ -48,6 +48,8 @@ pub async fn check_fail2ban(handle: tauri::AppHandle) -> Result<String, String> 
     Ok(result)
 }
 
+
+#[allow(dead_code)]
 #[tauri::command]
 pub async fn check_calmav(handle: tauri::AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
@@ -166,6 +168,8 @@ pub async fn check_unused_package() -> Result<String, String> {
     }
 }
 
+
+#[allow(dead_code)]
 #[tauri::command]
 pub async fn check_apparmor(handle: tauri::AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;

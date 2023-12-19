@@ -19,7 +19,7 @@ pub async fn install_and_configure_apparmor(handle : tauri::AppHandle) -> Result
     }
 
     // Run the bash script to install and configure AppArmor
-    let mut child = AsyncCommand::new("bash")
+    let child = AsyncCommand::new("bash")
         .arg("-c")
         .arg(fs::read_to_string(&script_path).map_err(|e| format!("Error reading script file: {}", e))?)
         .stdout(Stdio::piped())
