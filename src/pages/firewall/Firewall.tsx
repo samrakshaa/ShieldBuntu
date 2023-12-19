@@ -124,7 +124,7 @@ const Firewall = () => {
   };
 
   useEffect(() => {
-    executeStatus();
+    // executeStatus();
   }, []);
 
   return (

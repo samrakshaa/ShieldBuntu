@@ -31,17 +31,17 @@ const networkLinks = [
     link: "/network",
     icon: <SiTorbrowser size={25} />,
   },
-  {
-    title: "Testing Area",
-    link: "/testing",
-    icon: <SiTorbrowser size={25} />,
-  },
+  // {
+  //   title: "Testing Area",
+  //   link: "/testing",
+  //   icon: <SiTorbrowser size={25} />,
+  // },
 ];
 
 const Home = () => {
   return (
     <>
-      <div className="home flex h-full mx-auto">
+      <div className="home flex h-screen mx-auto">
         <Sidemenu menuOptions={networkLinks} />
         <div className="overflow-auto w-full">
           <Outlet />

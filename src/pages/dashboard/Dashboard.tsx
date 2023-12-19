@@ -2,8 +2,8 @@ import StatusOfAll from "@/components/statusOfAll";
 import { Button } from "@/components/ui/button";
 import useLoading from "@/hooks/useLoading";
 import { invoke } from "@tauri-apps/api/tauri";
-import { Skeleton } from "@/components/ui/skeleton"
-
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "@/components/ui/use-toast";
 
 const Dashboard = () => {
   // const [username, setUsername] = useState("");
@@ -25,10 +25,32 @@ const Dashboard = () => {
     useLoading({
       functionToExecute: () => invoke("remove_unused_packages"),
       onSuccess: (res: any) => {
+        toast({
+          variant: "default",
+          title: " Success!",
+          description: " Unused packages removed successfully",
+          className: "border-emerald-500 bg-emerald-700/10 ",
+        });
         console.log(res);
       },
       onError: (err) => {
         console.log(err);
+      },
+    });
+
+  const { isLoading: packagesUpdateLoading, execute: updatePackages } =
+    useLoading({
+      functionToExecute: () => invoke("update_and_upgrade_packages"),
+      onSuccess: (res: any) => {
+        toast({
+          variant: "default",
+          title: " Success!",
+          description: " updated system & packages successfully",
+          className: "border-emerald-500 bg-emerald-700/10 ",
+        });
+      },
+      onError: (err) => {
+        console.log(err, "error");
       },
     });
 
@@ -40,7 +62,7 @@ const Dashboard = () => {
           <h1 className="settings-header text-lg font-bold mb-2">Status</h1>
           <StatusOfAll />
         </div>
-        <br/>
+        <br />
         <div className="flex flex-col">
           <h1 className="settings-header text-lg font-bold">
             System Update & Cleaning
@@ -56,8 +78,9 @@ const Dashboard = () => {
               <Button
                 className="font-normal text-base max-w-xl bg-secondary border-2 border-white/90 rounded
               hover:bg-secondary/50 my-2 mx-3"
+                onClick={updatePackages}
               >
-                Update System
+                {packagesUpdateLoading ? "Updating..." : "Update Packages"}
               </Button>
               <Button
                 className="max-w-xl bg-primary borderW-2 border-secondary/90 rounded hover:bg-primary/80 my-2 mx-3"
@@ -71,14 +94,14 @@ const Dashboard = () => {
         </div>
 
         {/* Dashboard section */}
-        <div className="flex flex-col">
+        {/* <div className="flex flex-col">
           <h1 className="settings-header text-lg font-bold py-4">
             System Status
           </h1>
           <div className="dashboard flex flex-row items-center p-4 bg-secondary/90 border-[1px] border-secondary/70 rounded-lg">
             <p className="content p-50">blah blah a lot of things go here!!</p>
           </div>
-        </div>
+        </div> */}
 
         {/* kernel section */}
         <div className="flex flex-col">
