@@ -84,14 +84,33 @@ pub async fn apply_firewall_rules(handle: tauri::AppHandle, port: Option<String>
 
 
 #[tauri::command]
-pub async fn list_ports(_handle: tauri::AppHandle) -> Result<String, String> {
+pub async fn list_ports(handle: tauri::AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    let script_relative_path = "scripts/apply/ufw_status.sh";
+    // let script_relative_path = "scripts/apply/ufw_status.sh";
 
-    let base_path = std::env::current_dir().unwrap(); // Get the current working directory
-    let script_path = base_path.join(script_relative_path);
+    // let base_path = std::env::current_dir().unwrap(); // Get the current working directory
+    // let script_path = base_path.join(script_relative_path);
 
-    let log_file_path = base_path.join("firewall_status.log");
+    // let log_file_path = base_path.join("firewall_status.log");
+
+
+    let script_path = handle
+        .path_resolver()
+        .resolve_resource("scripts/apply/ufw_status.sh")
+        .expect("failed to resolve resource");
+
+    let log_directory = match env::var("HOME") {
+        Ok(home) => format!("{}/.samrakshak_logs", home),
+        Err(_) => return Err("Could not retrieve user's home directory".to_string()),
+    };
+
+    fs::create_dir_all(&log_directory)
+        .map_err(|e| format!("Error creating directory: {}", e))?;
+
+    let log_file_path = Path::new(&log_directory).join("firewall_status.txt");
+
+    // println!("{:?}", log_file_path);
+    // println!("{:?}", script_path);
 
     let mut child = Command::new("sudo")
         .arg("-S")
