@@ -10,7 +10,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import useLoading from "@/hooks/useLoading";
-import { useNetworkStore } from "@/store";
+import { useGStore } from "@/store";
 import Loader from "@/components/Loader";
 import { TimeoutProps } from "react-transition-group/Transition";
 
@@ -24,7 +24,7 @@ const Tor = () => {
     torTimeout,
     torTimeoutTimestamp,
     setTorTimeout,
-  } = useNetworkStore();
+  } = useGStore();
   const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
     functionToExecute: () => invoke("block_tor_access"),
     onSuccess: (res: any) => {

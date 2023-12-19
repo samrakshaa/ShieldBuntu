@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/tooltip";
 // import { GiSheikahEye } from "react-icons/gi";
 import useLoading from "@/hooks/useLoading";
-import { useFirewallStore } from "@/store";
+import { useGStore } from "@/store";
 import { useNavigate } from "react-router-dom";
 import Loader from "@/components/Loader";
 import BackButton from "@/components/BackButton";
@@ -28,7 +28,7 @@ import BackButton from "@/components/BackButton";
 const Firewall = () => {
   const { toast } = useToast();
   const { changeFirewall: updateFirewallStatus, firewall: firewallStatus } =
-    useFirewallStore();
+    useGStore();
   const navigate = useNavigate();
   const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
     functionToExecute: () => invoke("apply_firewall_rules"),
@@ -139,7 +139,12 @@ const Firewall = () => {
                 {" "}
                 <HiOutlineInformationCircle size={25} />
               </TooltipTrigger>
-              <TooltipContent className="content-tooltip max-w-[440px]">Firewall is software that monitors incoming and outgoing traffic based on pre-defined network rules. This section provides concise list of all enabled firewall rules - the section also involves options to block/manage open port configurations.</TooltipContent>
+              <TooltipContent className="content-tooltip max-w-[440px]">
+                Firewall is software that monitors incoming and outgoing traffic
+                based on pre-defined network rules. This section provides
+                concise list of all enabled firewall rules - the section also
+                involves options to block/manage open port configurations.
+              </TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>

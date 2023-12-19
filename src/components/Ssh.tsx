@@ -10,13 +10,13 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import useLoading from "@/hooks/useLoading";
-import { useNetworkStore } from "@/store";
+import { useGStore } from "@/store";
 import Loader from "@/components/Loader";
 
 const Ssh = () => {
   const [logs, setLogs] = useState("");
   const { toast } = useToast();
-  const { changeSSH: updateSSHStatus, ssh: SSHStatus } = useNetworkStore();
+  const { changeSSH: updateSSHStatus, ssh: SSHStatus } = useGStore();
   const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
     functionToExecute: () => invoke("apply_ssh_rules"),
     onSuccess: (res: any) => {

@@ -1,10 +1,9 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Route } from "react-router-dom";
 import Sidemenu from "@/components/Sidemenu";
 import { MdDashboard } from "react-icons/md";
-import { TbUsb, TbBrandPowershell } from "react-icons/tb";
-import { SiFirewalla, SiTorbrowser } from "react-icons/si";
+import { TbUsb } from "react-icons/tb";
+import { SiTorbrowser } from "react-icons/si";
 import { PiWallFill } from "react-icons/pi";
-
 // interface MenuItem {
 //   title: string;
 //   link: string;
@@ -14,7 +13,7 @@ import { PiWallFill } from "react-icons/pi";
 const networkLinks = [
   {
     title: "Dashboard",
-    link: "/",
+    link: "",
     icon: <MdDashboard size={25} />,
   },
   {
@@ -32,20 +31,11 @@ const networkLinks = [
     link: "/network",
     icon: <SiTorbrowser size={25} />,
   },
-  // {
-  //   title: "SSH Connect",
-  //   link: "/sshconnect",
-  //   icon: <TbBrandPowershell size={25} />,
-  // },
   {
     title: "Testing Area",
     link: "/testing",
     icon: <SiTorbrowser size={25} />,
   },
-  // {
-  //   title: "Open Port Settings",
-  //   link: "/",
-  // },
 ];
 
 const Home = () => {

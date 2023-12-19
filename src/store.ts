@@ -1,23 +1,21 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-interface GFireStore {
-  firewall: boolean;
-  changeFirewall: (status: boolean) => void;
-}
-
+type Flow = "local" | "remote";
 interface USBDevice {
   id: string;
   name: string;
   state: "block" | "allow";
 }
-interface GUsbStore {
+interface GStore {
+  flow: Flow;
+  setFlow: (client: Flow) => void;
+  firewall: boolean;
+  changeFirewall: (status: boolean) => void;
   usbStatus: boolean;
   connectedUsbs: USBDevice[];
   changeUsbStatus: (status: boolean) => void;
   setConnectedUsbs: (usbs: USBDevice[]) => void;
-}
-interface GNetworkStore {
   ssh: boolean;
   tor: boolean;
   torTimeout: boolean;
@@ -27,22 +25,13 @@ interface GNetworkStore {
   setTorTimeout: (status: boolean) => void;
 }
 
-export const useFirewallStore = create(
-  persist<GFireStore>(
+export const useGStore = create(
+  persist<GStore>(
     (set) => ({
+      flow: "local",
+      setFlow: (client) => set(() => ({ flow: client })),
       firewall: false,
       changeFirewall: (status: boolean) => set(() => ({ firewall: status })),
-    }),
-    {
-      name: "firewall-store",
-      storage: createJSONStorage(() => localStorage),
-    }
-  )
-);
-
-export const useNetworkStore = create(
-  persist<GNetworkStore>(
-    (set) => ({
       ssh: false,
       tor: false,
       torTimeout: false,
@@ -58,17 +47,6 @@ export const useNetworkStore = create(
           }, 10 * 60 * 1000); // 10 minutes timeout
         }
       },
-    }),
-    {
-      name: "network-store",
-      storage: createJSONStorage(() => localStorage),
-    }
-  )
-);
-
-export const useUsbStore = create(
-  persist<GUsbStore>(
-    (set) => ({
       usbStatus: false,
       connectedUsbs: [],
       changeUsbStatus: (status: boolean) => set(() => ({ usbStatus: status })),
@@ -76,7 +54,7 @@ export const useUsbStore = create(
         set(() => ({ connectedUsbs: connUsbs })),
     }),
     {
-      name: "usb-store",
+      name: "global-store",
       storage: createJSONStorage(() => localStorage),
     }
   )
