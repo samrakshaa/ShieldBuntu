@@ -22,6 +22,7 @@ mod basic_check;
 mod ssh_conn;
 mod check_sudo;
 mod no_exec;
+mod kernel;
 
 static mut PASSWORD: Option<String> = None;
 
@@ -112,6 +113,8 @@ pub async fn main() {
             usb::check_usb,
             check_sudo::check_sudo_user,
             no_exec::no_exec,
+            kernel::kernel,
+            kernel::reverse_kernel,
             ]
         )
         .run(tauri::generate_context!())

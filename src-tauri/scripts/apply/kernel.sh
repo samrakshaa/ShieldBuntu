@@ -5,6 +5,7 @@ backup_file="/etc/sysctl.conf.bak"
 if [ ! -e "$backup_file" ]; then
     cp /etc/sysctl.conf "$backup_file"
 fi
+
 add_sysctl() {
     sysctl_param=$1
     sysctl_value=$2
@@ -17,6 +18,7 @@ add_sysctl() {
         echo "$sysctl_param = $sysctl_value" >> /etc/sysctl.conf
     fi
 }
+
 add_sysctl "net.ipv4.tcp_syncookies" 1
 add_sysctl "net.ipv4.tcp_max_syn_backlog" 2048
 add_sysctl "net.ipv4.tcp_synack_retries" 2
@@ -49,7 +51,8 @@ add_sysctl "net.ipv4.conf.default.log_martians" 1
 add_sysctl "net.ipv4.tcp_syncookies" 1
 
 add_sysctl "net.ipv4.ip_forward" 0
-
+add_sysctl "net.ipv4.conf.all.send_redirects" 0
+add_sysctl "net.ipv4.conf.default.send_redirects" 0
 add_sysctl "net.ipv6.conf.all.forwarding" 0
 add_sysctl "net.ipv6.conf.default.forwarding" 0
 

@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 
 const USBPage = () => {
   const handleClick = () => {
-    invoke("list_usb_devices")
+    invoke("kernel")
       .then((res) => console.log(res))
       .catch((err) => console.error(err));
   };
   const handleClick2 = () => {
-    invoke("remove_unused_packages")
+    invoke("reverse_kernel")
       .then((res) => console.log(res))
       .catch((err) => console.error(err));
   };
@@ -115,10 +115,10 @@ const USBPage = () => {
   return (
     <div className="">
       <Button onClick={handleClick} className=" mt-32">
-        List USB
+        Kernel
       </Button>
       <Button onClick={handleClick2} className=" mt-32">
-        Ununsed Package Remover
+        Reverse Kernel
       </Button>
       <Button onClick={handleClick3} className=" mt-32">
         Package Updater

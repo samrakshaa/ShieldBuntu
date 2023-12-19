@@ -1,6 +1,7 @@
 #!/bin/bash
 
 if [ -e /etc/sysctl.conf.bak ]; then
+    # Restore the original sysctl.conf file
     cp /etc/sysctl.conf.bak /etc/sysctl.conf
 
     sysctl -p
