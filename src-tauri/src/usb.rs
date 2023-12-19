@@ -55,7 +55,7 @@ pub async fn list_usb_devices() -> Result<String, String> {
         let devices: Vec<UsbDevice1> = result
             .lines()
             .enumerate()
-            .filter_map(|(index, line)| {
+            .filter_map(|(_, line)| {
                 let parts: Vec<&str> = line.split_whitespace().collect();
                 if parts.len() >= 6 {
                     // let sequence = (index + 1) as u32;
@@ -124,7 +124,7 @@ pub async fn list_usb_devices_usbguard() -> Result<String, String> {
         let devices: Vec<UsbDevice2> = result
             .lines()
             .enumerate()
-            .filter_map(|(index, line)| {
+            .filter_map(|(_, line)| {
                 let parts: Vec<&str> = line.split_whitespace().collect();
                 if parts.len() >= 8 {
                     // let sequence = (index + 1) as u32;
@@ -273,7 +273,7 @@ pub async fn list_usb_devices_usbguard() -> Result<String, String> {
 
 #[warn(non_snake_case)]
 #[tauri::command]
-pub async fn apply_usb_blocking(usbIds: Vec<String>) -> Result<String, String> {
+pub async fn apply_usb_blocking(usb_ids: Vec<String>) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
     let script_path = current_dir.join("scripts/apply/usb_blocking.sh");
@@ -296,7 +296,7 @@ pub async fn apply_usb_blocking(usbIds: Vec<String>) -> Result<String, String> {
         .arg("-S")
         .arg("bash")
         .arg(script_path)
-        .args(usbIds) // Pass the USB IDs to the script
+        .args(usb_ids) // Pass the USB IDs to the script
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
@@ -339,7 +339,7 @@ pub async fn apply_usb_blocking(usbIds: Vec<String>) -> Result<String, String> {
 
 
 #[tauri::command]
-pub async fn reverse_usb_blocking(usbIds: Vec<String>) -> Result<String, String> {
+pub async fn reverse_usb_blocking(usb_ids: Vec<String>) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
     let script_path = current_dir.join("scripts/reverse/r-usb_blocking.sh");
@@ -362,7 +362,7 @@ pub async fn reverse_usb_blocking(usbIds: Vec<String>) -> Result<String, String>
         .arg("-S")
         .arg("bash")
         .arg(script_path)
-        .args(usbIds) // Pass the USB IDs to the script
+        .args(usb_ids) // Pass the USB IDs to the script
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
@@ -406,7 +406,7 @@ pub async fn reverse_usb_blocking(usbIds: Vec<String>) -> Result<String, String>
 
 #[warn(non_snake_case)]
 #[tauri::command]
-pub async fn whitelist_usb(usbIds: Vec<String>) -> Result<String, String> {
+pub async fn whitelist_usb(usb_ids: Vec<String>) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
     let script_path = current_dir.join("scripts/apply/whitelist_usbs.sh");
@@ -429,7 +429,7 @@ pub async fn whitelist_usb(usbIds: Vec<String>) -> Result<String, String> {
         .arg("-S")
         .arg("bash")
         .arg(script_path)
-        .args(usbIds) // Pass the USB IDs to the script
+        .args(usb_ids) // Pass the USB IDs to the script
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
@@ -471,8 +471,9 @@ pub async fn whitelist_usb(usbIds: Vec<String>) -> Result<String, String> {
 }
 
 
+
 #[tauri::command]
-pub async fn blacklist_usb(usbIds: Vec<String>) -> Result<String, String> {
+pub async fn blacklist_usb(usb_ids: Vec<String>) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
     let script_path = current_dir.join("scripts/apply/blacklist_usbs.sh");
@@ -495,7 +496,7 @@ pub async fn blacklist_usb(usbIds: Vec<String>) -> Result<String, String> {
         .arg("-S")
         .arg("bash")
         .arg(script_path)
-        .args(usbIds) // Pass the USB IDs to the script
+        .args(usb_ids) // Pass the USB IDs to the script
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
@@ -538,7 +539,44 @@ pub async fn blacklist_usb(usbIds: Vec<String>) -> Result<String, String> {
 
 
 
+#[tauri::command]
+pub async fn check_usb() -> Result<String, String> {
+    let password = get_password().ok_or_else(|| "Password not available".to_string())?;
+    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    let script_path = current_dir.join("scripts/check/check_usb_guard.sh");
 
+    // Run the bash script for checking firewall status
+    let mut child = AsyncCommand::new("sudo")
+        .arg("-S")
+        .arg("bash")
+        .arg(script_path)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .map_err(|e| format!("Error spawning process: {}", e))?;
+
+    if let Some(mut stdin) = child.stdin.take() {
+        stdin.write_all(format!("{}\n", password).as_bytes()).await
+            .map_err(|e| format!("Error writing to stdin: {}", e))?;
+    }
+
+    // Await the child process completion
+    let output = child.wait_with_output().await
+        .map_err(|e| format!("Error waiting for process: {}", e))?;
+
+    // Check if the command executed successfully
+    if output.status.success() {
+        let output_str = String::from_utf8(output.stdout)
+            .map_err(|e| format!("Failed to read output: {}", e))?;
+
+        Ok(output_str)  // Return the output directly
+    } else {
+        let error_output = String::from_utf8(output.stderr)
+            .map_err(|e| format!("Failed to read error output: {}", e))?;
+        Err(format!("Error executing command: {}", error_output))
+    }
+}
 
 
 // #[tokio::main]

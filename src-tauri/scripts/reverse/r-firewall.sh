@@ -1,8 +1,8 @@
 #!/bin/bash
 
-echo "Disabling and resetting UFW..."
-sudo ufw disable
-sudo ufw reset
-echo "UFW disabled and reset."
-
-echo "Reversal script completed. Please review the changes and make any additional adjustments as needed."
+# Check if UFW is installed
+if ! command -v ufw &> /dev/null; then
+    echo "UFW is not installed. Nothing to uninstall."
+    exit 0
+fi
+sudo ufw --force reset

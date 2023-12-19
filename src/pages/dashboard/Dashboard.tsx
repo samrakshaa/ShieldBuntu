@@ -2,7 +2,8 @@ import StatusOfAll from "@/components/statusOfAll";
 import { Button } from "@/components/ui/button";
 import useLoading from "@/hooks/useLoading";
 import { invoke } from "@tauri-apps/api/tauri";
-import { useEffect, useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton"
+
 
 const Dashboard = () => {
   // const [username, setUsername] = useState("");
@@ -20,20 +21,26 @@ const Dashboard = () => {
   //   checkUsername();
   // }, [])
 
-  const { isLoading: removeUnusedLoading, execute: removeUnsedPackages } = useLoading({
-    functionToExecute: () => invoke("remove_unused_packages"),
-    onSuccess: (res: any) => {
-      console.log(res);
-    },
-    onError: (err) => {
-      console.log(err);
-    },
-  });
+  const { isLoading: removeUnusedLoading, execute: removeUnsedPackages } =
+    useLoading({
+      functionToExecute: () => invoke("remove_unused_packages"),
+      onSuccess: (res: any) => {
+        console.log(res);
+      },
+      onError: (err) => {
+        console.log(err);
+      },
+    });
 
   return (
     <>
       {/* basic hardening section */}
       <div className="basic-settings flex flex-col mt-12 px-6 mx-auto max-w-[900px]">
+        <div>
+          <h1 className="settings-header text-lg font-bold mb-2">Status</h1>
+          <StatusOfAll />
+        </div>
+        <br/>
         <div className="flex flex-col">
           <h1 className="settings-header text-lg font-bold">
             System Update & Cleaning
@@ -50,7 +57,7 @@ const Dashboard = () => {
                 className="font-normal text-base max-w-xl bg-secondary border-2 border-white/90 rounded
               hover:bg-secondary/50 my-2 mx-3"
               >
-                Upgrade
+                Update System
               </Button>
               <Button
                 className="max-w-xl bg-primary borderW-2 border-secondary/90 rounded hover:bg-primary/80 my-2 mx-3"
@@ -73,31 +80,36 @@ const Dashboard = () => {
           </div>
         </div>
 
-
         {/* kernel section */}
         <div className="flex flex-col">
           <h1 className="settings-header text-lg font-bold py-4">
             Kernel Parameters
           </h1>
           <div className="dashboard flex flex-row items-center p-4 bg-secondary/90 border-[1px] border-secondary/70 rounded-lg">
-            <p className="content p-50">Enhances the security of a Linux system by configuring various kernel parameters related to network security and system protection.</p>
+            <p className="content p-50">
+              Enhances the security of a Linux system by configuring various
+              kernel parameters related to network security and system
+              protection.
+            </p>
           </div>
         </div>
 
         {/* kernel section */}
         <div className="flex flex-col">
           <h1 className="settings-header text-lg font-bold py-4">
-           Status of your device
+            Status of your device
           </h1>
           <div className="dashboard flex flex-row items-center p-4 bg-secondary/90 border-[1px] border-secondary/70 rounded-lg">
-            <p className="content p-50">Enhances the security of a Linux system by configuring various kernel parameters related to network security and system protection.</p>
+            <p className="content p-50">
+              Enhances the security of a Linux system by configuring various
+              kernel parameters related to network security and system
+              protection.
+            </p>
           </div>
-          <StatusOfAll/>
         </div>
 
-        <br/>
-        <br/>
-
+        <br />
+        <br />
       </div>
     </>
   );

@@ -112,7 +112,7 @@ const Tor = () => {
                 {" "}
                 <HiOutlineInformationCircle size={25} />
               </TooltipTrigger>
-              <TooltipContent>Hover</TooltipContent>
+              <TooltipContent className="content-tooltip max-w-[440px]">Tor safeguards anonymity, routing internet traffic through a distributed network, shielding identities and activities for enhanced privacy and security.</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>

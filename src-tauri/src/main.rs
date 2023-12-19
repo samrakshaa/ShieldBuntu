@@ -20,7 +20,65 @@ mod ssh;
 mod check_username;
 mod basic_check;
 mod ssh_conn;
+// #[derive(Debug, Serialize, Deserialize)]
+// struct UsbDevice {
+//     sequence: u32,
+//     id: String,
+//     name: String,
+// }
 
+
+// #[tauri::command]
+// fn list_usb_devices() -> Result<String, String> {
+//     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+
+//     let script_path = current_dir.join("scripts/list_usb.sh");
+
+
+//     let output = Command::new("bash")
+//         .arg(script_path)
+//         .stdin(Stdio::inherit()) // Inherit standard input for password prompt
+//         .output();
+
+//         match output {
+//             Ok(output) => {
+//                 // Check if the command was successful
+//                 if output.status.success() {
+//                     // Process the output and extract device information
+//                     let result = String::from_utf8_lossy(&output.stdout);
+//                     let devices: Vec<UsbDevice> = result
+//                         .lines()
+//                         .filter_map(|line| {
+//                             let parts: Vec<&str> = line.trim().split_whitespace().collect();
+//                             if parts.len() >= 7 && parts[0].parse::<u32>().is_ok() {
+//                                 let sequence = parts[0].parse().unwrap();
+//                                 let id = parts[1];
+//                                 let name = parts[6..].join(" ");
+//                                 Some(UsbDevice { sequence, id: id.to_string(), name })
+//                             } else {
+//                                 None
+//                             }
+//                         })
+//                         .collect();
+    
+//                     // Convert the device information to JSON
+//                     let json_output = serde_json::to_string_pretty(&devices);
+//                     match json_output {
+//                         Ok(json) => Ok(json),
+//                         Err(err) => Err(format!("Error converting to JSON: {}", err)),
+//                     }
+//                 } else {
+//                     // Return the error if the command failed
+//                     let error: std::borrow::Cow<'_, str> = String::from_utf8_lossy(&output.stderr);
+//                     Err(error.into_owned())
+//                 }
+//             }
+//             Err(err) => {
+//                 // Return the error if the command couldn't be executed
+//                 Err(format!("Error executing command: {}", err))
+//             }
+//         }
+// }
 static mut PASSWORD: Option<String> = None;
 
 static mut USERNAME_SSH: Option<String> = None;
@@ -133,6 +191,9 @@ pub async fn main() {
             basic_check::check_fail2ban,
             basic_check::check_rkhunter,
             basic_check::check_unused_package,
+            ssh_conn::first_time_ssh,
+            ssh_conn::second_time_ssh,
+            usb::check_usb
             ]
         )
         .run(tauri::generate_context!())
