@@ -209,8 +209,9 @@ pub async fn check_ssh(handle : tauri::AppHandle) -> Result<String, String> {
         let output = child.wait_with_output().await
             .map_err(|e| format!("Error waiting for process: {}", e))?;
     
+        let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
         // Check if the command executed successfully
-        let result = if output.status.success() {
+        let result = if stdout=="true" {
             json!({ "success": true }).to_string()
         } else {
             json!({ "success": false }).to_string()

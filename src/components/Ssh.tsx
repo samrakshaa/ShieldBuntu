@@ -75,7 +75,7 @@ const Ssh = () => {
     functionToExecute: () => invoke("check_ssh"),
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
-
+      console.log(resJSON);
       if (resJSON.success) {
         console.log("SSH is enabled");
         updateSSHStatus(true);

@@ -18,15 +18,15 @@ const allServicesConfig = [
     name: "apparmour",
     function: "check_apparmor",
   },
-  {
-    name: "kernel_status",
-    function: "check_kernel_satatus",
-  },
+  // {
+  //   name: "kernel_status",
+  //   function: "check_kernel_status",
+  // },
 
-  {
-    name: "clam_av",
-    function: "check_imptools",
-  },
+  // {
+  //   name: "clam_av",
+  //   function: "check_imptools",
+  // },
   {
     name: "rkhunter",
     function: "check_rkhunter",
