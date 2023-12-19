@@ -237,17 +237,14 @@ pub async fn reverse_firewall_rules(handle: tauri::AppHandle) -> Result<String, 
 
 #[tauri::command]
 pub async fn check_firewall(handle: tauri::AppHandle) -> Result<String, String> {
-    // Retrieve password or credentials (replace with your logic)
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
 
-    // Resolve the path to the bash script using Tauri's path_resolver
     let script_path = handle
         .path_resolver()
         .resolve_resource("scripts/check/check_firewall.sh")
         .expect("failed to resolve resource");
 
-    // Run the bash script for checking firewall status
-    let mut child = AsyncCommand::new("sudo")
+    let mut child = Command::new("sudo")
         .arg("-S")
         .arg("bash")
         .arg(&script_path)
@@ -257,18 +254,17 @@ pub async fn check_firewall(handle: tauri::AppHandle) -> Result<String, String> 
         .spawn()
         .map_err(|e| format!("Error spawning process: {}", e))?;
 
-    // Write password to the stdin of the child process
     if let Some(mut stdin) = child.stdin.take() {
-        stdin.write_all(format!("{}\n", password).as_bytes()).await
+        stdin.write_all(format!("{}\n", password).as_bytes())
             .map_err(|e| format!("Error writing to stdin: {}", e))?;
     }
 
-    // Await the child process completion
-    let output = child.wait_with_output().await
+    let output = child.wait_with_output()
         .map_err(|e| format!("Error waiting for process: {}", e))?;
 
-    // Construct the JSON-like return value
-    let result = if output.status.success() {
+    let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
+
+    let result = if stdout == "true" {
         json!({ "success": true }).to_string()
     } else {
         json!({ "success": false }).to_string()
