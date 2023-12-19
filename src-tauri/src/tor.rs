@@ -1,3 +1,5 @@
+use std::{env, fs};
+use std::path::Path;
 use std::process::{Stdio, Command};
 // use serde_json::Value;
 use tokio::io::AsyncWriteExt;
@@ -11,12 +13,27 @@ use serde_json::json;
 
 
 #[tauri::command]
-pub async fn block_tor_access() -> Result<String, String> {
+pub async fn block_tor_access(handle : tauri::AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/apply/tor_blocker.sh");
-    let log_file_path = current_dir.join("logs/tor_log.txt");
+    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    // let script_path = current_dir.join("scripts/apply/tor_blocker.sh");
+    // let log_file_path = current_dir.join("logs/tor_log.txt");
 
+    let log_directory = match env::var("HOME") {
+        Ok(home) => format!("{}/.samrakshak_logs", home),
+        Err(_) => return Err("Could not retrieve user's home directory".to_string()),
+    };
+
+    fs::create_dir_all(&log_directory)
+        .map_err(|e| format!("Error creating directory: {}", e))?;
+
+        let script_path = handle
+        .path_resolver()
+        .resolve_resource("scripts/apply/tor_blocker.sh")
+        .expect("failed to resolve resource");
+
+    // Open or create the log file for appending
+    let log_file_path = Path::new(&log_directory).join("block_tor_log.txt");
     // Open or create the log file for appending
     let mut file = OpenOptions::new()
         .create(true)
@@ -136,10 +153,15 @@ pub async fn reverse_tor_block() -> Result<String, String> {
 
 
 #[tauri::command]
-pub async fn check_tor_blocked() -> Result<String, String> {
+pub async fn check_tor_blocked(handle : tauri::AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/check/check_tor_blocked.sh");
+    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    // let script_path = current_dir.join("scripts/check/check_tor_blocked.sh");
+
+    let script_path = handle
+        .path_resolver()
+        .resolve_resource("scripts/check/check_rkhunter.sh")
+        .expect("failed to resolve resource");
 
     // Run the bash script for checking firewall status
     let mut child = AsyncCommand::new("sudo")
@@ -162,14 +184,11 @@ pub async fn check_tor_blocked() -> Result<String, String> {
         .map_err(|e| format!("Error waiting for process: {}", e))?;
 
     // Check if the command executed successfully
-    if output.status.success() {
-        let output_str = String::from_utf8(output.stdout)
-            .map_err(|e| format!("Failed to read output: {}", e))?;
-
-        Ok(output_str)  // Return the output directly
+    let result = if output.status.success() {
+        json!({ "success": true }).to_string()
     } else {
-        let error_output = String::from_utf8(output.stderr)
-            .map_err(|e| format!("Failed to read error output: {}", e))?;
-        Err(format!("Error executing command: {}", error_output))
-    }
+        json!({ "success": false }).to_string()
+    };
+
+    Ok(result)
 }
