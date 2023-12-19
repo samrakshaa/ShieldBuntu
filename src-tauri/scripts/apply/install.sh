@@ -1,0 +1,1 @@
+sudo apt install ssh ufw usbguard net-tools auditd dborphan sshpass -y
