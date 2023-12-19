@@ -1,17 +1,63 @@
 #!/bin/bash
 
+# Function to check if an IP address is IPv4 or IPv6
 is_ipv6() {
   [[ "$1" == *:* ]]
 }
 
-block_tor_ports() {
-  ufw deny 9001     
-  ufw deny 9030    
-  ufw deny 9050    
-  ufw deny 9051   
-  ufw deny 9000
-  ufw deny 9150
-  ufw deny 9040
+# Function to block IP addresses using iptables
+block_ip_addresses() {
+  local file="$1"
+  while IFS= read -r ip; do
+    if is_ipv6 "$ip"; then
+      ip6tables -A INPUT -s "$ip" -j DROP
+      ip6tables -A OUTPUT -d "$ip" -j DROP
+    else
+      iptables -A INPUT -s "$ip" -j DROP
+      iptables -A OUTPUT -d "$ip" -j DROP
+    fi
+    echo "Blocked IP address: $ip"
+  done < "$file"
+}
+
+# Function to create iptables rule files and directories if they don't exist
+create_iptables_files() {
+  local ipv4_file="/etc/iptables/rules.v4"
+  local ipv6_file="/etc/iptables/rules.v6"
+
+  local ipv4_dir=$(dirname "$ipv4_file")
+  local ipv6_dir=$(dirname "$ipv6_file")
+
+  # Create directories if they don't exist
+  mkdir -p "$ipv4_dir"
+  mkdir -p "$ipv6_dir"
+
+  # Create iptables rule files if they don't exist
+  touch "$ipv4_file"
+  touch "$ipv6_file"
+
+  echo "Created $ipv4_file"
+  echo "Created $ipv6_file"
+}
+
+# Function to install iptables and iptables-persistent if not present
+install_iptables() {
+  apt remove -y iptables
+  if ! command -v iptables &> /dev/null; then
+    echo "Installing iptables..."
+    apt-get update
+    apt-get install -y --reinstall iptables
+  fi
+
+  if ! command -v iptables-save &> /dev/null; then
+    echo "Installing iptables-persistent..."
+    apt-get install -y iptables-persistent
+  fi
+
+   # Ensure iptables service is enabled if the package is installed
+  if [ -x /etc/init.d/iptables ]; then
+    update-rc.d iptables enable
+  fi
 }
 
 ensure_ufw_enabled() {
@@ -28,95 +74,54 @@ ensure_ufw_enabled() {
   fi
 }
 
-download_tor_nodes() {
-  local url="$1"
-  local output_file="$2"
-  curl -sSL "$url" >> "$output_file"
+# Function to block Tor ports using UFW
+block_tor_ports() {
+  local tor_ports=(9001 9030 9050 9051 9000 9150 9040)
+  for port in "${tor_ports[@]}"; do
+    ufw deny "$port"
+  done
 }
 
-merge_and_deduplicate() {
-  local file1="$1"
-  local file2="$2"
-  local merged_list="/var/log/merged_list.txt"
-  sort -u "$file1" "$file2" > "$merged_list"
-}
 
-block_ip_addresses() {
-  local file="$1"
-  while IFS= read -r ip; do
-    if is_ipv6 "$ip"; then
-      sudo ip6tables -A INPUT -s "$ip" -j DROP
-      sudo ip6tables -A OUTPUT -d "$ip" -j DROP
-    else
-      sudo iptables -A INPUT -s "$ip" -j DROP
-      sudo iptables -A OUTPUT -d "$ip" -j DROP
-    fi
-  done < "$file"
-}
-
-create_iptables_files() {
-  local ipv4_file="/etc/iptables/rules.v4"
-  local ipv6_file="/etc/iptables/rules.v6"
-
-  local ipv4_dir=$(dirname "$ipv4_file")
-  local ipv6_dir=$(dirname "$ipv6_file")
-
-  sudo mkdir -p "$ipv4_dir"
-  sudo mkdir -p "$ipv6_dir"
-
-  sudo touch "$ipv4_file"
-  sudo touch "$ipv6_file"
-
-  echo "Created $ipv4_file"
-  echo "Created $ipv6_file"
-}
-
-install_iptables() {
-  sudo apt-get remove -y iptables
-  if ! command -v ip6tables &> /dev/null; then
-    echo "Installing ip6tables..."
-    sudo apt-get update
-    sudo apt-get install -y --reinstall iptables
-  fi
-  if ! command -v iptables-save &> /dev/null; then
-    echo "Installing iptables-persistent..."
-    sudo apt-get install -y iptables-persistent
-  fi
-  if [ -x /etc/init.d/iptables ]; then
-    sudo update-rc.d iptables enable
-  fi
-}
-
+# Function to reload iptables rules
 reload_iptables_rules() {
+  # Check if iptables-persistent is installed
   if command -v systemctl &> /dev/null && systemctl list-unit-files | grep -q iptables; then
-    sudo systemctl restart iptables
+    systemctl restart iptables
   else
-    sudo iptables-restore < /etc/iptables/rules.v4
-    sudo ip6tables-restore < /etc/iptables/rules.v6
+    # Reload iptables rules using appropriate command
+    iptables-restore < /etc/iptables/rules.v4
+    ip6tables-restore < /etc/iptables/rules.v6
   fi
 }
 
-cleanup() {
-  sudo rm -f "/var/log/tor_full_list.txt" "/var/log/tor_exit_list.txt" "/var/log/merged_list.txt"
-}
-
+# Main function to execute blocking measures
 main() {
+  # Check if the script is run as root
   if [ "$EUID" -ne 0 ]; then
     echo "Please run as root (sudo)." >&2
     exit 1
   fi
+
+  # Install iptables and iptables-persistent if not present
   install_iptables
-  download_tor_nodes "https://www.dan.me.uk/torlist/?full" "/var/log/tor_full_list.txt"
-  download_tor_nodes "https://www.dan.me.uk/torlist/?exit" "/var/log/tor_exit_list.txt"
-  merge_and_deduplicate "/var/log/tor_full_list.txt" "/var/log/tor_exit_list.txt"
+
+  # Create iptables rule files if they don't exist
   create_iptables_files
-  block_ip_addresses "/var/log/merged_list.txt"
+
+  # Block IP addresses from the nodes.txt file
+  block_ip_addresses "nodes.txt"
+
+  # Reload iptables rules
   reload_iptables_rules
+  
   ensure_ufw_enabled
+  
   block_tor_ports
-  cleanup
 
   echo "IP blocking measures have been applied."
 }
 
+# Run the main function
 main
+
