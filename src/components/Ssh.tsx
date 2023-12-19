@@ -108,7 +108,7 @@ const Ssh = () => {
   }, []);
 
   return (
-    <div className="SSH flex flex-row justify-center p-8">
+    <div className="SSH flex flex-row justify-center py-8">
       <div className="main-section">
         <div className=" flex gap-2  items-center ">
           <h1 className="text-2xl text-primary font-bold">

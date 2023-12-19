@@ -99,7 +99,7 @@ const Tor = () => {
   }, [torTimeout, torTimeoutTimestamp, setTorTimeout]);
 
   return (
-    <div className="Tor flex flex-row justify-center p-8">
+    <div className="Tor flex flex-row justify-center py-8">
       <div className="main-section">
         <div className=" flex gap-2 items-center">
           <h1 className="text-2xl text-primary font-bold">
@@ -120,8 +120,8 @@ const Tor = () => {
           ports, protocols. Use iptables for advanced rules. Install, configure,
           manage. Ensure network security.
         </p>
-        <div className="enableTor flex flex-row items-center gap-4 mt-2">
-          <div className="toggle-Tor bg-secondary/60 p-2 px-4 text-lg border-2 rounded-lg flex flex-row justify-between items-center w-5/6">
+        <div className="enableTor   gap-4 mt-2">
+          <div className="toggle-Tor bg-secondary/60 p-2 px-4 text-lg border-2 rounded-lg flex flex-row justify-between items-center ">
             <div className="flex flex-row items-center">
               <p>Enable/Disable Tor</p>
               {isEnablelLoading && <Loader />}
@@ -139,11 +139,11 @@ const Tor = () => {
             </Button>
           </div>
           {torTimeout ? (
-            <div className="timer w-1/6">
-              {torTimeout && <p>Remaining time: {formatTime(timer)}</p>}
+            <div className="timer ">
+              {torTimeout && <p>You can rerun this after {formatTime(timer)}</p>}
             </div>
           ) : (
-            "Timer holder"
+            <></>
           )}
         </div>
       </div>
