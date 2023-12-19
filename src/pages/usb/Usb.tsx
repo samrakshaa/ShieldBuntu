@@ -18,7 +18,7 @@ import { Button } from "../../components/ui/button";
 import { HiOutlineInformationCircle } from "react-icons/hi";
 import BackButton from "@/components/BackButton";
 import { Switch } from "@/components/ui/switch";
-import { useUsbStore } from "@/store";
+import { useGStore } from "@/store";
 import useLoading from "@/hooks/useLoading";
 import { invoke } from "@tauri-apps/api/tauri";
 import { useEffect, useState } from "react";
@@ -28,18 +28,15 @@ import { useNavigate } from "react-router-dom";
 import { CloudCog } from "lucide-react";
 
 const Usb = () => {
-  const {
-    usbStatus,
-    connectedUsbs,
-    changeUsbStatus,
-    setConnectedUsbs,
-  } = useUsbStore();
+  const { usbStatus, connectedUsbs, changeUsbStatus, setConnectedUsbs } =
+    useGStore();
   const { toast } = useToast();
   const navigate = useNavigate();
 
   // Enabling USB blocking
-  const { isLoading: isEnablelLoading, execute: executeEnable} = useLoading({
-    functionToExecute: (usbIds: String[]) => invoke("apply_usb_blocking", {usbIds}),
+  const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
+    functionToExecute: (usbIds: String[]) =>
+      invoke("apply_usb_blocking", { usbIds }),
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
       console.log(resJSON);
@@ -68,7 +65,8 @@ const Usb = () => {
 
   // Disabling USB blocking
   const { isLoading: isDisablelLoading, execute: executeDisable } = useLoading({
-    functionToExecute: (usbIds : String[]) => invoke("reverse_usb_blocking", {usbIds}),
+    functionToExecute: (usbIds: String[]) =>
+      invoke("reverse_usb_blocking", { usbIds }),
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
       console.log(resJSON);
@@ -94,37 +92,43 @@ const Usb = () => {
     },
   });
 
-    // Disabling Selected USB blocking
-    const { isLoading: isDisableSelectedLoading, execute: executeDisableSelected } = useLoading({
-      functionToExecute: (usbIds: String[]) => invoke("apply_usb_blocking", {usbIds}),
-      onSuccess: (res: any) => {
-        const resJSON = JSON.parse(res);
-        console.log(resJSON);
-        if (resJSON.success) {
-          console.log("Blocked Selected USBs");
-          executeGetStatusAll();
-        } else {
-          console.log("not able to enable usb");
-          toast({
-            variant: "destructive",
-            title: "Uh oh! Something went wrong.",
-            description: "Not able to enable/disable usb.",
-          });
-        }
-      },
-      onError: (err) => {
-        console.log(err);
+  // Disabling Selected USB blocking
+  const {
+    isLoading: isDisableSelectedLoading,
+    execute: executeDisableSelected,
+  } = useLoading({
+    functionToExecute: (usbIds: String[]) =>
+      invoke("apply_usb_blocking", { usbIds }),
+    onSuccess: (res: any) => {
+      const resJSON = JSON.parse(res);
+      console.log(resJSON);
+      if (resJSON.success) {
+        console.log("Blocked Selected USBs");
+        executeGetStatusAll();
+      } else {
+        console.log("not able to enable usb");
         toast({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
-          description: "There was a problem with your request.",
+          description: "Not able to enable/disable usb.",
         });
-      },
-    });
-  
-    // Enabling Selected USB blocking
-    const { isLoading: isEnableSelectedLoading, execute: executeEnableSelected } = useLoading({
-      functionToExecute: (usbIds : String[]) => invoke("reverse_usb_blocking", {usbIds}),
+      }
+    },
+    onError: (err) => {
+      console.log(err);
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem with your request.",
+      });
+    },
+  });
+
+  // Enabling Selected USB blocking
+  const { isLoading: isEnableSelectedLoading, execute: executeEnableSelected } =
+    useLoading({
+      functionToExecute: (usbIds: String[]) =>
+        invoke("reverse_usb_blocking", { usbIds }),
       onSuccess: (res: any) => {
         const resJSON = JSON.parse(res);
         console.log(resJSON);
@@ -150,8 +154,6 @@ const Usb = () => {
       },
     });
 
-
-
   // List connected usbs
   const { isLoading: isAllUsbsLoading, execute: executeGetAll } = useLoading({
     functionToExecute: () => invoke("list_usb_devices"),
@@ -171,42 +173,38 @@ const Usb = () => {
   });
 
   // List connected usbs with status
-  const { isLoading: isAllUsbsStatusLoading, execute: executeGetStatusAll } = useLoading({
-    functionToExecute: () => invoke("list_usb_devices_usbguard"),
-    onSuccess: (res: any) => {
-      const resJSON = JSON.parse(res);
-      console.log(res);
-      setConnectedUsbs(resJSON);
-    },
-    onError: (err) => {
-      console.log(err);
-      toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "Cannot fetch connected USBs...",
-      });
-    },
-  });
-
-  
+  const { isLoading: isAllUsbsStatusLoading, execute: executeGetStatusAll } =
+    useLoading({
+      functionToExecute: () => invoke("list_usb_devices_usbguard"),
+      onSuccess: (res: any) => {
+        const resJSON = JSON.parse(res);
+        console.log(res);
+        setConnectedUsbs(resJSON);
+      },
+      onError: (err) => {
+        console.log(err);
+        toast({
+          variant: "destructive",
+          title: "Uh oh! Something went wrong.",
+          description: "Cannot fetch connected USBs...",
+        });
+      },
+    });
 
   const [selectedBlockedRows, setSelectedBlockedRows] = useState<string[]>([]);
   const [selectedUnblockedRows, setSelectedUnblockedRows] = useState<string[]>(
     []
   );
-  const [selectedMainRows, setSelectedMainRows] = useState<string[]>(
-    []
-  ); 
-  
+  const [selectedMainRows, setSelectedMainRows] = useState<string[]>([]);
+
   const clearAllSelectedRows = () => {
     setSelectedBlockedRows([]);
     setSelectedUnblockedRows([]);
     setSelectedMainRows([]);
-  }
-  console.log("selectedrows",selectedBlockedRows);
-  console.log("selectedublockedrows",selectedUnblockedRows);
-  
-  
+  };
+  console.log("selectedrows", selectedBlockedRows);
+  console.log("selectedublockedrows", selectedUnblockedRows);
+
   console.log("mainrows", selectedMainRows);
 
   const handleBlockedRowClick = (usbId: string) => {
@@ -256,14 +254,14 @@ const Usb = () => {
     // blocks selected USBS
     // console.log(selectedUnblockedRows);
     clearAllSelectedRows();
-    executeDisableSelected(selectedUnblockedRows)
-  }; 
-  
+    executeDisableSelected(selectedUnblockedRows);
+  };
+
   const handleUnblock = () => {
     // unblocks selected USBS
     // console.log(selectedBlockedRows);
     clearAllSelectedRows();
-    executeEnableSelected(selectedBlockedRows)
+    executeEnableSelected(selectedBlockedRows);
   };
 
   const handleSwitchChange = () => {
@@ -273,15 +271,15 @@ const Usb = () => {
       executeEnable(selectedMainRows);
     } else {
       console.log("reverse_usb_rules");
-      const blockedUsbIds =connectedUsbs
-      .filter(usb => usb.state === 'block')
-      .map(usb => usb.id);
+      const blockedUsbIds = connectedUsbs
+        .filter((usb) => usb.state === "block")
+        .map((usb) => usb.id);
       executeDisable(blockedUsbIds);
     }
   };
 
   useEffect(() => {
-    if(!usbStatus) executeGetAll();
+    if (!usbStatus) executeGetAll();
     else executeGetStatusAll();
   }, [usbStatus]);
 
@@ -289,31 +287,36 @@ const Usb = () => {
     <div className="usb flex flex-row justify-center mx-auto max-w-[900px] p-6 pt-0">
       <div className="main-section py-12">
         <div className=" flex gap-2 items-center ">
-          <BackButton 
+          <BackButton
             className="bg-secondary text-2xl py-0 hover:bg-secondary/50"
             onClick={handleBack}
           />
-          <h1  className="text-3xl pl-2 font-bold">USB Configuration</h1>
+          <h1 className="text-3xl pl-2 font-bold">USB Configuration</h1>
           <TooltipProvider>
             <Tooltip delayDuration={20}>
               <TooltipTrigger className="">
                 {" "}
                 <HiOutlineInformationCircle size={25} />
               </TooltipTrigger>
-              <TooltipContent className="content-tooltip max-w-[440px]">USB ports and external devices pose security risks, inviting malware and data theft. Managing these devices and ports prevents unauthorized access, malware injection, and data exfiltration, ensuring a secure and robust system.</TooltipContent>
+              <TooltipContent className="content-tooltip max-w-[440px]">
+                USB ports and external devices pose security risks, inviting
+                malware and data theft. Managing these devices and ports
+                prevents unauthorized access, malware injection, and data
+                exfiltration, ensuring a secure and robust system.
+              </TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>
         <p className="py-2 text-foreground/50 leading-6">
-          allow/deny/blacklist external USB devices; manage access and use of USB ports on your system - view list of managable USB devices and ports.
+          allow/deny/blacklist external USB devices; manage access and use of
+          USB ports on your system - view list of managable USB devices and
+          ports.
         </p>
         <br />
         <div className="toggle-usb bg-secondary/60 mt-2 p-2 px-4 text-lg border-2 rounded-lg flex flex-row justify-between items-center">
           <div className="flex flex-row items-center">
             <p>USB Blocking</p>
-            {(isDisablelLoading || isEnablelLoading) && (
-              <Loader />
-            )}
+            {(isDisablelLoading || isEnablelLoading) && <Loader />}
           </div>
           <Switch
             className=""
@@ -333,7 +336,9 @@ const Usb = () => {
               <div className="blacklistTable flex flex-col">
                 <div className="flex flex-row gap-4">
                   <h2 className="text-lg underline">Blocked USB Devices</h2>
-                  {(isAllUsbsStatusLoading || isEnableSelectedLoading)   && <Loader />}
+                  {(isAllUsbsStatusLoading || isEnableSelectedLoading) && (
+                    <Loader />
+                  )}
                 </div>
                 <Table className="usbBlocking">
                   <TableHeader>
@@ -348,21 +353,24 @@ const Usb = () => {
                   </TableHeader>
                   <TableBody>
                     {connectedUsbs.map((usb, index) => {
-                      if(usb.state === "block") return (
-                      <TableRow key={index} onClick={() =>
-                        handleBlockedRowClick(usb.id)
-                      }>
-                        <TableCell className="py-2">
-                          <Checkbox
-                            checked={selectedBlockedRows.includes(usb.id)}
-                            disabled={!usbStatus}
-                          />
-                        </TableCell>
-                        <TableCell className="py-2">{usb.id}</TableCell>
-                        <TableCell className="py-2">{usb.name}</TableCell>
-                        <TableCell className="py-2">{usb.state}</TableCell>
-                      </TableRow>
-                    )})}
+                      if (usb.state === "block")
+                        return (
+                          <TableRow
+                            key={index}
+                            onClick={() => handleBlockedRowClick(usb.id)}
+                          >
+                            <TableCell className="py-2">
+                              <Checkbox
+                                checked={selectedBlockedRows.includes(usb.id)}
+                                disabled={!usbStatus}
+                              />
+                            </TableCell>
+                            <TableCell className="py-2">{usb.id}</TableCell>
+                            <TableCell className="py-2">{usb.name}</TableCell>
+                            <TableCell className="py-2">{usb.state}</TableCell>
+                          </TableRow>
+                        );
+                    })}
                   </TableBody>
                 </Table>
                 <Button
@@ -375,9 +383,11 @@ const Usb = () => {
               </div>
 
               <div className="whitelistTable flex flex-col">
-              <div className="flex flex-row gap-4">
+                <div className="flex flex-row gap-4">
                   <h2 className="text-lg underline">Unblocked USB Devices</h2>
-                  {(isAllUsbsStatusLoading || isDisableSelectedLoading)  && <Loader />}
+                  {(isAllUsbsStatusLoading || isDisableSelectedLoading) && (
+                    <Loader />
+                  )}
                 </div>
                 <Table className="usbBlocking">
                   <TableHeader>
@@ -389,20 +399,25 @@ const Usb = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                  {connectedUsbs.map((usb, index) => {
-                      if(usb.state === "allow") return (
-                      <TableRow key={index} onClick={() => handleUnblockedRowClick(usb.id)}>
-                        <TableCell className="py-2">
-                          <Checkbox 
-                            checked={selectedUnblockedRows.includes(usb.id)}
-                            disabled={!usbStatus}
-                          />
-                        </TableCell>
-                        <TableCell className="py-2">{usb.id}</TableCell>
-                        <TableCell className="py-2">{usb.name}</TableCell>
-                        <TableCell className="py-2">{usb.state}</TableCell>
-                      </TableRow>
-                    )})}
+                    {connectedUsbs.map((usb, index) => {
+                      if (usb.state === "allow")
+                        return (
+                          <TableRow
+                            key={index}
+                            onClick={() => handleUnblockedRowClick(usb.id)}
+                          >
+                            <TableCell className="py-2">
+                              <Checkbox
+                                checked={selectedUnblockedRows.includes(usb.id)}
+                                disabled={!usbStatus}
+                              />
+                            </TableCell>
+                            <TableCell className="py-2">{usb.id}</TableCell>
+                            <TableCell className="py-2">{usb.name}</TableCell>
+                            <TableCell className="py-2">{usb.state}</TableCell>
+                          </TableRow>
+                        );
+                    })}
                   </TableBody>
                 </Table>
                 <Button
@@ -428,15 +443,14 @@ const Usb = () => {
                 {connectedUsbs.map((usb, index) => (
                   <TableRow key={index}>
                     <TableCell>
-                      <Checkbox onCheckedChange={() =>
-                              handleMainCheckboxClick(usb.id)
-                            }
-                            checked={selectedMainRows.includes(usb.id)} />
+                      <Checkbox
+                        onCheckedChange={() => handleMainCheckboxClick(usb.id)}
+                        checked={selectedMainRows.includes(usb.id)}
+                      />
                     </TableCell>
                     <TableCell>{usb.id}</TableCell>
                     <TableCell>{usb.name}</TableCell>
                     <TableCell>Enabled</TableCell>
-
                   </TableRow>
                 ))}
               </TableBody>

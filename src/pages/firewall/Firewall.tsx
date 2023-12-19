@@ -20,19 +20,21 @@ import {
 } from "@/components/ui/tooltip";
 // import { GiSheikahEye } from "react-icons/gi";
 import useLoading from "@/hooks/useLoading";
-import { useFirewallStore } from "@/store";
+import { useGStore } from "@/store";
 import { useNavigate } from "react-router-dom";
 import Loader from "@/components/Loader";
 import BackButton from "@/components/BackButton";
-import RefreshButton from "@/components/refreshButton";
 
 const Firewall = () => {
   const { toast } = useToast();
-  const { changeFirewall: updateFirewallStatus, firewall: firewallStatus } =
-    useFirewallStore();
+  const {
+    changeFirewall: updateFirewallStatus,
+    firewall: firewallStatus,
+    isRemote,
+  } = useGStore();
   const navigate = useNavigate();
   const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
-    functionToExecute: () => invoke("apply_firewall_rules"),
+    functionToExecute: () => invoke("apply_firewall_rules", { isRemote }),
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
       console.log(resJSON);
@@ -59,7 +61,7 @@ const Firewall = () => {
   });
 
   const { isLoading: isDisablelLoading, execute: executeDisable } = useLoading({
-    functionToExecute: () => invoke("reverse_firewall_rules"),
+    functionToExecute: () => invoke("reverse_firewall_rules", { isRemote }),
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
       console.log(resJSON);
@@ -86,7 +88,7 @@ const Firewall = () => {
   });
 
   const { isLoading: isStatusLoading, execute: executeStatus } = useLoading({
-    functionToExecute: () => invoke("check_firewall"),
+    functionToExecute: () => invoke("check_firewall", { isRemote }),
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
       if (resJSON.enabled) {
@@ -136,7 +138,7 @@ const Firewall = () => {
           <h1 className="text-3xl pl-2 font-bold">Firewall Configuration</h1>
           <TooltipProvider>
             <Tooltip delayDuration={20}>
-              <TooltipTrigger className="flex-1">
+              <TooltipTrigger className="">
                 {" "}
                 <HiOutlineInformationCircle size={25} />
               </TooltipTrigger>
@@ -148,10 +150,6 @@ const Firewall = () => {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          <RefreshButton
-            loading={isStatusLoading}
-            onClick={() => executeStatus()}
-          />
         </div>
         <p className="py-2 text-foreground/50 leading-6">
           Control network ports and firewall rules with UFW. Allow/deny specific

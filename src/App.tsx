@@ -13,7 +13,6 @@ import TestingArea from "./pages/TestingArea";
 import Usb from "./pages/usb/Usb";
 import LoadingScreenProvider from "./components/LoadingScreenProvider";
 import SshConnect from "./pages/ssh/SshConnect";
-import { Button } from "./components/ui/button";
 
 attachConsole();
 function App() {

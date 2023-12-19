@@ -10,7 +10,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import useLoading from "@/hooks/useLoading";
-import { useNetworkStore } from "@/store";
+import { useGStore } from "@/store";
 import Loader from "@/components/Loader";
 import { TimeoutProps } from "react-transition-group/Transition";
 
@@ -24,7 +24,7 @@ const Tor = () => {
     torTimeout,
     torTimeoutTimestamp,
     setTorTimeout,
-  } = useNetworkStore();
+  } = useGStore();
   const { isLoading: isEnablelLoading, execute: executeEnable } = useLoading({
     functionToExecute: () => invoke("block_tor_access"),
     onSuccess: (res: any) => {
@@ -111,7 +111,11 @@ const Tor = () => {
                 {" "}
                 <HiOutlineInformationCircle size={25} />
               </TooltipTrigger>
-              <TooltipContent className="content-tooltip max-w-[440px]">Tor safeguards anonymity, routing internet traffic through a distributed network, shielding identities and activities for enhanced privacy and security.</TooltipContent>
+              <TooltipContent className="content-tooltip max-w-[440px]">
+                Tor safeguards anonymity, routing internet traffic through a
+                distributed network, shielding identities and activities for
+                enhanced privacy and security.
+              </TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>
@@ -140,7 +144,9 @@ const Tor = () => {
           </div>
           {torTimeout ? (
             <div className="timer ">
-              {torTimeout && <p>You can rerun this after {formatTime(timer)}</p>}
+              {torTimeout && (
+                <p>You can rerun this after {formatTime(timer)}</p>
+              )}
             </div>
           ) : (
             <></>

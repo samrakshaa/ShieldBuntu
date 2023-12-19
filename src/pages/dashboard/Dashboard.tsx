@@ -2,8 +2,7 @@ import StatusOfAll from "@/components/statusOfAll";
 import { Button } from "@/components/ui/button";
 import useLoading from "@/hooks/useLoading";
 import { invoke } from "@tauri-apps/api/tauri";
-import { Skeleton } from "@/components/ui/skeleton"
-
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Dashboard = () => {
   // const [username, setUsername] = useState("");
@@ -40,7 +39,7 @@ const Dashboard = () => {
           <h1 className="settings-header text-lg font-bold mb-2">Status</h1>
           <StatusOfAll />
         </div>
-        <br/>
+        <br />
         <div className="flex flex-col">
           <h1 className="settings-header text-lg font-bold">
             System Update & Cleaning

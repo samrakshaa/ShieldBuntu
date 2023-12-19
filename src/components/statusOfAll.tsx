@@ -22,18 +22,15 @@ const allServicesConfig = [
     name: "kernel_status",
     function: "check_kernel_satatus",
   },
-  
- 
+
   {
     name: "clam_av",
     function: "check_imptools",
   },
   {
     name: "rkhunter",
-    function: "check_rkhunter"
-  }
-  
-
+    function: "check_rkhunter",
+  },
 ];
 
 function StatusOfAll({}: Props) {
@@ -43,9 +40,9 @@ function StatusOfAll({}: Props) {
     apparmour: false,
     ssh: false,
     clam_av: false,
-    rkhunter: false
+    rkhunter: false,
   });
-  const [allStatusLoading, setAllStatusLoading] = useState(false)
+  const [allStatusLoading, setAllStatusLoading] = useState(false);
 
   const getAllServices = async () => {
     setAllStatusLoading(true);
@@ -57,7 +54,8 @@ function StatusOfAll({}: Props) {
       invoke(service.function)
         .then((res: any) => {
           const resJSON = JSON.parse(res);
-          serviceStatusUpdates[service.name.trim()] = resJSON.enabled || resJSON.success;
+          serviceStatusUpdates[service.name.trim()] =
+            resJSON.enabled || resJSON.success;
         })
         .catch((error) => {
           console.error(`Error checking ${service.name}:`, error);
@@ -87,12 +85,15 @@ function StatusOfAll({}: Props) {
   useEffect(() => {
     allServices();
   }, []);
-  console.log(services)
+  console.log(services);
   return (
     <div className="grid grid-flow-row grid-cols-3  gap-2  ">
       {allStatusLoading
-        ? [0, 0, 0, 0,0,0,0,0,0].map((_, i) => (
-            <Skeleton key={i} className="w-full h-20 rounded-xl bg-secondary " />
+        ? [0, 0, 0, 0, 0, 0, 0, 0, 0].map((_, i) => (
+            <Skeleton
+              key={i}
+              className="w-full h-20 rounded-xl bg-secondary "
+            />
           ))
         : Object.entries(services).map(([key, value], index: number) => {
             return (
@@ -104,8 +105,14 @@ function StatusOfAll({}: Props) {
                     : "bg-secondary"
                 } `}
               >
-                <div className="capitalize font-bold">{key.replace("_", " ")}</div>
-                <div className={`flex gap-2 justify-center items-center text-xs ${value && "text-emerald-300"} `}>
+                <div className="capitalize font-bold">
+                  {key.replace("_", " ")}
+                </div>
+                <div
+                  className={`flex gap-2 justify-center items-center text-xs ${
+                    value && "text-emerald-300"
+                  } `}
+                >
                   {value ? (
                     <>
                       Active
