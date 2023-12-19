@@ -4,7 +4,7 @@ use std::process::{Stdio, Command};
 use tokio::io::AsyncWriteExt;
 use crate::get_password;
 use chrono::Utc;
-use std::fs::OpenOptions;
+use std::fs::{OpenOptions, File};
 use std::io::Write;
 use tokio::process::Command as AsyncCommand;
 use std::io::Read;
@@ -83,68 +83,55 @@ pub async fn apply_firewall_rules(handle: tauri::AppHandle, port: Option<String>
 }
 
 
-
-// Function to parse the output of the firewall script into a JSON format
-fn parse_firewall_output(output: String) -> Vec<serde_json::Value> {
-    output.lines()
-        .skip_while(|line| !line.starts_with("To"))
-        .skip(1) // Skip the header line
-        .filter_map(|line| {
-            let parts: Vec<&str> = line.split_whitespace().collect();
-            if parts.len() >= 3 {
-                Some(json!({
-                    "To": parts[0],
-                    "Action": parts[1],
-                    "From": parts[2]
-                }))
-            } else {
-                None
-            }
-        })
-        .collect()
-}
-
-
 #[tauri::command]
-pub async fn list_ports(handle: tauri::AppHandle) -> Result<String, String> {
+pub async fn list_ports(_handle: tauri::AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    let script_path = handle
-        .path_resolver()
-        .resolve_resource("scripts/apply/ufw_status.sh")
-        .expect("failed to resolve resource");
+    let script_relative_path = "scripts/apply/ufw_status.sh";
 
-        println!("Resolved script path: {:?}", script_path); // Debug: Print resolved script path
+    let base_path = std::env::current_dir().unwrap(); // Get the current working directory
+    let script_path = base_path.join(script_relative_path);
 
-        let mut child = Command::new("sudo")
-            .arg("-S")
-            .arg("bash")
-            .arg(&script_path)
-            .stdin(Stdio::piped())
-            .stdout(Stdio::piped())
-            .stderr(Stdio::piped())
-            .spawn()
-            .map_err(|e| format!("Error spawning process: {}", e))?;
-    
-        if let Some(mut stdin) = child.stdin.take() {
-            stdin.write_all(format!("{}\n", password).as_bytes())
-                .map_err(|e| format!("Error writing to stdin: {}", e))?;
-        }
-    
-        let output = child.wait_with_output()
-            .map_err(|e| format!("Error waiting for process: {}", e))?;
-    
-        // Debug: Print raw output and error output
-        println!("Raw script output:\n{}", String::from_utf8_lossy(&output.stdout));
-        if !output.stderr.is_empty() {
-            println!("Error output:\n{}", String::from_utf8_lossy(&output.stderr));
-        }
-    // Debug: Print raw output
-    println!("Raw script output:\n{}", String::from_utf8_lossy(&output.stdout));
+    let log_file_path = base_path.join("firewall_status.log");
 
-    // Parse the output to JSON
-    let firewall_status = parse_firewall_output(String::from_utf8_lossy(&output.stdout).to_string());
+    let mut child = Command::new("sudo")
+        .arg("-S")
+        .arg("bash")
+        .arg(&script_path)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .map_err(|e| format!("Error spawning process: {}", e))?;
 
-    Ok(json!({ "firewall_status": firewall_status }).to_string())
+    if let Some(mut stdin) = child.stdin.take() {
+        stdin.write_all(format!("{}\n", password).as_bytes())
+            .map_err(|e| format!("Error writing to stdin: {}", e))?;
+    }
+
+    let output = child.wait_with_output()
+        .map_err(|e| format!("Error waiting for process: {}", e))?;
+
+    // Write the output to the log file, overwriting any existing content
+    let mut file = OpenOptions::new()
+        .create(true)
+        .write(true)
+        .truncate(true)
+        .open(&log_file_path)
+        .map_err(|e| format!("Error opening log file: {}", e))?;
+
+    file.write_all(&output.stdout)
+        .map_err(|e| format!("Error writing to log file: {}", e))?;
+
+    // Read the content of the log file
+    let mut file = File::open(&log_file_path)
+        .map_err(|e| format!("Error opening log file: {}", e))?;
+
+    let mut log_contents = String::new();
+    file.read_to_string(&mut log_contents)
+        .map_err(|e| format!("Error reading log file: {}", e))?;
+
+    let result = json!({ "ufw_status": log_contents.trim() }).to_string();
+    Ok(result)
 }
 
 
