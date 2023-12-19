@@ -148,7 +148,7 @@ pub async fn reverse_ssh_rules() -> Result<String, String> {
     };
 
     Ok(result)
-    }
+}
 
 
 #[tauri::command]

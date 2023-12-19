@@ -21,66 +21,31 @@ mod check_username;
 mod basic_check;
 mod ssh_conn;
 
-// #[derive(Debug, Serialize, Deserialize)]
-// struct UsbDevice {
-//     sequence: u32,
-//     id: String,
-//     name: String,
-// }
-
-
-// #[tauri::command]
-// fn list_usb_devices() -> Result<String, String> {
-//     let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-
-//     let script_path = current_dir.join("scripts/list_usb.sh");
-
-
-//     let output = Command::new("bash")
-//         .arg(script_path)
-//         .stdin(Stdio::inherit()) // Inherit standard input for password prompt
-//         .output();
-
-//         match output {
-//             Ok(output) => {
-//                 // Check if the command was successful
-//                 if output.status.success() {
-//                     // Process the output and extract device information
-//                     let result = String::from_utf8_lossy(&output.stdout);
-//                     let devices: Vec<UsbDevice> = result
-//                         .lines()
-//                         .filter_map(|line| {
-//                             let parts: Vec<&str> = line.trim().split_whitespace().collect();
-//                             if parts.len() >= 7 && parts[0].parse::<u32>().is_ok() {
-//                                 let sequence = parts[0].parse().unwrap();
-//                                 let id = parts[1];
-//                                 let name = parts[6..].join(" ");
-//                                 Some(UsbDevice { sequence, id: id.to_string(), name })
-//                             } else {
-//                                 None
-//                             }
-//                         })
-//                         .collect();
-    
-//                     // Convert the device information to JSON
-//                     let json_output = serde_json::to_string_pretty(&devices);
-//                     match json_output {
-//                         Ok(json) => Ok(json),
-//                         Err(err) => Err(format!("Error converting to JSON: {}", err)),
-//                     }
-//                 } else {
-//                     // Return the error if the command failed
-//                     let error: std::borrow::Cow<'_, str> = String::from_utf8_lossy(&output.stderr);
-//                     Err(error.into_owned())
-//                 }
-//             }
-//             Err(err) => {
-//                 // Return the error if the command couldn't be executed
-//                 Err(format!("Error executing command: {}", err))
-//             }
-//         }
-// }
 static mut PASSWORD: Option<String> = None;
+
+static mut USERNAME_SSH: Option<String> = None;
+static mut IP_SSH: Option<String> = None;
+static mut PASSWORD_SSH: Option<String> = None;
+
+#[tauri::command]
+async fn set_ssh_credentials(username: String, ip: String, password: String) -> Result<bool, String> {
+    unsafe {
+        USERNAME_SSH.replace(username);
+    }
+    unsafe {
+        IP_SSH.replace(ip);
+    }
+    unsafe {
+        PASSWORD_SSH.replace(password);
+    }
+    Ok(true)  // Assuming always successful
+}
+
+pub fn get_ssh_credentials() -> Vec<String> {
+    unsafe {
+        [USERNAME_SSH.clone().unwrap(), IP_SSH.clone().unwrap(), PASSWORD_SSH.clone().unwrap()].to_vec()
+    }
+}
 
 #[tauri::command]
 async fn set_password(password: String) -> Result<bool, String> {
@@ -116,7 +81,6 @@ async fn set_password(password: String) -> Result<bool, String> {
     }
 }
 
-
 pub fn get_password() -> Option<String> {
     unsafe {
         PASSWORD.clone()
@@ -140,6 +104,7 @@ pub async fn main() {
         .build()
     )
         .invoke_handler(tauri::generate_handler![
+            set_ssh_credentials,
             set_password,
             unused_packages::remove_unused_packages,
             update_packages::update_and_upgrade_packages,
@@ -157,6 +122,8 @@ pub async fn main() {
             ssh::apply_ssh_rules,
             ssh::reverse_ssh_rules,
             ssh::check_ssh,
+            ssh_conn::establish_ssh_connection,
+            ssh_conn::execute_scripts_ssh,
             usb::list_usb_devices,
             usb::list_usb_devices_usbguard,
             usb::apply_usb_blocking,
@@ -166,8 +133,6 @@ pub async fn main() {
             basic_check::check_fail2ban,
             basic_check::check_rkhunter,
             basic_check::check_unused_package,
-            ssh_conn::first_time_ssh,
-            ssh_conn::second_time_ssh,
             ]
         )
         .run(tauri::generate_context!())
