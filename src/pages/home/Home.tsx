@@ -33,7 +33,7 @@ const Home = () => {
     <>
       <div className="home flex h-screen mx-auto">
         <Sidemenu menuOptions={networkLinks} />
-        {/* <TestingArea  /> */}
+        <TestingArea  />
         <div className="overflow-auto w-full">
           <Outlet />
         </div>

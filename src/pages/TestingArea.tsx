@@ -19,7 +19,7 @@ const USBPage = () => {
       .catch((err) => console.error(err));
   };
   const handleClick4 = () => {
-    invoke("apply_firewall_rules", {"port": "3000", "action": "d"})
+    invoke("apply_firewall_rules", {"port": "10.25.1.0", "action": "a"})
       .then((res) => console.log(res))
       .catch((err) => console.error(err));
   };
