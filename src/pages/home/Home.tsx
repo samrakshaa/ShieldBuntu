@@ -33,11 +33,16 @@ const Home = () => {
     <>
       <div className="home   h-screen mx-auto">
         <Sidemenu menuOptions={networkLinks} />
+<<<<<<< Updated upstream
         {/* <TestingArea  /> */}
 
         <div className="overflow-auto w-full px-8">
           
 
+=======
+        {/* <TestingArea /> */}
+        <div className="overflow-auto w-full">
+>>>>>>> Stashed changes
           <Outlet />
         </div>
       </div>

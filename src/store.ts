@@ -6,11 +6,20 @@ interface USBDevice {
   name: string;
   state: "block" | "allow";
 }
+
+interface Port {
+  port: string;
+  action: "ALLOW" | "DENY";
+  from?: string;
+}
+
 interface GStore {
   isRemote: boolean;
   setRemote: (client: boolean) => void;
   firewall: boolean;
   changeFirewall: (status: boolean) => void;
+  ports: Port[];
+  setPorts: (port: Port[]) => void;
   usbStatus: boolean;
   connectedUsbs: USBDevice[];
   changeUsbStatus: (status: boolean) => void;
@@ -31,6 +40,8 @@ export const useGStore = create(
       setRemote: () => set((state) => ({ isRemote: !state.isRemote })),
       firewall: false,
       changeFirewall: (status: boolean) => set(() => ({ firewall: status })),
+      ports: [{ port: "", action: "ALLOW" }],
+      setPorts: (newPorts: Port[]) => set(() => ({ ports: newPorts })),
       ssh: false,
       tor: false,
       torTimeout: false,
