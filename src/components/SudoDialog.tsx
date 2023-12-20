@@ -27,6 +27,7 @@ const SudoDialog = (props: { children: ReactNode }) => {
   const { isLoading, execute } = useLoading({
     functionToExecute: () => invoke("set_password", { password }),
     onSuccess: () => {
+      setAttemptsRemaining((prev) => prev - 1);
       setAuthorized(true);
       setPassword("");
       setIsDialogOpen(false);
@@ -53,7 +54,6 @@ const SudoDialog = (props: { children: ReactNode }) => {
 
   const handlePassword = (e: FormEvent) => {
     e.preventDefault();
-    setAttemptsRemaining((prev) => prev - 1);
     execute();
   };
 

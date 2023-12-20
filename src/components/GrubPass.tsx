@@ -1,16 +1,14 @@
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@radix-ui/react-tooltip";
-
 import React, { useEffect, useState } from "react";
 import BackButton from "./BackButton";
 import { HiOutlineInformationCircle } from "react-icons/hi";
 import useLoading from "@/hooks/useLoading";
 import { invoke } from "@tauri-apps/api/tauri";
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Button } from "./ui/button";
 import RefreshButton from "./refreshButton";
 import Loader from "./Loader";
@@ -82,7 +80,8 @@ function GrubPass({}: Props) {
                   <HiOutlineInformationCircle size={25} />
                 </TooltipTrigger>
                 <TooltipContent className="content-tooltip max-w-[440px]">
-                  Grub Password Configuration: Easily set a password to secure the GRUB bootloader with just a few clicks.
+                  Grub Password Configuration: Easily set a password to secure
+                  the GRUB bootloader with just a few clicks.
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -93,7 +92,9 @@ function GrubPass({}: Props) {
           />
         </div>
         <p className="py-2 text-foreground/50 leading-6">
-          Easily fortify system security by setting a GRUB bootloader password using a simplified interface, enhancing defense against unauthorized access or system alterations.
+          Easily fortify system security by setting a GRUB bootloader password
+          using a simplified interface, enhancing defense against unauthorized
+          access or system alterations.
         </p>
         <br />
         <div className="toggle-firewall bg-secondary/60 mt-2 p-2 px-4 text-lg border-2 rounded-lg flex flex-row justify-between items-center">

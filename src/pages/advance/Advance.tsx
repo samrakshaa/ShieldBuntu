@@ -27,12 +27,13 @@ const Advance = () => {
         <h1 className="text-3xl pl-2 font-bold">Level-2 Hardening</h1>
         <TooltipProvider>
           <Tooltip delayDuration={20}>
-            <TooltipTrigger className="flex-1">
+            <TooltipTrigger className="">
               {" "}
               <HiOutlineInformationCircle size={25} />
             </TooltipTrigger>
             <TooltipContent className="content-tooltip max-w-[440px]">
-              Advanced security measures exceeding CIS benchmarks, involving user interaction for fortified system setup.
+              Advanced security measures exceeding CIS benchmarks, involving
+              user interaction for fortified system setup.
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
