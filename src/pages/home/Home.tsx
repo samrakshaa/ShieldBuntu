@@ -31,7 +31,7 @@ const networkLinks = [
 const Home = () => {
   return (
     <>
-      <div className="home flex h-screen mx-auto">
+      <div className="home   h-screen mx-auto">
         <Sidemenu menuOptions={networkLinks} />
         <TestingArea  />
         <div className="overflow-auto w-full">
