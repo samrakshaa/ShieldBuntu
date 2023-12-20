@@ -14,7 +14,7 @@ const USBPage = () => {
       .catch((err) => console.error(err));
   };
   const handleClick3 = () => {
-    invoke("update_and_upgrade_packages")
+    invoke("custom_script", {"scriptIds": ["5", "7"]})
       .then((res) => console.log(res))
       .catch((err) => console.error(err));
   };
@@ -121,7 +121,7 @@ const USBPage = () => {
         Reverse Kernel
       </Button>
       <Button onClick={handleClick3} className=" mt-32">
-        Package Updater
+        Custom Script
       </Button>
       <Button onClick={handleClick4} className=" mt-32">
         Firewall

@@ -3,12 +3,12 @@
 TOR_PORTS=("9050" "9150" "9000" "9001" "9051" "9030" "9040")
 
 # Enable ufw if not already enabled
-enable_ufw() {
-    if ! sudo ufw status | grep -q "Status: active"; then
-        sudo ufw enable
-        echo "ufw has been enabled."
-    fi
-}
+# enable_ufw() {
+#     if ! sudo ufw status | grep -q "Status: active"; then
+#         sudo ufw enable
+#         echo "ufw has been enabled."
+#     fi
+# }
 
 # Check if Tor ports are blocked using ufw
 check_tor_ports() {
@@ -21,7 +21,7 @@ check_tor_ports() {
 }
 
 # Main script
-enable_ufw
+# enable_ufw
 if check_tor_ports; then
     echo "true"
 else

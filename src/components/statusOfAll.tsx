@@ -58,8 +58,7 @@ function StatusOfAll({}: Props) {
       invoke(service.function)
         .then((res: any) => {
           const resJSON = JSON.parse(res);
-          serviceStatusUpdates[service.name.trim()] =
-            resJSON.enabled || resJSON.success;
+          serviceStatusUpdates[service.name.trim()] = resJSON.success;
         })
         .catch((error) => {
           console.error(`Error checking ${service.name}:`, error);
