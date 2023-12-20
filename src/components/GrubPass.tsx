@@ -31,7 +31,7 @@ type Props = {};
 function GrubPass({}: Props) {
   const [isGrubPass, setIsGrubPass] = useState(false);
   const [password, setPassword] = useState("");
-  const [isDialogOpen, setIsDialogOpen] = useState(true);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { isLoading: grubLoading, execute: checkGrubStatus } = useLoading({
     functionToExecute: () => invoke("grub_pass_check"),
     onSuccess: (res: any) => {
