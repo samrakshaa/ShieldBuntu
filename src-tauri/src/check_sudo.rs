@@ -38,13 +38,13 @@ pub async fn check_sudo_user(handle: AppHandle, port: Option<String>, action: Op
 
     let output = child.wait_with_output()
         .map_err(|e| format!("Error waiting for process: {}", e))?;
+    let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
 
-    let output_str = String::from_utf8_lossy(&output.stdout).trim().to_string();
-
-    let result = json!({
-        "success": output.status.success(),
-        "output": output_str
-    }).to_string();
+    let result = if stdout == "true" {
+        json!({ "success": true }).to_string()
+    } else {
+        json!({ "success": false }).to_string()
+    };
 
     Ok(result)
 }

@@ -8,7 +8,9 @@ if [ "$root_users" -gt 1 ]; then
         usermod -G "$user" "$user"
     done
 
-    echo "User privileges modified. Only $current_user has root access now."
+    echo false
+    exit 0
 else
-    echo "Single root user found. No changes needed for security."
+    echo true
+    exit 0
 fi
