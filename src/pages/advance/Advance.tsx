@@ -18,8 +18,6 @@ const Advance = () => {
   };
   return (
     <div className="flex flex-col max-w-[900px] mx-auto p-4">
-        <Firewall />
-
       <div className=" flex gap-2 mt-12">
         <BackButton
           className="bg-secondary text-2xl py-0 hover:bg-secondary/50"
@@ -33,11 +31,12 @@ const Advance = () => {
               <HiOutlineInformationCircle size={25} />
             </TooltipTrigger>
             <TooltipContent className="content-tooltip max-w-[440px]">
-              Advanced Hardening
+              Level 2 Hardening
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </div>
+      <Firewall />
 
       {/* USB */}
       <Usb />
