@@ -30,6 +30,7 @@ type Props = {};
 function GrubPass({}: Props) {
   const [isGrubPass, setIsGrubPass] = useState(false);
   const [password, setPassword] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState(true);
   const { isLoading: grubLoading, execute: checkGrubStatus } = useLoading({
     functionToExecute: () => invoke("grub_pass_check"),
     onSuccess: (res: any) => {
@@ -55,6 +56,12 @@ function GrubPass({}: Props) {
       }
     },
   });
+
+  const handleSubmit = () => {
+    setIsDialogOpen(false);
+    addGrubPass();
+  };
+
   useEffect(() => {
     checkGrubStatus();
   }, []);
@@ -100,11 +107,12 @@ function GrubPass({}: Props) {
             {grubLoading && <Loader />}
           </div>
 
-          <Dialog>
-            <DialogTrigger asChild>
+          <Dialog open={isDialogOpen}>
+            <DialogTrigger>
               <Button
                 className="font-normal text-base max-w-xl bg-secondary border-2 border-white/90 rounded
               hover:bg-secondary/50 my-2 mx-3"
+                onClick={() => setIsDialogOpen(true)}
               >
                 {addGrubPassLoading
                   ? "Adding..."
@@ -135,7 +143,7 @@ function GrubPass({}: Props) {
                 </div>
               </div>
               <DialogFooter>
-                <Button type="submit" onClick={() => addGrubPass()}>
+                <Button type="submit" onClick={() => handleSubmit()}>
                   Save changes
                 </Button>
               </DialogFooter>
