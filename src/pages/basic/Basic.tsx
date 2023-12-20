@@ -11,6 +11,10 @@ import {
 } from "@/components/ui/tooltip";
 import { useNavigate } from "react-router-dom";
 import BackButton from "@/components/BackButton";
+import Firewall from "../firewall/Firewall";
+import Tor from "@/components/Tor";
+
+import Ssh from "@/components/Ssh";
 
 const Basic = () => {
   const navigate = useNavigate();
@@ -60,7 +64,7 @@ const Basic = () => {
             className="bg-secondary text-2xl py-0 hover:bg-secondary/50"
             onClick={handleBack}
           />
-          <h1 className="text-3xl pl-2 font-bold">Basic Hardening</h1>
+          <h1 className="text-3xl pl-2 font-bold">Level 1</h1>
           <TooltipProvider>
             <Tooltip delayDuration={20}>
               <TooltipTrigger className="flex-1">
@@ -103,6 +107,10 @@ const Basic = () => {
             </Button>
           </div>
         </div>
+      </div>
+      <div className="flex flex-col mt-12 px-4 max-w-[900px] mx-auto">
+        <Tor />
+        <Ssh />
       </div>
     </div>
   );

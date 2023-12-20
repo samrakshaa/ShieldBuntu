@@ -8,6 +8,7 @@ import BackButton from "@/components/BackButton";
 import { useNavigate } from "react-router-dom";
 import { HiOutlineInformationCircle } from "react-icons/hi";
 import Usb from "../usb/Usb";
+import Firewall from "../firewall/Firewall";
 
 const Advance = () => {
   const navigate = useNavigate();
@@ -17,6 +18,8 @@ const Advance = () => {
   };
   return (
     <div className="flex flex-col max-w-[900px] mx-auto p-4">
+        <Firewall />
+
       <div className=" flex gap-2 mt-12">
         <BackButton
           className="bg-secondary text-2xl py-0 hover:bg-secondary/50"

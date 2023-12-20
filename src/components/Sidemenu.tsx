@@ -21,18 +21,28 @@ const Sidemenu: React.FC<SidemenuProps> = ({ menuOptions }) => {
 
   return (
     <div className=" overflow-auto Defend flex flex-col border-r-2 border-secondary gap-4 items-center w-full max-w-[250px] bg-secondary/20 py-10 h-auto">
-      <Link to={"/"} className=" px-4 text-2xl">
-        ShieldBuntu
-      </Link>
       <Link
         to={"/"}
-        className={`${"hover:bg-secondary/50"} text-foreground p-4 px-6 flex gap-2 items-center w-full`}
+        className=" px-4 text-2xl flex gap-2 justify-center items-center font-bold"
+      >
+        <img
+          src="shield.svg"
+          alt="logo"
+          className=" bg-blend-soft-light "
+          width={"20%"}
+        />
+        ShieldBuntu
+      </Link>
+      <br />
+      <Link
+        to={"/"}
+        className={`${"hover:bg-secondary/50"} text-foreground p-4 px-6 flex gap-2 items-center w-full text-2xl`}
       >
         <MdDashboard />
         Dashboard
       </Link>
       <div className="categories bg-secondary rounded-md w-5/6 p-2">
-        <h2 className="text-lg font-bold p-4 ">Categories</h2>
+        <h2 className="text-lg font-bold p-4 ">Hardening</h2>
         {menuOptions.map((item, itemIndex) => (
           <Link
             key={itemIndex}

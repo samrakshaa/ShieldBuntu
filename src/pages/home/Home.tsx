@@ -4,6 +4,8 @@ import { MdDashboard } from "react-icons/md";
 import { TbUsb, TbBrandPowershell } from "react-icons/tb";
 import { SiFirewalla, SiTorbrowser } from "react-icons/si";
 import { PiWallFill } from "react-icons/pi";
+import { GiRank1 } from "react-icons/gi";
+import { GiRank2 } from "react-icons/gi";
 
 // interface MenuItem {
 //   title: string;
@@ -13,19 +15,15 @@ import { PiWallFill } from "react-icons/pi";
 
 const networkLinks = [
   {
-    title: "Basic",
+    title: "Level 1",
     link: "/basic",
-    icon: <PiWallFill size={25} />,
+    icon: <GiRank1 size={25} />,
   },
+  
   {
-    title: "Moderate",
-    link: "/intermediate",
-    icon: <TbUsb size={25} />,
-  },
-  {
-    title: "Expert",
+    title: "Level 2",
     link: "/advanced",
-    icon: <SiTorbrowser size={25} />,
+    icon: <GiRank2 size={25} />,
   },
 ];
 
