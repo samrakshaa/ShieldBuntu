@@ -34,9 +34,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "resources": [
-        "scripts/**/*"
-      ]
+      "resources": ["scripts/**/*"]
     },
     "security": {
       "csp": null
@@ -45,7 +43,7 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "samrakshak",
+        "title": "SheildBuntu",
         "width": 800,
         "height": 600
       }

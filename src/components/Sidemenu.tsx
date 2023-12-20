@@ -42,21 +42,21 @@ const Sidemenu: React.FC<SidemenuProps> = ({ menuOptions }) => {
         Dashboard
       </Link>
       <div className="categories bg-secondary rounded-md w-5/6 p-2">
-        <h2 className="text-lg font-bold p-4 ">Hardening</h2>
-        {menuOptions.map((item, itemIndex) => (
-          <Link
-            key={itemIndex}
-            to={item.link}
-            className={`${
-              pathname === item.link
-                ? "hover:bg-primary/80 bg-primary"
-                : "hover:bg-secondary/50"
-            } text-foreground p-4 px-6 flex gap-2 items-center w-full`}
-          >
-            {item.icon && item.icon}
-            {item.title}
-          </Link>
-        ))}
+        <h2 className="text-xl font-bold p-4 ">Hardening</h2>
+        <div className="flex flex-col gap-2">
+          {menuOptions.map((item, itemIndex) => (
+            <Link
+              key={itemIndex}
+              to={item.link}
+              className={`rounded-lg ${
+                pathname === item.link ? "bg-primary" : "hover:bg-gray-400/10"
+              } text-foreground p-4 px-6 flex gap-2 items-center w-full text-lg`}
+            >
+              {item.icon && item.icon}
+              {item.title}
+            </Link>
+          ))}
+        </div>
       </div>
     </div>
   );

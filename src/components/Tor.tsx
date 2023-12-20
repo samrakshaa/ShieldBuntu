@@ -132,7 +132,7 @@ const Tor = () => {
             </div>
             <Button
               className=""
-              disabled={isEnablelLoading || torTimeout}
+              disabled={isEnablelLoading}
               onClick={handleSwitchChange}
             >
               {torStatus ? (
@@ -142,7 +142,7 @@ const Tor = () => {
               )}
             </Button>
           </div>
-          {torTimeout ? (
+          {/* {torTimeout ? (
             <div className="timer ">
               {torTimeout && (
                 <p>You can rerun this after {formatTime(timer)}</p>
@@ -150,7 +150,7 @@ const Tor = () => {
             </div>
           ) : (
             <></>
-          )}
+          )} */}
         </div>
       </div>
     </div>

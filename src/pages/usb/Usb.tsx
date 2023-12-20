@@ -102,7 +102,7 @@ const Usb = () => {
       invoke("apply_usb_blocking", { usbIds }),
     onSuccess: (res: any) => {
       const resJSON = JSON.parse(res);
-      console.log(resJSON);
+      // console.log(resJSON);
       if (resJSON.success) {
         console.log("Blocked Selected USBs");
         executeGetStatusAll();
@@ -132,7 +132,7 @@ const Usb = () => {
         invoke("reverse_usb_blocking", { usbIds }),
       onSuccess: (res: any) => {
         const resJSON = JSON.parse(res);
-        console.log(resJSON);
+        // console.log(resJSON);
         if (resJSON.success) {
           console.log("Enabled Selected USBs");
           executeGetStatusAll();

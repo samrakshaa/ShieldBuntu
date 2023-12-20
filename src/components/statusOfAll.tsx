@@ -9,23 +9,32 @@ const allServicesConfig = [
   {
     name: "firewall",
     function: "check_firewall",
+    description:
+      "Manages system firewall settings, allowing control over incoming and outgoing network traffic by blocking or allowing specific ports and protocols.",
   },
   {
     name: "ssh",
     function: "check_ssh",
+    description:
+      "Enhances SSH (Secure Shell) security protocols by configuring encryption methods, user authentication, and access control to safeguard remote access to the system.",
   },
-
   {
     name: "grub_password",
     function: "grub_pass_check",
+    description:
+      "Secures the GRUB (Grand Unified Bootloader) bootloader by setting a password, preventing unauthorized access or modifications during system startup.",
   },
   {
     name: "kernel_status",
     function: "check_kernel_status",
+    description:
+      "Adjusts and configures system kernel settings, including system limits, feature toggles, and performance optimizations for better system functionality.",
   },
   {
     name: "tor_status",
     function: "check_tor_blocked",
+    description:
+      "Blocks access to Tor network nodes and services, limiting or preventing the use of Tor for anonymous internet browsing.",
   },
 ];
 
@@ -91,34 +100,45 @@ function StatusOfAll({}: Props) {
             />
           ))
         : Object.entries(services).map(([key, value], index: number) => {
+            const serviceInfo = allServicesConfig.find(
+              (service) => service.name === key
+            );
+
             return (
               <div
                 key={index}
-                className={`h-20 w-full border-2  rounded-xl p-4 flex items-center  justify-between ${
+                className={`h-36 w-full border-2  rounded-xl p-4 flex flex-col items-center  justify-between ${
                   value
                     ? "border-emerald-500 bg-emerald-700/10 "
                     : "bg-secondary"
                 } `}
               >
-                <div className="capitalize font-bold">
-                  {key.replace("_", " ")}
+                <div className=" flex justify-between w-full">
+                  <div className="capitalize font-bold">
+                    {key.replace("_", " ")}
+                  </div>
+                  <div
+                    className={`flex gap-2 justify-center items-center text-xs ${
+                      value && "text-emerald-300"
+                    } `}
+                  >
+                    {value ? (
+                      <>
+                        Active
+                        <span className="  inline-flex h-2 w-2 rounded-full bg-emerald-600 opacity-75  top-0 left-0 relative">
+                          <span className="animate-ping  inline-flex h-4 w-4 -top-1/2 -left-1/2   rounded-full bg-emerald-600/20 opacity-75 absolute"></span>
+                        </span>
+                      </>
+                    ) : (
+                      "Inactive"
+                    )}
+                  </div>
                 </div>
-                <div
-                  className={`flex gap-2 justify-center items-center text-xs ${
-                    value && "text-emerald-300"
-                  } `}
-                >
-                  {value ? (
-                    <>
-                      Active
-                      <span className="  inline-flex h-2 w-2 rounded-full bg-emerald-600 opacity-75  top-0 left-0 relative">
-                        <span className="animate-ping  inline-flex h-4 w-4 -top-1/2 -left-1/2   rounded-full bg-emerald-600/20 opacity-75 absolute"></span>
-                      </span>
-                    </>
-                  ) : (
-                    "Inactive"
-                  )}
-                </div>
+                {serviceInfo && (
+                  <div className="text-xs text-gray-500 mt-2">
+                    {serviceInfo.description}
+                  </div>
+                )}
               </div>
             );
           })}
