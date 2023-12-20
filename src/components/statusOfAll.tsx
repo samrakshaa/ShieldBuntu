@@ -14,22 +14,18 @@ const allServicesConfig = [
     name: "ssh",
     function: "check_ssh",
   },
-  {
-    name: "apparmour",
-    function: "check_apparmor",
-  },
-  // {
-  //   name: "kernel_status",
-  //   function: "check_kernel_status",
-  // },
 
-  // {
-  //   name: "clam_av",
-  //   function: "check_imptools",
-  // },
   {
-    name: "rkhunter",
-    function: "check_rkhunter",
+    name: "grub_password",
+    function: "grub_pass_check",
+  },
+  {
+    name: "kernel_status",
+    function: "check_kernel_status",
+  },
+  {
+    name: "tor_status",
+    function: "check_tor_blocked",
   },
 ];
 
@@ -37,10 +33,9 @@ function StatusOfAll({}: Props) {
   const [services, setServices] = useState({
     firewall: false,
     kernel_status: false,
-    apparmour: false,
     ssh: false,
-    clam_av: false,
-    rkhunter: false,
+    grub_password: false,
+    tor_status: false,
   });
   const [allStatusLoading, setAllStatusLoading] = useState(false);
 

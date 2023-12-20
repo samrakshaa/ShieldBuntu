@@ -139,12 +139,13 @@ pub async fn reverse_tor_block() -> Result<String, String> {
     file.read_to_string(&mut log_contents)
         .map_err(|e| format!("Error reading log file: {}", e))?;
 
-    // Construct the JSON-like return value
-    let result = if output.status.success() {
-        json!({ "success": true, "logs": log_contents }).to_string()
-    } else {
-        json!({ "success": false, "logs": log_contents }).to_string()
-    };
+        let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
+
+        let result = if stdout == "true" {
+            json!({ "success": true }).to_string()
+        } else {
+            json!({ "success": false }).to_string()
+        };
 
     Ok(result)
 }
@@ -157,7 +158,7 @@ pub async fn check_tor_blocked(handle : tauri::AppHandle) -> Result<String, Stri
 
     let script_path = handle
         .path_resolver()
-        .resolve_resource("scripts/check/check_rkhunter.sh")
+        .resolve_resource("scripts/check/check_tor_blocked.sh")
         .expect("failed to resolve resource");
 
     // Run the bash script for checking firewall status
