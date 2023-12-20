@@ -107,7 +107,7 @@ function StatusOfAll({}: Props) {
             return (
               <div
                 key={index}
-                className={`h-36 w-full border-2  rounded-xl p-4 flex flex-col items-center  justify-between ${
+                className={`w-full border-2  rounded-xl p-4 flex flex-col items-center  justify-between ${
                   value
                     ? "border-emerald-500 bg-emerald-700/10 "
                     : "bg-secondary"
