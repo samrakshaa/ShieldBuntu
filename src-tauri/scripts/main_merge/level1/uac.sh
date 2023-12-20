@@ -1,16 +1,12 @@
 #!/bin/bash
 
-# Function to list human users
 list_users() {
     echo "List of human users:"
     getent passwd | awk -F: '$3 >= 1000 {print $1}'
 }
 
-# Function to remove a user
 remove_user() {
     read -p "Enter the username to remove: " username
-
-    # Check if the user has a home directory
     if [ -d "/home/$username" ]; then
         sudo userdel -r $username
         echo "User $username has been removed."
@@ -19,12 +15,9 @@ remove_user() {
     fi
 }
 
-# Function to check password strength
 check_password_strength() {
     read -s -p "Enter a password to check its strength: " password
     echo
-
-    # Password strength check rules
     if [[ ${#password} -ge 8 && "$password" =~ [0-9] && "$password" =~ [A-Z] && "$password" =~ [a-z] && "$password" =~ [\!\@\#\$\%\^\&\*\(\)\_\+\.\,\;\:] ]]; then
         echo "Password strength: Strong"
     else
@@ -32,14 +25,12 @@ check_password_strength() {
     fi
 }
 
-# Function to update password
 update_password() {
     read -p "Enter the username to update the password: " username
     sudo passwd $username
     echo "Password for user $username has been updated."
 }
 
-# Main script
 while true; do
     echo "1. List all users"
     echo "2. Remove a user"

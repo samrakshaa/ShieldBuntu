@@ -1,40 +1,32 @@
 #!/bin/bash
 
-# Log file location
 LOG_FILE="/var/log/audit.log"
 
-# Function to log messages to the audit log and print to the console
 log() {
   local message="$1"
   echo "$(date '+%Y-%m-%d %H:%M:%S') $message" >> "$LOG_FILE"
   echo "$message"
 }
-
-# Function to check and log user accounts
 check_users() {
   echo "Checking user accounts:"
   cat /etc/passwd | awk -F: '{ print "User: " $1 ", UID: " $3 ", Home: " $6 }'
 }
 
-# Function to check and log file integrity
 check_file_integrity() {
   echo "Checking file integrity:"
   find /etc -type f -exec md5sum {} \;
 }
 
-# Function to check and log SSH configuration
 check_ssh_config() {
   echo "Checking SSH configuration:"
   grep -E "PermitRootLogin|PasswordAuthentication" /etc/ssh/sshd_config
 }
 
-# Function to check and log firewall settings
 check_firewall() {
   echo "Checking firewall settings:"
   iptables -L -n
 }
 
-# Function to check and log basic system information
 check_system_info() {
   echo "Checking basic system information:"
   uname -a
@@ -44,25 +36,21 @@ check_system_info() {
   lsblk
 }
 
-# Function to check and log open ports
 check_open_ports() {
   echo "Checking open ports:"
   ss -tuln
 }
 
-# Function to check and log running processes
 check_processes() {
   echo "Checking running processes:"
   ps aux
 }
 
-# Function to check and log listening network services
 check_network_services() {
   echo "Checking listening network services:"
   netstat -tuln
 }
 
-# Function to check and log user login history
 check_login_history() {
   echo "Checking user login history:"
   if [ -e /var/log/wtmp ]; then
@@ -77,20 +65,17 @@ check_login_history() {
 }
 
 
-# Function to check and log system logs
 check_system_logs() {
   echo "Checking system logs:"
   sudo dmesg
   sudo dmesg > cat $LOG_FILE
 }
 
-# Function to extract logs and print to the console
 extract_logs() {
   echo "Extracting logs:"
   cat "$LOG_FILE"
 }
 
-# Main menu
 main_menu() {
   echo "===== System Audit Menu ====="
   echo "1. Check User Accounts"
@@ -124,14 +109,11 @@ main_menu() {
   esac
 }
 
-# Main function
 main() {
-  # Run the main menu
   while :
   do
     main_menu
   done
 }
 
-# Run the script
 main

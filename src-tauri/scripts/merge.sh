@@ -120,6 +120,10 @@ else
   selected_scripts="$@"
 fi
 
+<<<<<<< Updated upstream
+=======
+# Specify the output files
+>>>>>>> Stashed changes
 output_file="output.sh"
 reverse_output_file="reverse_output.sh"
 
@@ -128,6 +132,10 @@ merge_scripts $selected_scripts >> "$output_file"
 chmod +x "$output_file"
 echo "Merged script has been written to: $output_file"
 
+<<<<<<< Updated upstream
+=======
+# Redirect the reverse merged script to the output file
+>>>>>>> Stashed changes
 echo -e "#!/bin/bash\n" > "$reverse_output_file"
 generate_reverse_script $selected_scripts >> "$reverse_output_file"
 chmod +x "$reverse_output_file"
