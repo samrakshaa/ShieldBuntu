@@ -282,9 +282,9 @@ pub async fn list_usb_devices_usbguard(handle : AppHandle) -> Result<String, Str
 // }
 
 
-#[warn(non_snake_case)]
+#[allow(non_snake_case)]
 #[tauri::command]
-pub async fn apply_usb_blocking(handle : AppHandle,usb_ids: Vec<String>) -> Result<String, String> {
+pub async fn apply_usb_blocking(handle : AppHandle,usbIds: Vec<String>) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
     // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
     // let script_path = current_dir.join("scripts/apply/usb_blocking.sh");
@@ -323,7 +323,7 @@ pub async fn apply_usb_blocking(handle : AppHandle,usb_ids: Vec<String>) -> Resu
         .arg("-S")
         .arg("bash")
         .arg(script_path)
-        .args(usb_ids) // Pass the USB IDs to the script
+        .args(usbIds) // Pass the USB IDs to the script
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
@@ -365,8 +365,9 @@ pub async fn apply_usb_blocking(handle : AppHandle,usb_ids: Vec<String>) -> Resu
 }
 
 
+#[allow(non_snake_case)]
 #[tauri::command]
-pub async fn reverse_usb_blocking(handle : AppHandle,usb_ids: Vec<String>) -> Result<String, String> {
+pub async fn reverse_usb_blocking(usb_ids: Vec<String>) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
     // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
     // let script_path = current_dir.join("scripts/reverse/r-usb_blocking.sh");
@@ -405,7 +406,7 @@ pub async fn reverse_usb_blocking(handle : AppHandle,usb_ids: Vec<String>) -> Re
         .arg("-S")
         .arg("bash")
         .arg(script_path)
-        .args(usb_ids) // Pass the USB IDs to the script
+        .args(usbIds) // Pass the USB IDs to the script
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
@@ -447,9 +448,9 @@ pub async fn reverse_usb_blocking(handle : AppHandle,usb_ids: Vec<String>) -> Re
 }
 
 
-#[warn(non_snake_case)]
+#[allow(non_snake_case)]
 #[tauri::command]
-pub async fn whitelist_usb(handle : AppHandle,usb_ids: Vec<String>) -> Result<String, String> {
+pub async fn whitelist_usb(usb_ids: Vec<String>) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
     // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
     // let script_path = current_dir.join("scripts/apply/whitelist_usbs.sh");
@@ -488,7 +489,7 @@ let log_file_path = Path::new(&log_directory).join("whitelist_usb_log.txt");
         .arg("-S")
         .arg("bash")
         .arg(script_path)
-        .args(usb_ids) // Pass the USB IDs to the script
+        .args(usbIds) // Pass the USB IDs to the script
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
@@ -530,9 +531,9 @@ let log_file_path = Path::new(&log_directory).join("whitelist_usb_log.txt");
 }
 
 
-
+#[allow(non_snake_case)]
 #[tauri::command]
-pub async fn blacklist_usb(handle : AppHandle,usb_ids: Vec<String>) -> Result<String, String> {
+pub async fn blacklist_usb(usb_ids: Vec<String>) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
     // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
     // let script_path = current_dir.join("scripts/apply/blacklist_usbs.sh");
@@ -571,7 +572,7 @@ let log_file_path = Path::new(&log_directory).join("blacklist_usb_log.txt");
         .arg("-S")
         .arg("bash")
         .arg(script_path)
-        .args(usb_ids) // Pass the USB IDs to the script
+        .args(usbIds) // Pass the USB IDs to the script
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
@@ -662,12 +663,12 @@ pub async fn check_usb(handle : AppHandle) -> Result<String, String> {
 // #[tokio::main]
 // async fn main() {
 //     // Example USB IDs to pass to the function
-//     let usb_ids = vec!["17ef:6099".to_string(), "0bda:c123".to_string()];
+//     let usbIds = vec!["17ef:6099".to_string(), "0bda:c123".to_string()];
 
-//     println!("{:?}", usb_ids);
+//     println!("{:?}", usbIds);
 
 //     // Call the whitelist_usb function
-//     match whitelist_usb(usb_ids).await {
+//     match whitelist_usb(usbIds).await {
 //         Ok(result) => println!("Result: {}", result),
 //         Err(e) => eprintln!("Error: {}", e),
 //     }

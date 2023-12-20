@@ -24,6 +24,7 @@ mod check_sudo;
 mod no_exec;
 mod kernel;
 mod grub;
+mod merge;
 
 static mut PASSWORD: Option<String> = None;
 
@@ -117,7 +118,8 @@ pub async fn main() {
             kernel::kernel,
             kernel::reverse_kernel,
             grub::grub_pass_check,
-            grub::grub_pass_add
+            grub::grub_pass_add,
+            merge::custom_script
             ]
         )
         .run(tauri::generate_context!())
