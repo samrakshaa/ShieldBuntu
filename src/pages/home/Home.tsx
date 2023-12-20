@@ -6,6 +6,7 @@ import { SiFirewalla, SiTorbrowser } from "react-icons/si";
 import { PiWallFill } from "react-icons/pi";
 import { GiRank1 } from "react-icons/gi";
 import { GiRank2 } from "react-icons/gi";
+import TestingArea from "@/pages/TestingArea";
 
 // interface MenuItem {
 //   title: string;
@@ -32,6 +33,7 @@ const Home = () => {
     <>
       <div className="home flex h-screen mx-auto">
         <Sidemenu menuOptions={networkLinks} />
+        <TestingArea  />
         <div className="overflow-auto w-full">
           <Outlet />
         </div>

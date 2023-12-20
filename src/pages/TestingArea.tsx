@@ -24,12 +24,12 @@ const USBPage = () => {
       .catch((err) => console.error(err));
   };
   const handleClick5 = () => {
-    invoke("reverse_firewall_rules")
+    invoke("grub_pass_check")
       .then((res) => console.log(res))
       .catch((err) => console.error(err));
   };
   const handleClick6 = () => {
-    invoke("check_firewall")
+    invoke("grub_pass_add", {"pass": "hello"})
       .then((res) => console.log(res))
       .catch((err) => console.error(err));
   };
@@ -127,10 +127,10 @@ const USBPage = () => {
         Firewall
       </Button>
       <Button onClick={handleClick5} className=" mt-32">
-        Rev Firewall
+        GRUB PASS CHECK
       </Button>
       <Button onClick={handleClick6} className=" mt-32">
-        Check Firewall
+        GRUB PASS ADD HELLO
       </Button>
       <Button onClick={handleClick7} className=" mt-32">
         LIST PORTS

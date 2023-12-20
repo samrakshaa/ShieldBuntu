@@ -23,6 +23,7 @@ mod ssh_conn;
 mod check_sudo;
 mod no_exec;
 mod kernel;
+mod grub;
 
 static mut PASSWORD: Option<String> = None;
 
@@ -115,6 +116,8 @@ pub async fn main() {
             no_exec::no_exec,
             kernel::kernel,
             kernel::reverse_kernel,
+            grub::grub_pass_check,
+            grub::grub_pass_add
             ]
         )
         .run(tauri::generate_context!())
