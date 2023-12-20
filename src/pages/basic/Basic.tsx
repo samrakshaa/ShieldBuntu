@@ -64,7 +64,7 @@ const Basic = () => {
             className="bg-secondary text-2xl py-0 hover:bg-secondary/50"
             onClick={handleBack}
           />
-          <h1 className="text-3xl pl-2 font-bold">Level 1</h1>
+          <h1 className="text-3xl pl-2 font-bold">Level-1 Hardening</h1>
           <TooltipProvider>
             <Tooltip delayDuration={20}>
               <TooltipTrigger className="flex-1">
@@ -72,7 +72,7 @@ const Basic = () => {
                 <HiOutlineInformationCircle size={25} />
               </TooltipTrigger>
               <TooltipContent className="content-tooltip max-w-[440px]">
-                Basic Hardening
+              Automated hardening features aligned with CIS benchmarks, requiring minimal user interaction.
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>

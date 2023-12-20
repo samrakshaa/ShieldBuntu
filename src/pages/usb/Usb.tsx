@@ -293,7 +293,7 @@ const Usb = () => {
             className="bg-secondary text-2xl py-0 hover:bg-secondary/50"
             onClick={handleBack}
           /> */}
-            <h1 className="text-2xl font-bold font-primary">
+            <h1 className="text-2xl font-bold text-primary">
               USB Configuration
             </h1>
             <TooltipProvider>

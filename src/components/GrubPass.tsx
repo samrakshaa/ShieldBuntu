@@ -4,6 +4,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@radix-ui/react-tooltip";
+
 import React, { useEffect, useState } from "react";
 import BackButton from "./BackButton";
 import { HiOutlineInformationCircle } from "react-icons/hi";
@@ -76,16 +77,12 @@ function GrubPass({}: Props) {
             </h1>
             <TooltipProvider>
               <Tooltip delayDuration={20}>
-                <TooltipTrigger className="flex-1">
+                <TooltipTrigger className="">
                   {" "}
                   <HiOutlineInformationCircle size={25} />
                 </TooltipTrigger>
                 <TooltipContent className="content-tooltip max-w-[440px]">
-                  Firewall is software that monitors incoming and outgoing
-                  traffic based on pre-defined network rules. This section
-                  provides concise list of all enabled firewall rules - the
-                  section also involves options to block/manage open port
-                  configurations.
+                  Grub Password Configuration: Easily set a password to secure the GRUB bootloader with just a few clicks.
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -96,9 +93,7 @@ function GrubPass({}: Props) {
           />
         </div>
         <p className="py-2 text-foreground/50 leading-6">
-          Control network ports and firewall rules with UFW. Allow/deny specific
-          ports, protocols. Use iptables for advanced rules. Install, configure,
-          manage. Ensure network security.
+          Easily fortify system security by setting a GRUB bootloader password using a simplified interface, enhancing defense against unauthorized access or system alterations.
         </p>
         <br />
         <div className="toggle-firewall bg-secondary/60 mt-2 p-2 px-4 text-lg border-2 rounded-lg flex flex-row justify-between items-center">

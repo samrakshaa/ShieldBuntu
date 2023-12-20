@@ -108,7 +108,7 @@ const Dashboard = () => {
               onClick={handleBack}
             /> */}
                 <h1 className="text-2xl text-primary font-bold">
-                  Firewall Configuration
+                  Configuration Export
                 </h1>
                 <TooltipProvider>
                   <Tooltip delayDuration={20}>
@@ -117,20 +117,14 @@ const Dashboard = () => {
                       <HiOutlineInformationCircle size={25} />
                     </TooltipTrigger>
                     <TooltipContent className="content-tooltip max-w-[440px]">
-                      Firewall is software that monitors incoming and outgoing
-                      traffic based on pre-defined network rules. This section
-                      provides concise list of all enabled firewall rules - the
-                      section also involves options to block/manage open port
-                      configurations.
+                    Export current hardened system settings for reference in securing other systems.
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
               </div>
             </div>
             <p className="py-2 text-foreground/50 leading-6">
-              Control network ports and firewall rules with UFW. Allow/deny
-              specific ports, protocols. Use iptables for advanced rules.
-              Install, configure, manage. Ensure network security.
+              The 'Export Current Configuration' function captures and saves the current fortified system setup into a file, offering a comprehensive reference guide for configuring and securing other systems based on established hardened settings.
             </p>
             <br />
             <div className="toggle-firewall bg-secondary/60 mt-2 p-2 px-4 text-lg border-2 rounded-lg flex flex-row justify-between items-center">

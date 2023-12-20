@@ -24,7 +24,7 @@ const Advance = () => {
           className="bg-secondary text-2xl py-0 hover:bg-secondary/50"
           onClick={handleBack}
         />
-        <h1 className="text-3xl pl-2 font-bold">Advanced Hardening</h1>
+        <h1 className="text-3xl pl-2 font-bold">Level-2 Hardening</h1>
         <TooltipProvider>
           <Tooltip delayDuration={20}>
             <TooltipTrigger className="flex-1">
@@ -32,7 +32,7 @@ const Advance = () => {
               <HiOutlineInformationCircle size={25} />
             </TooltipTrigger>
             <TooltipContent className="content-tooltip max-w-[440px]">
-              Level 2 Hardening
+              Advanced security measures exceeding CIS benchmarks, involving user interaction for fortified system setup.
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
