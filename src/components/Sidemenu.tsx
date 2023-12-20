@@ -58,17 +58,21 @@ const Sidemenu: React.FC<SidemenuProps> = ({ menuOptions }) => {
           </div>
         )}
       </div>
-      <div className="flex absolute top-0 left-0 w-screen  justify-center items-center h-full ">
+      <div className="flex absolute top-0 left-0 w-screen  justify-center items-center h-full gap-4   ">
         <Link
           to={"/"}
-          className={`${"hover:bg-secondary/50"} text-foreground p-4 px-6 flex gap-2 items-center  text-2xl rounded-xl `}
+          className={`${"hover:bg-secondary/50"} text-foreground p-2 px-6 flex gap-2 items-center  text-2xl rounded-xl ${
+            pathname == "/" && "text-primary bg-secondary"
+          } `}
         >
           <MdDashboard />
           Dashboard
         </Link>
         <Link
           to={"/basic"}
-          className={`${"hover:bg-secondary/50"} text-foreground p-4 px-6 flex gap-2 items-center  text-2xl rounded-xl `}
+          className={`${"hover:bg-secondary/50"} text-foreground p-2 px-6 flex gap-2 items-center  text-2xl rounded-xl ${
+            (pathname == "/basic" || pathname == "/advanced") && "text-primary bg-secondary"
+          }  `}
         >
           <TbShieldFilled />
           Hardening

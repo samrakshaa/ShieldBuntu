@@ -29,7 +29,7 @@ function App() {
                 <Route path="/" element={<Home />}>
                   <Route path={"/"} element={<Dashboard />} />
                   <Route path={"/basic"} element={<Basic />} />
-                  <Route path={"/intermediate"} element={<Intermediate />} />
+                  {/* <Route path={"/intermediate"} element={<Intermediate />} /> */}
                   <Route path={"/advanced"} element={<Advance />} />
                 </Route>
               </Routes>

@@ -19,10 +19,10 @@ const Advance = () => {
     navigate(-1);
   };
   return (
-    <div className="flex flex-col max-w-[1000px] mx-auto py-4">
+    <div className="flex flex-col max-w-[1000px] mx-auto  mt-28">
       <div className=" flex gap-2 mt-12">
         <BackButton
-          className="bg-secondary text-2xl py-0 hover:bg-secondary/50"
+          className="bg-secondary text-2xl  hover:bg-secondary/50"
           onClick={handleBack}
         />
         <h1 className="text-5xl pl-2 font-bold flex "><GiRank2  />  Level-2 Hardening</h1>

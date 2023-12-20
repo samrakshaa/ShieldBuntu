@@ -36,10 +36,7 @@ const Home = () => {
         {/* <TestingArea  /> */}
 
         <div className="overflow-auto w-full px-8">
-          <br/>
-          <br/>
-          <br/>
-          <br/>
+          
 
           <Outlet />
         </div>

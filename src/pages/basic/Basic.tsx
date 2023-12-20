@@ -60,7 +60,7 @@ const Basic = () => {
   return (
     <div>
       <div className="flex flex-col max-w-[1000px] mx-auto py-4">
-        <div className=" flex gap-2 mt-12">
+        <div className=" flex gap-2 mt-32">
           <BackButton
             className="bg-secondary text-2xl py-0 hover:bg-secondary/50"
             onClick={handleBack}
