@@ -15,6 +15,7 @@ import Firewall from "../firewall/Firewall";
 import Tor from "@/components/Tor";
 
 import Ssh from "@/components/Ssh";
+import { GiRank1 } from "react-icons/gi";
 
 const Basic = () => {
   const navigate = useNavigate();
@@ -58,13 +59,15 @@ const Basic = () => {
 
   return (
     <div>
-      <div className=" flex flex-col max-w-[900px] mx-auto p-2 ">
-        <div className=" flex gap-2 mt-12     ">
+      <div className="flex flex-col max-w-[1000px] mx-auto py-4">
+        <div className=" flex gap-2 mt-12">
           <BackButton
             className="bg-secondary text-2xl py-0 hover:bg-secondary/50"
             onClick={handleBack}
           />
-          <h1 className="text-3xl pl-2 font-bold">Level-1 Hardening</h1>
+          <h1 className="text-5xl pl-2 font-bold flex "><GiRank1 />Level-1 Hardening</h1>
+          <br />
+          
           <TooltipProvider>
             <Tooltip delayDuration={20}>
               <TooltipTrigger className="flex-1">
@@ -78,9 +81,11 @@ const Basic = () => {
           </TooltipProvider>
         </div>
       </div>
+      <hr className="mt-10 border-[1px]  "/>
+
       {/* undate and remove */}
-      <div className="flex flex-col mt-12 px-4 max-w-[900px] mx-auto">
-        <h1 className="settings-header text-lg font-bold align-left">
+      <div className="flex flex-col mt-12  max-w-[1000px] mx-auto ">
+        <h1 className=" text-lg font-bold align-left ">
           System Update & Cleaning
         </h1>
         <div className="basic-settings-content flex flex-row items-center p-2 my-4 bg-secondary/60 border-[1px] border-secondary rounded-lg justify-between">
@@ -108,7 +113,7 @@ const Basic = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col mt-12 px-4 max-w-[900px] mx-auto">
+      <div className="flex flex-col mt-12 px-4  mx-auto">
         <Tor />
         <Ssh />
       </div>

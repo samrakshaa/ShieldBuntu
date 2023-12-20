@@ -99,7 +99,7 @@ const Tor = () => {
   }, [torTimeout, torTimeoutTimestamp, setTorTimeout]);
 
   return (
-    <div className="Tor flex flex-row justify-center py-8">
+    <div className="Tor flex flex-row justify-center py-8 max-w-[1000px] mx-auto">
       <div className="main-section">
         <div className=" flex gap-2 items-center">
           <h1 className="text-2xl text-primary font-bold">

@@ -285,7 +285,7 @@ const Usb = () => {
   }, [usbStatus]);
 
   return (
-    <div className="usb flex flex-row justify-center mx-auto max-w-[900px]">
+    <div className="usb flex flex-row justify-center mx-auto ">
       <div className="main-section py-12">
         <div className=" flex gap-2 items-center justify-between ">
           <div className="flex gap-2">

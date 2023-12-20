@@ -64,9 +64,14 @@ const Dashboard = () => {
   return (
     <>
       {/* basic hardening section */}
-      <div className="basic-settings flex flex-col mt-12 px-6 mx-auto max-w-[900px]">
+      <div className="basic-settings flex flex-col mt-12 px-6 mx-auto max-w-[1200px]">
         <div>
-          <h1 className="settings-header text-lg font-bold mb-2">Status</h1>
+          <h1 className="text-5xl  font-bold">Dashboard</h1>
+
+          <br />
+          <br />
+
+          <h1 className="text-2xl text-primary font-bold">Status</h1>
           <StatusOfAll />
         </div>
         <br />
@@ -99,7 +104,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div> */}
-        <div className="firewall flex flex-row justify-center mx-auto max-w-[900px]">
+        <div className="firewall flex flex-row justify-center mx-auto">
           <div className="main-section pt-8">
             <div className=" flex items-center justify-between ">
               <div className=" flex gap-2  ">
@@ -117,14 +122,18 @@ const Dashboard = () => {
                       <HiOutlineInformationCircle size={25} />
                     </TooltipTrigger>
                     <TooltipContent className="content-tooltip max-w-[440px]">
-                    Export current hardened system settings for reference in securing other systems.
+                      Export current hardened system settings for reference in
+                      securing other systems.
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
               </div>
             </div>
             <p className="py-2 text-foreground/50 leading-6">
-              The 'Export Current Configuration' function captures and saves the current fortified system setup into a file, offering a comprehensive reference guide for configuring and securing other systems based on established hardened settings.
+              The 'Export Current Configuration' function captures and saves the
+              current fortified system setup into a file, offering a
+              comprehensive reference guide for configuring and securing other
+              systems based on established hardened settings.
             </p>
             <br />
             <div className="toggle-firewall bg-secondary/60 mt-2 p-2 px-4 text-lg border-2 rounded-lg flex flex-row justify-between items-center">

@@ -34,7 +34,13 @@ const Home = () => {
       <div className="home   h-screen mx-auto">
         <Sidemenu menuOptions={networkLinks} />
         {/* <TestingArea  /> */}
-        <div className="overflow-auto w-full">
+
+        <div className="overflow-auto w-full px-8">
+          <br/>
+          <br/>
+          <br/>
+          <br/>
+
           <Outlet />
         </div>
       </div>

@@ -66,7 +66,7 @@ function GrubPass({}: Props) {
   }, []);
   console.log(password);
   return (
-    <div className="firewall flex flex-row justify-center mx-auto max-w-[900px]">
+    <div className="firewall flex flex-row justify-center mx-auto ">
       <div className="main-section pt-8">
         <div className=" flex items-center justify-between ">
           <div className=" flex gap-2 items-center  ">
