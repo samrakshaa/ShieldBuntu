@@ -1,7 +1,7 @@
 export const allServicesConfig = [
     {
       name: "single_user",
-      key: 2,
+      key: 1,
       function: "check_sudo_user",
       description:
         "This service checks if the current user has sudo (superuser) privileges. Sudo privileges allow a user to execute commands with administrative permissions ",
@@ -16,7 +16,7 @@ export const allServicesConfig = [
     {
       name: "ssh",
       function: "check_ssh",
-      level: 4,
+      key: 4,
       description:
         "Enhances SSH (Secure Shell) security protocols by configuring encryption methods, user authentication, and access control to safeguard remote access to the system.",
     },

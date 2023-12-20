@@ -20,7 +20,18 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog";import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Checkbox } from "@/components/ui/checkbox";
+import { set } from "react-hook-form";
+import { toast } from "./ui/use-toast";
 
 type Props = {};
 
@@ -34,7 +45,9 @@ function StatusOfAll({}: Props) {
   });
   const [allStatusLoading, setAllStatusLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+  const [selectedBlockedRows, setSelectedBlockedRows] = useState<string[]>(
+    []
+  );
   const getAllServices = async () => {
     setAllStatusLoading(true);
     let hasErrorOccurred = false;
@@ -53,6 +66,7 @@ function StatusOfAll({}: Props) {
           hasErrorOccurred = true;
         })
     );
+    
 
     await Promise.all(servicePromises).finally(() => {
       setServices((prev) => ({ ...prev, ...serviceStatusUpdates }));
@@ -71,10 +85,23 @@ function StatusOfAll({}: Props) {
     },
   });
   console.log(isLoading, "loading ....");
-
+console.log(selectedBlockedRows)
   useEffect(() => {
     allServices();
   }, []);
+  const handleClick3 = () => {
+    invoke("custom_script", {"scriptIds": selectedBlockedRows.filter(item => item !== undefined).map(String)})
+      .then((res) => {
+        toast({
+          variant: "default",
+          title: " Success!",
+          description: " file createed successfully on /home/jayash/.samrakshak_logs",
+          className: "border-emerald-500 bg-emerald-700/10 ",
+        });
+        setIsDialogOpen(false)
+      })
+      .catch((err) => console.error(err));
+  };
   console.log(services);
   return (
     <>
@@ -174,10 +201,35 @@ function StatusOfAll({}: Props) {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle>Enter you new grub password</DialogTitle>
+                <DialogTitle>Select config</DialogTitle>
                 <DialogDescription>
-                  Make changes to your profile here. Click save when you're
-                  done.
+                <Table className="usbBlocking">
+                 
+                  <TableBody className="flex flex-col h-[400px] overflow-auto w-full">
+                    {allServicesConfig.map((item:any, index: number) => {
+                      
+                        return (
+                          <TableRow
+                            key={index}
+                            onClick={() => {setSelectedBlockedRows([...selectedBlockedRows, item.key])}}
+                            className=""
+                          >
+                            <TableCell className="py-2 " >
+                              <Checkbox 
+                                checked={selectedBlockedRows.includes(item.key)}
+                                // disabled={!usbStatus}
+                              />
+                            </TableCell>
+                            <div className="flex flex-row items-center">
+
+                            <TableCell className="py-2">{item.name}</TableCell>
+                            <TableCell className="py-2">{item.description}</TableCell>
+                            </div>
+                          </TableRow>
+                        );
+                    })}
+                  </TableBody>
+                </Table>
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">sdnksnd</div>
@@ -189,7 +241,7 @@ function StatusOfAll({}: Props) {
                 >
                   Cancel
                 </Button>
-                <Button type="submit" onClick={() => {}}>
+                <Button type="submit" onClick={handleClick3}>
                   Create File
                 </Button>
               </DialogFooter>
