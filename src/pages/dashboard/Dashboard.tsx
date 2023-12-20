@@ -1,4 +1,11 @@
 import StatusOfAll from "@/components/statusOfAll";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@radix-ui/react-tooltip";
+import { HiOutlineInformationCircle } from "react-icons/hi";
 // import { Button } from "@/components/ui/button";
 // import useLoading from "@/hooks/useLoading";
 // import { invoke } from "@tauri-apps/api/tauri";
@@ -92,47 +99,48 @@ const Dashboard = () => {
             </div>
           </div>
         </div> */}
-
-        {/* Dashboard section */}
-        <div className="flex flex-col">
-          <h1 className="settings-header text-lg font-bold py-4">
-            System Status
-          </h1>
-          <div className="dashboard flex flex-row items-center p-4 bg-secondary/90 border-[1px] border-secondary/70 rounded-lg">
-            <p className="content p-50">blah blah a lot of things go here!!</p>
-          </div>
-        </div>
-
-        {/* kernel section */}
-        <div className="flex flex-col">
-          <h1 className="settings-header text-lg font-bold py-4">
-            Kernel Parameters
-          </h1>
-          <div className="dashboard flex flex-row items-center p-4 bg-secondary/90 border-[1px] border-secondary/70 rounded-lg">
-            <p className="content p-50">
-              Enhances the security of a Linux system by configuring various
-              kernel parameters related to network security and system
-              protection.
+        <div className="firewall flex flex-row justify-center mx-auto max-w-[900px]">
+          <div className="main-section pt-8">
+            <div className=" flex items-center justify-between ">
+              <div className=" flex gap-2  ">
+                {/* <BackButton
+              className="bg-secondary text-2xl py-0 hover:bg-secondary/50"
+              onClick={handleBack}
+            /> */}
+                <h1 className="text-2xl text-primary font-bold">
+                  Firewall Configuration
+                </h1>
+                <TooltipProvider>
+                  <Tooltip delayDuration={20}>
+                    <TooltipTrigger className="flex-1">
+                      {" "}
+                      <HiOutlineInformationCircle size={25} />
+                    </TooltipTrigger>
+                    <TooltipContent className="content-tooltip max-w-[440px]">
+                      Firewall is software that monitors incoming and outgoing
+                      traffic based on pre-defined network rules. This section
+                      provides concise list of all enabled firewall rules - the
+                      section also involves options to block/manage open port
+                      configurations.
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            </div>
+            <p className="py-2 text-foreground/50 leading-6">
+              Control network ports and firewall rules with UFW. Allow/deny
+              specific ports, protocols. Use iptables for advanced rules.
+              Install, configure, manage. Ensure network security.
             </p>
+            <br />
+            <div className="toggle-firewall bg-secondary/60 mt-2 p-2 px-4 text-lg border-2 rounded-lg flex flex-row justify-between items-center">
+              <div className="flex flex-row items-center">
+                <p>Export your current configuration</p>
+              </div>
+            </div>
+            <br />
           </div>
         </div>
-
-        {/* kernel section */}
-        <div className="flex flex-col">
-          <h1 className="settings-header text-lg font-bold py-4">
-            Status of your device
-          </h1>
-          <div className="dashboard flex flex-row items-center p-4 bg-secondary/90 border-[1px] border-secondary/70 rounded-lg">
-            <p className="content p-50">
-              Enhances the security of a Linux system by configuring various
-              kernel parameters related to network security and system
-              protection.
-            </p>
-          </div>
-        </div>
-
-        <br />
-        <br />
       </div>
     </>
   );

@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { HiOutlineInformationCircle } from "react-icons/hi";
 import Usb from "../usb/Usb";
 import Firewall from "../firewall/Firewall";
+import GrubPass from "@/components/GrubPass";
 
 const Advance = () => {
   const navigate = useNavigate();
@@ -36,6 +37,7 @@ const Advance = () => {
           </Tooltip>
         </TooltipProvider>
       </div>
+      <GrubPass />
       <Firewall />
 
       {/* USB */}
