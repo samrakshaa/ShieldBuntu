@@ -54,8 +54,7 @@ while true; do
         2) remove_user ;;
         3) check_password_strength ;;
         4) update_password ;;
-        5) echo "Exiting the script. Goodbye!"; exit ;;
+        5) echo ""; exit ;;
         *) echo "Invalid choice. Please enter a number between 1 and 5." ;;
     esac
 done
-

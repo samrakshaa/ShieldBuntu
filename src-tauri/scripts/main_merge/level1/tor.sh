@@ -8,7 +8,7 @@ if [ "$(id -u)" != "0" ]; then
     exit 1
 fi
 
-# # Enable ufw if not already enabled
+# Enable ufw if not already enabled
 ufw_enable() {
     ufw status | grep -q "Status: inactive"
     if [ $? -eq 0 ]; then

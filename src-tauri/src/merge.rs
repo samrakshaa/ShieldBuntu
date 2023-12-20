@@ -28,7 +28,7 @@ pub async fn custom_script(handle: AppHandle, script_ids: Vec<String>) -> Result
 
     // Paths for the output and reverse output files
     let output_file_path = Path::new(&log_directory).join("output.sh");
-    let reverse_output_file_path = Path::new(&log_directory).join("reverse_output.sh");
+    // let reverse_output_file_path = Path::new(&log_directory).join("reverse_output.sh");
 
     let mut file = OpenOptions::new()
         .create(true)
@@ -70,20 +70,25 @@ pub async fn custom_script(handle: AppHandle, script_ids: Vec<String>) -> Result
     merged_script_file.read_to_string(&mut merged_script)
         .map_err(|e| format!("Error reading merged script file: {}", e))?;
 
-    // Read the reverse merged script file
-    let mut reverse_merged_script_file = OpenOptions::new().read(true).open(&reverse_output_file_path)
-        .map_err(|e| format!("Error opening reverse merged script file: {}", e))?;
-    let mut reverse_merged_script = String::new();
-    reverse_merged_script_file.read_to_string(&mut reverse_merged_script)
-        .map_err(|e| format!("Error reading reverse merged script file: {}", e))?;
+    // // Read the reverse merged script file
+    // let mut reverse_merged_script_file = OpenOptions::new().read(true).open(&reverse_output_file_path)
+    //     .map_err(|e| format!("Error opening reverse merged script file: {}", e))?;
+    // let mut reverse_merged_script = String::new();
+    // reverse_merged_script_file.read_to_string(&mut reverse_merged_script)
+    //     .map_err(|e| format!("Error reading reverse merged script file: {}", e))?;
 
     let logs = String::from_utf8_lossy(&output.stderr).to_string();
 
     let result = json!({
         "success": output.status.success(),
         "script": merged_script,
-        "reverse_script": reverse_merged_script,
         "logs": logs
     });
+    // let result = json!({
+    //     "success": output.status.success(),
+    //     "script": merged_script,
+    //     "reverse_script": reverse_merged_script,
+    //     "logs": logs
+    // });
     Ok(result.to_string())
 }

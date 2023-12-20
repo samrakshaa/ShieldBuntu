@@ -12,72 +12,81 @@ log() {
 
 # Function to check and log user accounts
 check_users() {
-  log "Checking user accounts:"
-  cat /etc/passwd | awk -F: '{ print "User: " $1 ", UID: " $3 ", Home: " $6 }' >> "$LOG_FILE"
+  echo "Checking user accounts:"
+  cat /etc/passwd | awk -F: '{ print "User: " $1 ", UID: " $3 ", Home: " $6 }'
 }
 
 # Function to check and log file integrity
 check_file_integrity() {
-  log "Checking file integrity:"
-  find /etc -type f -exec md5sum {} \; >> "$LOG_FILE"
+  echo "Checking file integrity:"
+  find /etc -type f -exec md5sum {} \;
 }
 
 # Function to check and log SSH configuration
 check_ssh_config() {
-  log "Checking SSH configuration:"
-  grep -E "PermitRootLogin|PasswordAuthentication" /etc/ssh/sshd_config >> "$LOG_FILE"
+  echo "Checking SSH configuration:"
+  grep -E "PermitRootLogin|PasswordAuthentication" /etc/ssh/sshd_config
 }
 
 # Function to check and log firewall settings
 check_firewall() {
-  log "Checking firewall settings:"
-  iptables -L -n >> "$LOG_FILE"
+  echo "Checking firewall settings:"
+  iptables -L -n
 }
 
 # Function to check and log basic system information
 check_system_info() {
-  log "Checking basic system information:"
-  uname -a >> "$LOG_FILE"
-  df -h >> "$LOG_FILE"
-  free -m >> "$LOG_FILE"
-  ifconfig >> "$LOG_FILE"
-  lsblk >> "$LOG_FILE"
+  echo "Checking basic system information:"
+  uname -a
+  df -h
+  free -m
+  ifconfig
+  lsblk
 }
 
 # Function to check and log open ports
 check_open_ports() {
-  log "Checking open ports:"
-  ss -tuln >> "$LOG_FILE"
+  echo "Checking open ports:"
+  ss -tuln
 }
 
 # Function to check and log running processes
 check_processes() {
-  log "Checking running processes:"
-  ps aux >> "$LOG_FILE"
+  echo "Checking running processes:"
+  ps aux
 }
 
 # Function to check and log listening network services
 check_network_services() {
-  log "Checking listening network services:"
-  netstat -tuln >> "$LOG_FILE"
+  echo "Checking listening network services:"
+  netstat -tuln
 }
 
 # Function to check and log user login history
 check_login_history() {
-  log "Checking user login history:"
-  last >> "$LOG_FILE"
+  echo "Checking user login history:"
+  if [ -e /var/log/wtmp ]; then
+    last
+  elif [ -e /var/run/utmp ]; then
+    last -f /var/run/utmp
+  elif command -v lastlog &> /dev/null; then
+    lastlog
+  else
+    echo "Error: Login history not available."
+  fi
 }
+
 
 # Function to check and log system logs
 check_system_logs() {
-  log "Checking system logs:"
-  cat /var/log/syslog >> "$LOG_FILE"
-  cat /var/log/auth.log >> "$LOG_FILE"
+  echo "Checking system logs:"
+  sudo dmesg
+  sudo dmesg > cat $LOG_FILE
 }
 
 # Function to extract logs and print to the console
 extract_logs() {
-  log "Extracting logs:"
+  echo "Extracting logs:"
   cat "$LOG_FILE"
 }
 
@@ -113,14 +122,15 @@ main_menu() {
     12) exit ;;
     *) echo "Invalid choice. Please enter a number between 1 and 12." ;;
   esac
-
-  main_menu
 }
 
 # Main function
 main() {
   # Run the main menu
-  main_menu
+  while :
+  do
+    main_menu
+  done
 }
 
 # Run the script

@@ -11,7 +11,7 @@ configure_default_rules() {
     sudo ufw allow in on lo
     sudo ufw allow out on lo
     echo "yes" | sudo ufw enable
-    sudo ufw logging on
+    sudo ufw logging high
     echo "Default UFW configuration complete."
 }
 
@@ -75,7 +75,7 @@ while true; do
     echo "3. View Rules/Check Firewall Status"
     echo "4. Enable/Disable Firewall"
     echo "5. Exit"
-    read -p "Enter your choice (1-4): " choice
+    read -p "Enter your choice (1-5): " choice
 
     case $choice in
         1)
