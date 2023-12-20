@@ -12,6 +12,8 @@ check_internet() {
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PACKAGE_DIR="$SCRIPT_DIR/../package"
+
+# Function to install a package
 install_package() {
     local package_file="$1"
     sudo dpkg -i $package_file.deb
@@ -26,7 +28,10 @@ fi
 if [ "$#" -eq 2 ]; then
     resource=$1
     opt=$2
+
+    # Check if the resource is an IP or a port
     if [[ "$resource" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        # IP address provided
         if [ "$opt" == "a" ]; then
             sudo ufw allow from "$resource" to any
         elif [ "$opt" == "d" ]; then
@@ -36,6 +41,7 @@ if [ "$#" -eq 2 ]; then
             exit 1
         fi
     else
+        # Port number provided
         if [ "$opt" == "a" ]; then
             sudo ufw allow "$resource"/tcp
         elif [ "$opt" == "d" ]; then
@@ -47,8 +53,8 @@ if [ "$#" -eq 2 ]; then
     fi
 
 elif [ "$#" -eq 0 ]; then
-    sudo ufw default deny incoming
-    sudo ufw default deny outgoing
+    sudo ufw default allow outgoing
+    # sudo ufw default deny incoming
     sudo ufw default deny routed
     sudo ufw allow 443/tcp
     sudo ufw allow 22/tcp
@@ -61,8 +67,8 @@ else
     exit 1
 fi
 
-sudo ufw default deny incoming
-sudo ufw default deny outgoing
+sudo ufw default allow outgoing
+# sudo ufw default deny incoming
 sudo ufw default deny routed
 sudo ufw allow 443/tcp
 sudo ufw allow 22/tcp

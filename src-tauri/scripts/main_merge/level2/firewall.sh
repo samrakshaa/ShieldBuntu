@@ -1,7 +1,6 @@
 #!/bin/bash
 
 configure_default_rules() {
-    sudo ufw default deny incoming
     sudo ufw default deny outgoing
     sudo ufw default deny routed
     sudo ufw allow 443/tcp
@@ -19,7 +18,9 @@ configure_custom_rules() {
     read -p "Enter resource (port or IP): " resource
     read -p "Enter option (a to allow, d to deny): " opt
 
+    # Check if the resource is an IP or a port
     if [[ "$resource" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        # IP address provided
         if [ "$opt" == "a" ]; then
             sudo ufw allow from "$resource" to any
         elif [ "$opt" == "d" ]; then
@@ -29,6 +30,7 @@ configure_custom_rules() {
             exit 1
         fi
     else
+        # Port number provided
         if [ "$opt" == "a" ]; then
             sudo ufw allow "$resource"/tcp
         elif [ "$opt" == "d" ]; then
@@ -64,6 +66,7 @@ enable_disable_firewall() {
     esac
 }
 
+# Main menu
 while true; do
     echo "UFW Configuration Menu:"
     echo "1. Default Rules"
