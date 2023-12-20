@@ -11,7 +11,7 @@ merge_scripts() {
 
       0)
         merged_script+="\n\n( sleep 2 && echo -e '================= Auto Logout =============='\n"
-        merged_script+="$(cat $SCRIPT_DIR/main_merge/level1/autologout.sh)\n"
+        merged_script+="$(cat $SCRIPT_DIR/main_merge/level1/apparmor.sh)\n"
         merged_script+="sleep 2 )\n\n"
         ;;
       1)
