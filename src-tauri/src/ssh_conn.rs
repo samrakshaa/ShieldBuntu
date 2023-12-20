@@ -2,19 +2,36 @@ use chrono::Utc;
 use serde_json::json;
 use tokio::process::Command as AsyncCommand;
 use tokio::io::AsyncWriteExt;
+use std::path::Path;
+use std::{env, fs};
 use std::fs::OpenOptions;
 use std::io::{Write, Read};
 use std::process::Stdio;
 use crate::get_password;
-
+use tauri::AppHandle;
 
 #[allow(non_snake_case)]
 #[tauri::command]
-pub async fn first_time_ssh(sshDetails: Vec<String>) -> Result<String, String> {
+pub async fn first_time_ssh(handle : AppHandle,sshDetails: Vec<String>) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/apply/ssh_conn_first.sh");
-    let log_file_path = current_dir.join("logs/ssh_conn_first.txt");
+    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    // let script_path = current_dir.join("scripts/apply/ssh_conn_first.sh");
+    // let log_file_path = current_dir.join("logs/ssh_conn_first.txt");
+    let script_path = handle
+        .path_resolver()
+        .resolve_resource("scripts/apply/ssh_conn_first.sh")
+        .expect("failed to resolve resource");
+
+        let log_directory = match env::var("HOME") {
+            Ok(home) => format!("{}/.samrakshak_logs", home),
+            Err(_) => return Err("Could not retrieve user's home directory".to_string()),
+        };
+    
+        fs::create_dir_all(&log_directory)
+            .map_err(|e| format!("Error creating directory: {}", e))?;
+    
+        let log_file_path = Path::new(&log_directory).join("ssh_conn_first.txt");
+    
 
     // Open or create the log file for appending
     let mut file = OpenOptions::new()
@@ -77,11 +94,27 @@ pub async fn first_time_ssh(sshDetails: Vec<String>) -> Result<String, String> {
 
 #[allow(non_snake_case)]
 #[tauri::command]
-pub async fn second_time_ssh(sshDetails: Vec<String>) -> Result<String, String> {
+pub async fn second_time_ssh(handle : AppHandle,sshDetails: Vec<String>) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/apply/ssh_conn_second.sh");
-    let log_file_path = current_dir.join("logs/ssh_conn_second.txt");
+    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    // let script_path = current_dir.join("scripts/apply/ssh_conn_second.sh");
+    // let log_file_path = current_dir.join("logs/ssh_conn_second.txt");
+
+    let script_path = handle
+        .path_resolver()
+        .resolve_resource("scripts/apply/ssh_conn_second.sh")
+        .expect("failed to resolve resource");
+
+        let log_directory = match env::var("HOME") {
+            Ok(home) => format!("{}/.samrakshak_logs", home),
+            Err(_) => return Err("Could not retrieve user's home directory".to_string()),
+        };
+    
+        fs::create_dir_all(&log_directory)
+            .map_err(|e| format!("Error creating directory: {}", e))?;
+    
+        let log_file_path = Path::new(&log_directory).join("ssh_conn_second.txt");
+    
 
     // Open or create the log file for appending
     let mut file = OpenOptions::new()

@@ -4,10 +4,13 @@ use serde_json::json;
 use tokio::process::Command as AsyncCommand;
 use tokio::fs::File;
 use tokio::io::{AsyncReadExt, AsyncWriteExt};
-use std::fs::OpenOptions;
+use std::env;
+use std::fs::{OpenOptions, self};
 use std::io::{Write, Read};
+use std::path::Path;
 use std::process::Stdio;
 use crate::get_password;
+use tauri::AppHandle;
 
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -17,10 +20,14 @@ struct UsbDevice1 {
 }
 
 #[tauri::command]
-pub async fn list_usb_devices() -> Result<String, String> {
+pub async fn list_usb_devices(handle : AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/apply/list_usb.sh");
+    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    // let script_path = current_dir.join("scripts/apply/list_usb.sh");
+    let script_path = handle
+    .path_resolver()
+    .resolve_resource("scripts/apply/list_usb.sh")
+    .expect("failed to resolve resource");
 
     // Read the script file asynchronously
     let mut file = File::open(&script_path).await.map_err(|e| format!("Error opening script file: {}", e))?;
@@ -86,10 +93,14 @@ struct UsbDevice2 {
 }
 
 #[tauri::command]
-pub async fn list_usb_devices_usbguard() -> Result<String, String> {
+pub async fn list_usb_devices_usbguard(handle : AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/apply/connected_usb_devices_status.sh");
+    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    // let script_path = current_dir.join("scripts/apply/connected_usb_devices_status.sh");
+    let script_path = handle
+    .path_resolver()
+    .resolve_resource("scripts/apply/connected_usb_devices_status.sh")
+    .expect("failed to resolve resource");
 
     // Read the script file asynchronously
     let mut file = File::open(&script_path).await.map_err(|e| format!("Error opening script file: {}", e))?;
@@ -273,11 +284,27 @@ pub async fn list_usb_devices_usbguard() -> Result<String, String> {
 
 #[warn(non_snake_case)]
 #[tauri::command]
-pub async fn apply_usb_blocking(usb_ids: Vec<String>) -> Result<String, String> {
+pub async fn apply_usb_blocking(handle : AppHandle,usb_ids: Vec<String>) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/apply/usb_blocking.sh");
-    let log_file_path = current_dir.join("logs/usb_blocking_log.txt");
+    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    // let script_path = current_dir.join("scripts/apply/usb_blocking.sh");
+    // let log_file_path = current_dir.join("logs/usb_blocking_log.txt");
+    let script_path = handle
+    .path_resolver()
+    .resolve_resource("scripts/apply/usb_blocking.sh")
+    .expect("failed to resolve resource");
+
+    let log_directory = match env::var("HOME") {
+    Ok(home) => format!("{}/.samrakshak_logs", home),
+    Err(_) => return Err("Could not retrieve user's home directory".to_string()),
+    };
+
+    fs::create_dir_all(&log_directory)
+    .map_err(|e| format!("Error creating directory: {}", e))?;
+
+    let log_file_path = Path::new(&log_directory).join("usb_blocking_log.txt");
+
+
 
     // Open or create the log file for appending
     let mut file = OpenOptions::new()
@@ -339,11 +366,27 @@ pub async fn apply_usb_blocking(usb_ids: Vec<String>) -> Result<String, String> 
 
 
 #[tauri::command]
-pub async fn reverse_usb_blocking(usb_ids: Vec<String>) -> Result<String, String> {
+pub async fn reverse_usb_blocking(handle : AppHandle,usb_ids: Vec<String>) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/reverse/r-usb_blocking.sh");
-    let log_file_path = current_dir.join("logs/reverse_usb_blocking_log.txt");
+    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    // let script_path = current_dir.join("scripts/reverse/r-usb_blocking.sh");
+    // let log_file_path = current_dir.join("logs/reverse_usb_blocking_log.txt");
+
+    let script_path = handle
+    .path_resolver()
+    .resolve_resource("scripts/reverse/r-usb_blocking.sh")
+    .expect("failed to resolve resource");
+
+    let log_directory = match env::var("HOME") {
+    Ok(home) => format!("{}/.samrakshak_logs", home),
+    Err(_) => return Err("Could not retrieve user's home directory".to_string()),
+    };
+
+    fs::create_dir_all(&log_directory)
+    .map_err(|e| format!("Error creating directory: {}", e))?;
+
+    let log_file_path = Path::new(&log_directory).join("reverse_usb_blocking_log.txt");
+
 
     // Open or create the log file for appending
     let mut file = OpenOptions::new()
@@ -406,11 +449,27 @@ pub async fn reverse_usb_blocking(usb_ids: Vec<String>) -> Result<String, String
 
 #[warn(non_snake_case)]
 #[tauri::command]
-pub async fn whitelist_usb(usb_ids: Vec<String>) -> Result<String, String> {
+pub async fn whitelist_usb(handle : AppHandle,usb_ids: Vec<String>) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/apply/whitelist_usbs.sh");
-    let log_file_path = current_dir.join("logs/whitelist_usb_log.txt");
+    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    // let script_path = current_dir.join("scripts/apply/whitelist_usbs.sh");
+    // let log_file_path = current_dir.join("logs/whitelist_usb_log.txt");
+
+    let script_path = handle
+    .path_resolver()
+    .resolve_resource("scripts/apply/whitelist_usbs.sh")
+    .expect("failed to resolve resource");
+
+let log_directory = match env::var("HOME") {
+    Ok(home) => format!("{}/.samrakshak_logs", home),
+    Err(_) => return Err("Could not retrieve user's home directory".to_string()),
+};
+
+fs::create_dir_all(&log_directory)
+    .map_err(|e| format!("Error creating directory: {}", e))?;
+
+let log_file_path = Path::new(&log_directory).join("whitelist_usb_log.txt");
+
 
     // Open or create the log file for appending
     let mut file = OpenOptions::new()
@@ -473,11 +532,27 @@ pub async fn whitelist_usb(usb_ids: Vec<String>) -> Result<String, String> {
 
 
 #[tauri::command]
-pub async fn blacklist_usb(usb_ids: Vec<String>) -> Result<String, String> {
+pub async fn blacklist_usb(handle : AppHandle,usb_ids: Vec<String>) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/apply/blacklist_usbs.sh");
-    let log_file_path = current_dir.join("logs/blacklist_usb_log.txt");
+    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    // let script_path = current_dir.join("scripts/apply/blacklist_usbs.sh");
+    // let log_file_path = current_dir.join("logs/blacklist_usb_log.txt");
+
+    let script_path = handle
+    .path_resolver()
+    .resolve_resource("scripts/apply/blacklist_usbs.sh")
+    .expect("failed to resolve resource");
+
+let log_directory = match env::var("HOME") {
+    Ok(home) => format!("{}/.samrakshak_logs", home),
+    Err(_) => return Err("Could not retrieve user's home directory".to_string()),
+};
+
+fs::create_dir_all(&log_directory)
+    .map_err(|e| format!("Error creating directory: {}", e))?;
+
+let log_file_path = Path::new(&log_directory).join("blacklist_usb_log.txt");
+
 
     // Open or create the log file for appending
     let mut file = OpenOptions::new()
@@ -540,10 +615,15 @@ pub async fn blacklist_usb(usb_ids: Vec<String>) -> Result<String, String> {
 
 
 #[tauri::command]
-pub async fn check_usb() -> Result<String, String> {
+pub async fn check_usb(handle : AppHandle) -> Result<String, String> {
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/check/check_usb_guard.sh");
+    // let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
+    // let script_path = current_dir.join("scripts/check/check_usb_guard.sh");
+
+    let script_path = handle
+        .path_resolver()
+        .resolve_resource("scripts/check/check_usb_guard.sh")
+        .expect("failed to resolve resource");
 
     // Run the bash script for checking firewall status
     let mut child = AsyncCommand::new("sudo")
