@@ -37,22 +37,22 @@ pub async fn apply_ssh_rules(handle: tauri::AppHandle, arguments: Vec<String>) -
     file.write_all(format!("\n\n{}\n\n", datetime).as_bytes())
         .map_err(|e| format!("Error writing to log file: {}", e))?;
 
-    let command = Command::new("sudo")
-        .arg("-S")
-        .arg("bash")
-        .arg(script_path);
+    // Create a mutable Command object
+    let mut command = Command::new("sudo");
+    command.arg("-S")
+           .arg("bash")
+           .arg(script_path.to_str().unwrap());
 
-    // Pass the arguments to the script
+    // Iteratively add arguments
     for arg in arguments.iter() {
         command.arg(arg);
     }
 
-    let mut child = command
-        .stdin(Stdio::piped())
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
-        .spawn()
-        .map_err(|e| format!("Error spawning process: {}", e))?;
+    let mut child = command.stdin(Stdio::piped())
+                          .stdout(Stdio::piped())
+                          .stderr(Stdio::piped())
+                          .spawn()
+                          .map_err(|e| format!("Error spawning process: {}", e))?;
 
     if let Some(mut stdin) = child.stdin.take() {
         stdin.write_all(format!("{}\n", password).as_bytes())
@@ -84,7 +84,6 @@ pub async fn apply_ssh_rules(handle: tauri::AppHandle, arguments: Vec<String>) -
 
     Ok(result)
 }
-
 
 #[tauri::command]
 pub async fn reverse_ssh_rules(handle : tauri::AppHandle) -> Result<String, String> {
