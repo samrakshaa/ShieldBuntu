@@ -1,41 +1,43 @@
-import { useState } from "react";
 import { ThemeProvider } from "./components/theme-provider";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster";
-import Navbar from "./components/Navbar";
 import Home from "./pages/home/Home";
-import Firewall from "./pages/firewall/Firewall";
-import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
-import { info } from "tauri-plugin-log-api";
 import { attachConsole } from "tauri-plugin-log-api";
-import USBPage from "./pages/USBPage";
 import StorageProvider from "./components/storageProvider";
+import SudoDialog from "./components/SudoDialog";
+import Firewall from "./pages/firewall/Firewall";
+import Dashboard from "./pages/dashboard/Dashboard";
+import Network from "./pages/network/Network";
+import TestingArea from "./pages/TestingArea";
+import Usb from "./pages/usb/Usb";
+import LoadingScreenProvider from "./components/LoadingScreenProvider";
+import SshConnect from "./pages/ssh/SshConnect";
+import Basic from "./pages/basic/Basic";
+import Intermediate from "./pages/intermediate/Intermediate";
+import Advance from "./pages/advance/Advance";
 
 attachConsole();
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
-
-  async function greet() {
-    const msg: string = await invoke("greet", { name });
-    msg && setGreetMsg(msg);
-    info(`${msg} - this is from nodejs `);
-  }
-
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <StorageProvider>
-        <Router>
-          <Navbar />
-          <Routes>
-            <Route path="/*" element={<Home />} />
-            <Route path="/network-security/firewall" element={<Firewall />} />
-            <Route path="/network-security/usbblock" element={<USBPage />} />
-          </Routes>
-        </Router>
-        <Toaster />
-      </StorageProvider>
+      <LoadingScreenProvider>
+        <StorageProvider>
+          <SudoDialog>
+            <Router>
+              <Routes>
+                <Route path="/" element={<Home />}>
+                  <Route path={"/"} element={<Dashboard />} />
+                  <Route path={"/basic"} element={<Basic />} />
+                  {/* <Route path={"/intermediate"} element={<Intermediate />} /> */}
+                  <Route path={"/advanced"} element={<Advance />} />
+                </Route>
+              </Routes>
+            </Router>
+          </SudoDialog>
+          <Toaster />
+        </StorageProvider>
+      </LoadingScreenProvider>
     </ThemeProvider>
   );
 }

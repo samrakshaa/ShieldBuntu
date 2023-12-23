@@ -1,31 +1,59 @@
-use std::process::Stdio;
-use tokio::process::Command as AsyncCommand;
-use tokio::io::AsyncReadExt;
+use std::io::Write;
+use std::process::{Command, Stdio};
+use std::fs::{OpenOptions, self};
+use std::path::Path;
+use std::env;
+use chrono::Utc;
+use serde_json::json;
+use tauri::AppHandle;
+// use tokio::io::AsyncWriteExt;
+
+use crate::get_password;
 
 #[tauri::command]
-pub async fn remove_unused_packages() -> Result<String, String> {
-    let current_dir = std::env::current_dir().map_err(|e| format!("Error getting current directory: {}", e))?;
-    let script_path = current_dir.join("scripts/unused_package_remover.sh");
+pub async fn remove_unused_packages(handle: AppHandle) -> Result<String, String> {
+    let password = get_password().ok_or_else(|| "Password not available".to_string())?;
 
-    // Run the bash script to remove unused packages
-    let mut child = AsyncCommand::new("bash")
-        .arg(&script_path)
-        .stdout(Stdio::inherit())
-        .stderr(Stdio::inherit())
+    let log_directory = match env::var("HOME") {
+        Ok(home) => format!("{}/.samrakshak_logs", home),
+        Err(_) => return Err("Could not retrieve user's home directory".to_string()),
+    };
+
+    fs::create_dir_all(&log_directory)
+        .map_err(|e| format!("Error creating directory: {}", e))?;
+
+    let script_path = handle
+        .path_resolver()
+        .resolve_resource("scripts/apply/unused_package_remover.sh")
+        .expect("failed to resolve resource");
+
+    let log_file_path = Path::new(&log_directory).join("unused_package_removal_log.txt");
+
+    let mut file = OpenOptions::new()
+        .create(true)
+        .write(true)
+        .truncate(true)
+        .open(&log_file_path)
+        .map_err(|e| format!("Error opening log file: {}", e))?;
+
+    let datetime = Utc::now().format("[%Y-%m-%d %H:%M:%S]").to_string();
+    file.write_all(format!("\n\n{}\n\n", datetime).as_bytes())
+        .map_err(|e| format!("Error writing to log file: {}", e))?;
+
+    let child = Command::new("bash")
+        .arg(script_path.to_str().unwrap())
+        .arg(&password)
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
         .spawn()
         .map_err(|e| format!("Error spawning process: {}", e))?;
 
-    // Await the child process completion
-    let status = child.wait().await.map_err(|e| format!("Error waiting for process: {}", e))?;
+    let output = child.wait_with_output()
+        .map_err(|e| format!("Error waiting for process: {}", e))?;
 
-    // Check if the command executed successfully
-    if status.success() {
-        Ok(true.to_string())
-    } else {
-        let mut error_output = String::new();
-        if let Some(mut stderr) = child.stderr.take() {
-            stderr.read_to_string(&mut error_output).await.map_err(|e| format!("Error reading stderr: {}", e))?;
-        }
-        Err(format!("Error removing unused packages: {}", error_output))
-    }
+    file.write_all(&output.stdout)
+        .map_err(|e| format!("Error writing to log file: {}", e))?;
+
+    let result = json!({ "logs": String::from_utf8_lossy(&output.stdout).trim() }).to_string();
+    Ok(result)
 }

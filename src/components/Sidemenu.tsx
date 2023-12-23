@@ -1,76 +1,83 @@
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useTheme } from "./theme-provider";
+import { ReactNode, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { MdDashboard } from "react-icons/md";
+import useLoading from "@/hooks/useLoading";
+import { invoke } from "@tauri-apps/api/tauri";
+import { TbShieldFilled } from "react-icons/tb";
 
-const networkList = [
-  {
-    title: "Firewall Configuration",
-    link: "/network-security/firewall",
-  },
-  {
-    title: "SSH/IP Blocking",
-    link: "/network-security/sshblock",
-  },
-  {
-    title: "USB Blocking",
-    link: "/network-security/usbblock",
-  },
-  {
-    title: "TOR Settings",
-    link: "/network-security/tor",
-  },
-  {
-    title: "Open Port Management",
-    link: "/network-security/port",
-  },
-];
+interface MenuItem {
+  title: string;
+  link: string;
+  icon?: ReactNode;
+}
 
-const bootList = [
-  {
-    title: "Basic & Display Settings",
-    link: "/boot/display",
-  },
-  {
-    title: "Advance Boot SEttings",
-    link: "/boot/",
-  },
-];
+interface SidemenuProps {
+  menuOptions: MenuItem[];
+}
 
-const generalList = [
-  {
-    title: "Auditing",
-    link: "/general/auditing",
-  },
-  {
-    title: "SSH/IP Blocking",
-    link: "/general/cron",
-  },
-];
-
-const menuOptions = [networkList, bootList, generalList];
-
-const Sidemenu = () => {
-
-
-
+const Sidemenu: React.FC<SidemenuProps> = ({ menuOptions }) => {
+  const location = useLocation();
+  const { pathname } = location;
+  console.log(pathname, "pathname");
   return (
-    <div className="sidemenu flex flex-col gap-8 items-start w-[350px] h-full fixed top-20 left-0 overflow-hidden p-8 bg-secondary">
-      {menuOptions.map((menu) => (
-        <div className=" mt-4">
-          <h3 className="text-3xl font-bold">Network & Security</h3>
-          <br />
-          <div className="links flex flex-col ">
-            {menu.map(({ title, link }) => (
-              <Link
-                to={link}
-                className="text-xl hover:bg-popover rounded-xl text-foreground/50 p-4"
-              >
-                {title}
-              </Link>
-            ))}
+    <div className=" overflow-visible Defend flex  border-r-2 border-secondary gap-10 items-center w-full  bg-secondary/20 justify-between p-4 sticky top-0 left-0 backdrop-blur-2xl ">
+      <Link
+        to={"/"}
+        className=" px-4 text-2xl flex gap-2 justify-center items-center font-black "
+      >
+        <img
+          src="shield.svg"
+          alt="logo"
+          className=" bg-blend-soft-light "
+          width={"  40px"}
+        />
+        ShieldBuntu
+      </Link>
+      <br />
+      <div className="absolute top-24  w-screen left-0 flex justify-center items-center">
+        {pathname != "/" && (
+          <div className="categories bg-secondary rounded-3xl w-full max-w-[1000px] p-2  mx-6 drop-shadow-3xl shadow-2xl ">
+            {/* <h2 className="text-xl font-bold p-4 ">Hardening</h2> */}
+            <div className="flex  gap-2  ">
+              {menuOptions.map((item, itemIndex) => (
+                <Link
+                  key={itemIndex}
+                  to={item.link}
+                  className={`rounded-2xl ${
+                    pathname === item.link
+                      ? "bg-primary"
+                      : "hover:bg-gray-400/10"
+                  } text-foreground p-2 px-6 flex gap-2 items-center w-full text-2xl font-black justify-center `}
+                >
+                  {item.icon && item.icon}
+                  {item.title}
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        )}
+      </div>
+      <div className="flex absolute top-0 left-0 w-screen  justify-center items-center h-full gap-4   ">
+        <Link
+          to={"/"}
+          className={`${"hover:bg-secondary/50"} text-foreground p-2 px-6 flex gap-2 items-center  text-2xl rounded-xl ${
+            pathname == "/" && "text-primary bg-secondary"
+          } `}
+        >
+          <MdDashboard />
+          Dashboard
+        </Link>
+        <Link
+          to={"/basic"}
+          className={`${"hover:bg-secondary/50"} text-foreground p-2 px-6 flex gap-2 items-center  text-2xl rounded-xl ${
+            (pathname == "/basic" || pathname == "/advanced") && "text-primary bg-secondary"
+          }  `}
+        >
+          <TbShieldFilled />
+          Hardening
+        </Link>
+      </div>
     </div>
   );
 };

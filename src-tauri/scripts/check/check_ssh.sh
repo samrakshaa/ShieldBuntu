@@ -1,8 +1,8 @@
 #!/bin/bash
 
 FILE_PATH="/etc/ssh/sshd_config"
-if grep -q "#Hardend" "$FILE_PATH"; then
-    echo '{"success": true}'
+if grep -q "#Hardened" "$FILE_PATH"; then
+    echo true
 else
-    echo '{"success": false}'
+    echo false
 fi
