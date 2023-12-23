@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-LOG_DIR="/home/jayash/.samrakshak_logs"
+LOG_DIR="/home/mvaibhav77/.samrakshak_logs"
 
 merge_scripts() {
   local merged_script=""

@@ -20,7 +20,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";import {
+} from "@/components/ui/dialog";
+import {
   Table,
   TableBody,
   TableCaption,
@@ -45,9 +46,7 @@ function StatusOfAll({}: Props) {
   });
   const [allStatusLoading, setAllStatusLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedBlockedRows, setSelectedBlockedRows] = useState<string[]>(
-    []
-  );
+  const [selectedBlockedRows, setSelectedBlockedRows] = useState<string[]>([]);
   const getAllServices = async () => {
     setAllStatusLoading(true);
     let hasErrorOccurred = false;
@@ -66,7 +65,6 @@ function StatusOfAll({}: Props) {
           hasErrorOccurred = true;
         })
     );
-    
 
     await Promise.all(servicePromises).finally(() => {
       setServices((prev) => ({ ...prev, ...serviceStatusUpdates }));
@@ -85,20 +83,25 @@ function StatusOfAll({}: Props) {
     },
   });
   console.log(isLoading, "loading ....");
-console.log(selectedBlockedRows)
+  console.log(selectedBlockedRows);
   useEffect(() => {
     allServices();
   }, []);
   const handleClick3 = () => {
-    invoke("custom_script", {"scriptIds": selectedBlockedRows.filter(item => item !== undefined).map(String)})
+    invoke("custom_script", {
+      scriptIds: selectedBlockedRows
+        .filter((item) => item !== undefined)
+        .map(String),
+    })
       .then((res) => {
         toast({
           variant: "default",
           title: " Success!",
-          description: " file createed successfully on /home/jayash/.samrakshak_logs",
+          description:
+            " file createed successfully on /home/mvaibhav77/.samrakshak_logs",
           className: "border-emerald-500 bg-emerald-700/10 ",
         });
-        setIsDialogOpen(false)
+        setIsDialogOpen(false);
       })
       .catch((err) => console.error(err));
   };
@@ -203,33 +206,39 @@ console.log(selectedBlockedRows)
               <DialogHeader>
                 <DialogTitle>Select config</DialogTitle>
                 <DialogDescription>
-                <Table className="usbBlocking">
-                 
-                  <TableBody className="flex flex-col h-[400px] overflow-auto w-full">
-                    {allServicesConfig.map((item:any, index: number) => {
-                      
+                  <Table className="usbBlocking">
+                    <TableBody className="flex flex-col h-[400px] overflow-auto w-full">
+                      {allServicesConfig.map((item: any, index: number) => {
                         return (
                           <TableRow
                             key={index}
-                            onClick={() => {setSelectedBlockedRows([...selectedBlockedRows, item.key])}}
+                            onClick={() => {
+                              setSelectedBlockedRows([
+                                ...selectedBlockedRows,
+                                item.key,
+                              ]);
+                            }}
                             className=""
                           >
-                            <TableCell className="py-2 " >
-                              <Checkbox 
+                            <TableCell className="py-2 ">
+                              <Checkbox
                                 checked={selectedBlockedRows.includes(item.key)}
                                 // disabled={!usbStatus}
                               />
                             </TableCell>
                             <div className="flex flex-row items-center">
-
-                            <TableCell className="py-2">{item.name}</TableCell>
-                            <TableCell className="py-2">{item.description}</TableCell>
+                              <TableCell className="py-2">
+                                {item.name}
+                              </TableCell>
+                              <TableCell className="py-2">
+                                {item.description}
+                              </TableCell>
                             </div>
                           </TableRow>
                         );
-                    })}
-                  </TableBody>
-                </Table>
+                      })}
+                    </TableBody>
+                  </Table>
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">sdnksnd</div>
