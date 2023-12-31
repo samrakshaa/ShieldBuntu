@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
-LOG_DIR="/home/mvaibhav77/.samrakshak_logs"
+OUTPUT_DIR="/home/$USER/ShieldBuntu"
 
 merge_scripts() {
   local merged_script=""
@@ -123,7 +123,7 @@ else
   selected_scripts="$@"
 fi
 
-output_file="$LOG_DIR/output.sh"
+output_file="$OUTPUT_DIR/output.sh"
 # reverse_output_file="reverse_output.sh"
 
 echo -e "#!/bin/bash\n" > "$output_file"
