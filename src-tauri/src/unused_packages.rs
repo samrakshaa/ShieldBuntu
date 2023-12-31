@@ -15,7 +15,7 @@ pub async fn remove_unused_packages(handle: AppHandle) -> Result<String, String>
     let password = get_password().ok_or_else(|| "Password not available".to_string())?;
 
     let log_directory = match env::var("HOME") {
-        Ok(home) => format!("{}/.samrakshak_logs", home),
+        Ok(home) => format!("{}/.shieldbuntu_logs", home),
         Err(_) => return Err("Could not retrieve user's home directory".to_string()),
     };
 

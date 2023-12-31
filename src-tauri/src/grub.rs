@@ -48,7 +48,7 @@ pub async fn grub_pass_add(handle: AppHandle, pass: String) -> Result<String, St
     let sudo_password = get_password().ok_or_else(|| "Password not available".to_string())?;
 
     let log_directory = match env::var("HOME") {
-        Ok(home) => format!("{}/.samrakshak_logs", home),
+        Ok(home) => format!("{}/.shieldbuntu_logs", home),
         Err(_) => return Err("Could not retrieve user's home directory".to_string()),
     };
 

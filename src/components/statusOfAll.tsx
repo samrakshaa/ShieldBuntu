@@ -98,7 +98,7 @@ function StatusOfAll({}: Props) {
           variant: "default",
           title: " Success!",
           description:
-            " file createed successfully on /home/mvaibhav77/.samrakshak_logs",
+            " file createed successfully on /home/mvaibhav77/.shieldbuntu_logs",
           className: "border-emerald-500 bg-emerald-700/10 ",
         });
         setIsDialogOpen(false);

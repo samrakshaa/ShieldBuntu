@@ -12,7 +12,7 @@ pub async fn kernel(handle: tauri::AppHandle) -> Result<String, String> {
         .expect("failed to resolve resource");
 
     let log_directory = match env::var("HOME") {
-        Ok(home) => format!("{}/.samrakshak_logs", home),
+        Ok(home) => format!("{}/.shieldbuntu_logs", home),
         Err(_) => return Err("Could not retrieve user's home directory".to_string()),
     };
 
@@ -82,7 +82,7 @@ pub async fn reverse_kernel(handle: tauri::AppHandle) -> Result<String, String> 
         .expect("failed to resolve resource");
 
     let log_directory = match env::var("HOME") {
-        Ok(home) => format!("{}/.samrakshak_logs", home),
+        Ok(home) => format!("{}/.shieldbuntu_logs", home),
         Err(_) => return Err("Could not retrieve user's home directory".to_string()),
     };
 

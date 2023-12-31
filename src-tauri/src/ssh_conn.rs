@@ -23,7 +23,7 @@ pub async fn first_time_ssh(handle : AppHandle,sshDetails: Vec<String>) -> Resul
         .expect("failed to resolve resource");
 
         let log_directory = match env::var("HOME") {
-            Ok(home) => format!("{}/.samrakshak_logs", home),
+            Ok(home) => format!("{}/.shieldbuntu_logs", home),
             Err(_) => return Err("Could not retrieve user's home directory".to_string()),
         };
     
@@ -106,7 +106,7 @@ pub async fn second_time_ssh(handle : AppHandle,sshDetails: Vec<String>) -> Resu
         .expect("failed to resolve resource");
 
         let log_directory = match env::var("HOME") {
-            Ok(home) => format!("{}/.samrakshak_logs", home),
+            Ok(home) => format!("{}/.shieldbuntu_logs", home),
             Err(_) => return Err("Could not retrieve user's home directory".to_string()),
         };
     

@@ -295,7 +295,7 @@ pub async fn apply_usb_blocking(handle : AppHandle,usbIds: Vec<String>) -> Resul
     .expect("failed to resolve resource");
 
     let log_directory = match env::var("HOME") {
-    Ok(home) => format!("{}/.samrakshak_logs", home),
+    Ok(home) => format!("{}/.shieldbuntu_logs", home),
     Err(_) => return Err("Could not retrieve user's home directory".to_string()),
     };
 
@@ -379,7 +379,7 @@ pub async fn reverse_usb_blocking(handle:AppHandle, usbIds: Vec<String>) -> Resu
     .expect("failed to resolve resource");
 
     let log_directory = match env::var("HOME") {
-    Ok(home) => format!("{}/.samrakshak_logs", home),
+    Ok(home) => format!("{}/.shieldbuntu_logs", home),
     Err(_) => return Err("Could not retrieve user's home directory".to_string()),
     };
 
@@ -462,7 +462,7 @@ pub async fn whitelist_usb(handle: AppHandle,usbIds: Vec<String>) -> Result<Stri
     .expect("failed to resolve resource");
 
 let log_directory = match env::var("HOME") {
-    Ok(home) => format!("{}/.samrakshak_logs", home),
+    Ok(home) => format!("{}/.shieldbuntu_logs", home),
     Err(_) => return Err("Could not retrieve user's home directory".to_string()),
 };
 
@@ -545,7 +545,7 @@ pub async fn blacklist_usb(handle: AppHandle, usbIds: Vec<String>) -> Result<Str
     .expect("failed to resolve resource");
 
 let log_directory = match env::var("HOME") {
-    Ok(home) => format!("{}/.samrakshak_logs", home),
+    Ok(home) => format!("{}/.shieldbuntu_logs", home),
     Err(_) => return Err("Could not retrieve user's home directory".to_string()),
 };
 

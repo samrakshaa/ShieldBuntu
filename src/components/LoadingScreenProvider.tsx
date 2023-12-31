@@ -26,7 +26,7 @@ function LoadingScreenProvider({ duration = 1000, children }: Props) {
           <img src="shield.svg" alt="logo" className=" bg-blend-soft-light " width={"10%"}  />
           <div>
 
-            Sheild<span className="font-black text-primary">Buntu</span>
+            Shield<span className="font-black text-primary">Buntu</span>
           </div>
           </div>
         </>
